@@ -34,7 +34,7 @@ function Certificates() {
     <section
       className="certificate"
       data-aos="fade-left"
-      style={{ padding: "25px" }}
+      style={{ padding: "25px" , minHeight:"80vh" }}
     >
       <div className="container">
         <div className="section-title" style={{height:"5px"}}>
