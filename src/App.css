@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700');
+
+* {
+  /* margin-bottom: 0.5rem; */
+  font-family: 'Saira Extra Condensed', sans-serif;
+  font-weight: 700 !important;
+  /* footer or all blue color can be removed from here only by removing below mentioned color */
+  color: rgb(49, 6, 220);
+}
+
+section {
+  min-height: 80vh;
+  padding-top: 85px;
+}
+
+.btn {
+  color: white !important;
+  background-color: #769fb6 !important;
+}
+
+.btn:hover {
+  color: white !important;
+  background-color:#484574 !important;
+}
+
+.contact-info{
+  color:#455374;
+}

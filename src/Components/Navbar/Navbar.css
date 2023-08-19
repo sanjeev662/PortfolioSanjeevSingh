@@ -1,0 +1,18 @@
+/* remaining css for navbaar is imported from bootstrap in index.js by installing bootstrap 
+here are only some modification done */
+
+
+.navbar {
+    background-color: #769fb6;
+    opacity: 0.9;
+}
+
+.nav-link,
+.navbar-brand {
+    color: black !important;
+}
+
+.nav-link:hover,
+.navbar-brand:hover {
+    color: white !important;
+}

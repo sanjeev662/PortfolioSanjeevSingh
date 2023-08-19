@@ -1,0 +1,269 @@
+.section .container{
+    padding-top: 10px;
+    padding-bottom: 70px;
+}
+.section-title{
+    max-width: 100%;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    margin-bottom: 60px;
+}
+.section-title h2{
+    font-size: 40px;
+    color: #302e4d;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    margin: 0;
+    position: relative;
+}
+.section-title h2::before{
+    content: '';
+    height: 4px;
+    width: 50px;
+    position: absolute;
+    top: 100%;
+    left: 0;  
+}
+.section-title h2::after{
+    content: '';
+    height: 4px;
+    width: 25px;
+    position: absolute;
+    top: 100%;
+    left: 0;  
+    margin-top: 8px;
+}
+.row{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    position: relative;
+}
+.padd-15{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.about .about-con{
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.about .about-con .about-text{
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.about .about-con .about-text h3{
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #302e4d;
+}
+.about .about-con .about-text p{
+    font-size: 16px;
+    line-height: 25px;
+    color: #504e70;
+    margin: 0;
+}
+.about .about-con .personal-info{
+    -ms-flex: 0 0 60%;
+    flex: 0 0 60%;
+    max-width: 60%;
+    margin-top: 40px;
+}
+.about .about-con .personal-info .info-item{
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+.about .about-con .personal-info .info-item p{
+    font-weight: 600;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #302e4d;
+    margin: 0;
+    border-bottom: 1px solid #d6c8db;
+}
+.about .about-con .personal-info .info-item p span{
+    font-weight: 400;
+    color: #504e70;
+    margin-left: 4px;
+    display: inline-block;
+}
+.btn{
+    font-size: 16px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    padding: 12px 35px;
+    color: #fff;
+    border-radius: 40px;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.about .about-con .personal-info .buttons{
+    margin-top: 30px;
+}
+.about .about-con .personal-info .buttons .btn{
+    margin-right: 15px;
+    margin-top: 10px;
+}
+ /* .btn:hover{
+    transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+} */
+.about .about-con .skills{
+    -ms-flex: 0 0 40%;
+    flex: 0 0 40%;
+    max-width: 40%;
+    margin-top: 40px;
+}
+.about .about-con .skills .skill-items{
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.about .about-con .skills .skill-items h5{
+    line-height: 15px;
+    font-weight: 600;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #302e4d;
+    text-transform: capitalize;
+}
+.about .about-con .skills .skill-items .progress{
+    background-color: #e3e3e3;
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    margin: 0;
+}
+.about .about-con .skills .skill-items{
+    margin-bottom: 30px;
+}
+.about .about-con .skills .skill-items .progress .progress-in{
+    background-color: #302e4d;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 4px;
+}
+.about .about-con .education{
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin-top: 30px;
+}
+.about .about-con .experience{
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin-top: 30px;
+}
+.about .about-con h3.title{
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #302e4d;
+}
+.about .about-con .timeline-box{
+-ms-flex: 0 0 90%;
+flex: 0 0 90%;
+max-width: 100%;
+}
+.about .about-con .timeline{
+    background-color: #fdf9ff;
+    /* background-color: #e7e9ec; */
+    padding: 30px 15px;
+    border-radius: 10px;
+    border: 2px solid #d6c8db;
+    width: 100%;
+    position: relative;
+}
+.about .about-con .timeline .timeline-item{
+    position: relative;
+    padding-left: 20px;
+}
+.about .about-con .timeline .timeline-item:last-child{
+    padding-bottom: 0;
+}
+.about .about-con .timeline .timeline-item::before{
+    content: '';
+    width: 1px;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+.about .about-con .timeline .circle-dot{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    left: -7px;
+}
+.about .about-con .timeline .timeline-date{
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: #504e70;
+}
+.about .about-con .timeline .timeline-date .fa{
+    margin-right: 5px;
+}
+.about .about-con .timeline .timeline-title{
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-transform: capitalize;
+    color: #302e4d;
+}
+.about .about-con .timeline .timeline-text{
+    font-size: 16px;
+    line-height: 25px;
+    color: #504e70;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+@media(max-width: 1150px){
+    .section .container{
+        padding-top: 70px;
+    }
+    .section{
+        left: 0;
+    }
+    .section.open{
+        left: 200px;
+    }
+    .about .about-con .personal-info .info-item p span{
+        display: block;
+        margin-left: 0;
+    }
+    .about .about-con .personal-info .info-item p{
+        font-size: 14px;
+    }
+}
+
+@media(max-width: 766px){
+    .about .about-con .personal-info,   
+    .about .about-con .education,
+    .about .about-con .skills,
+    .about .about-con .experience
+    {
+       -ms-flex: 0 0 100%;
+       flex: 0 0 100%;
+       max-width: 100%;
+    }
+}

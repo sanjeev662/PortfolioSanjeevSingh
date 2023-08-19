@@ -1,0 +1,23 @@
+#Home {
+    /* background: url(../../Assets/Images/bg.jpg)
+        no-repeat center center fixed; */
+    background-size: cover;
+    background-color:#f9fafb;
+    /* height: 100vh; */
+    padding-top: 55px;
+   
+}
+
+.center {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.photo {
+    height: 35vh;
+    width: 30vh;
+    padding-bottom: 35px;
+}

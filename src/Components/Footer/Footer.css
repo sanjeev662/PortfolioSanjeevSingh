@@ -1,0 +1,61 @@
+.footer {
+    background-color: #769fb6;
+    bottom: 0 !important;
+    padding-top: 10px !important;
+    padding-bottom: 8px !important ;
+    z-index: 6;
+  }
+  .footer-copywright {
+    text-align: center !important;
+    z-index: 7;
+  }
+  
+  .footer-body {
+    text-align: center !important;
+    z-index: 7;
+  }
+  .aboutme-heading{
+    font-size: 4.6em;
+    /* color:#fbd9ad; */
+    color: black !important;
+  }
+  @media (max-width: 767px) {
+    .footer-copywright {
+      text-align: center !important;
+    }
+  
+    .footer-body {
+      text-align: center !important;
+    }
+    .home-about-description {
+      padding-top: 0px !important;
+    }
+    .aboutme-heading{
+      font-size: 3.6em;
+    }
+  }
+  
+  .footer h3 {
+    font-size: 1em;
+    /* color: white !important; */
+    color: black !important;
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+  }
+  .footer-icons {
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+    padding: 0 !important;
+    z-index: 25;
+  }
+  
+  .blockquote-footer {
+    /* color: #a588c0 !important; */
+    color: black !important;
+  }
+
+  .social-icons {
+    display: inline-block !important;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
