@@ -28,9 +28,9 @@ function Home() {
       <hr style={{borderWidth:"6px", color:"#7da2b7"}}/>
       <HomeCertificate />
       <hr style={{borderWidth:"6px", color:"#7da2b7"}}/>
-      <HomeDomain />
-      <hr style={{borderWidth:"6px", color:"#7da2b7"}}/>
       <HomeProjets />
+      <hr style={{borderWidth:"6px", color:"#7da2b7"}}/>
+      <HomeDomain />
       <hr style={{borderWidth:"6px", color:"#7da2b7"}}/>
       <HomeContacts />
     </div>
