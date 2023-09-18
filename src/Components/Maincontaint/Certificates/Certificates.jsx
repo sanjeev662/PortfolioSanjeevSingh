@@ -3,6 +3,8 @@ import CertificateCard from "./CertificateCard";
 import "./Certificates.css";
 import { Container, Row, Col } from "react-bootstrap";
 
+import multigradc from "../../Assets/Certificates/multigrad.png"
+
 import risec from "../../Assets/Certificates/rise.png";
 import icpcc from "../../Assets/Certificates/icpc.jpg";
 import mernc from "../../Assets/Certificates/udemy.jpg";
@@ -24,16 +26,22 @@ function Certificates() {
 
   const certificatelist=[
     {
-      title : "Rise Higher Education Inc",
-      imgUrl : risec,
-      siteUrl : "https://www.risehighereducation.com/",
-      tagline : "Full Stack Development intern"
+      title : "Fightage Pvt Ltd (Multigrad)",
+      imgUrl : multigradc,
+      siteUrl : "https://multigrad.in/",
+      tagline : "Full Stack Development Intern"
     },
     {
       title : "ACM-ICPC",
       imgUrl : icpcc,
       siteUrl : "https://icpc.global/",
       tagline : "ICPC 2022 Regionalist"
+    },
+    {
+      title : "Rise Higher Education Inc",
+      imgUrl : risec,
+      siteUrl : "https://www.risehighereducation.com/",
+      tagline : "Full Stack Development intern"
     },
     {
       title : "Udemy",

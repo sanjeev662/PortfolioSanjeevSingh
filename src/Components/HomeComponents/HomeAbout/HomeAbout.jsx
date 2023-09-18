@@ -56,14 +56,14 @@ function About() {
                 </div>
                 <div className="info-item padd-15">
                   <p>
-                    FreeLance / Intern: <span> Available </span>
+                    Job / Intern: <span> Available </span>
                   </p>
                 </div>
               </div>
               <div className="row">
                 <div className="buttons">
                   <a
-                    href="https://drive.google.com/file/d/1z1P7g1AcfjWl8TCElfa7aMlEmZvJnkX0/view?usp=sharing"
+                    href="https://drive.google.com/file/d/1owTJHwvsvIn8PpVRFsKLpSqQIarMIKe9/view"
                     target="_blank"
                     className="btn"
                   >
@@ -82,27 +82,27 @@ function About() {
             <div className="skills padd-15">
               <div className="row">
                 <div className="skill-items padd-15">
-                  <h5>Front End(Bootstrap, React, and Javascript)</h5>
-                  <div className="progress">
-                    <div className="progress-in" style={{ width: "70%" }} />
-                  </div>
-                </div>
-                <div className="skill-items padd-15">
-                  <h5>Back End(NodeJs, Express, SQL, MongoDB, ...)</h5>
-                  <div className="progress">
-                    <div className="progress-in" style={{ width: "80%" }} />
-                  </div>
-                </div>
-                <div className="skill-items padd-15">
-                  <h5>Data Structure and Algorithm</h5>
+                  <h5>Front End (React, Bootstrap, Javascript, ...)</h5>
                   <div className="progress">
                     <div className="progress-in" style={{ width: "85%" }} />
                   </div>
                 </div>
                 <div className="skill-items padd-15">
-                  <h5>Competitive Programming</h5>
+                  <h5>Back End (NodeJs, Express, SQL, MongoDB, ...)</h5>
                   <div className="progress">
-                    <div className="progress-in" style={{ width: "85%" }} />
+                    <div className="progress-in" style={{ width: "82%" }} />
+                  </div>
+                </div>
+                <div className="skill-items padd-15">
+                  <h5>Data Structure and Algorithm (Java)</h5>
+                  <div className="progress">
+                    <div className="progress-in" style={{ width: "82%" }} />
+                  </div>
+                </div>
+                <div className="skill-items padd-15">
+                  <h5>Competitive Programming (Java)</h5>
+                  <div className="progress">
+                    <div className="progress-in" style={{ width: "83%" }} />
                   </div>
                 </div>
               </div>
@@ -171,6 +171,34 @@ function About() {
                     <div className="timeline-item">
                       <div className="circle-dot" />
                       <h6 className="timeline-date">
+                        <i className="fa fa-calendar" aria-hidden="true" /> Jul
+                        2023 - Sep 2023
+                      </h6>
+                      <h4 className="timeline-title">
+                        Fightage Pvt Ltd (Multigrad)
+                      </h4>
+                      <p className="timeline-text">
+                        <a
+                          href="https://drive.google.com/file/d/1pnetigvEpF4VFIMCwEWomPMKii3Y8rxS/view?usp=drive_link"
+                          target="_blank"
+                        >
+                          <span> Full stack devlopment intern </span>
+                        </a>{" "}
+                        <br />
+                        • Contributing to the domain of full stack web
+                        development as a proactive intern .<br />
+                        • Taking charge of Node.js and React.js projects,
+                        showcasing skills in both frontend and backend
+                        technologies.
+                        <br />• Collaborating within a team to build and enhance
+                        web applications using Figma .{" "}
+                      </p>
+                    </div>
+
+                    {/* Item 2 */}
+                    <div className="timeline-item">
+                      <div className="circle-dot" />
+                      <h6 className="timeline-date">
                         <i className="fa fa-calendar" aria-hidden="true" /> Apr
                         2023 - Jun 2023
                       </h6>
@@ -190,30 +218,6 @@ function About() {
                         node js and react js <br />• Responsibilities:
                         Implementing databases , developing RESTful APIs ,
                         deploying applications on cloud platform .{" "}
-                      </p>
-                    </div>
-                    {/* Item 2 */}
-                    <div className="timeline-item">
-                      <div className="circle-dot" />
-                      <h6 className="timeline-date">
-                        <i className="fa fa-calendar" aria-hidden="true" /> Jun
-                        2022 - Aug 2022
-                      </h6>
-                      <h4 className="timeline-title">The Sparks Foundation</h4>
-                      <p className="timeline-text">
-                        <a
-                          href="https://truecertificates.com/verified/E979FNMVBQ"
-                          target="_blank"
-                        >
-                          <span>Web Devlopment Intern</span>
-                        </a>{" "}
-                        <br />
-                        • In this internship I got opprtunity to perform
-                        different projects , test my skills , and learn new
-                        concepts
-                        <br />• I have completed this internship using frontend
-                        skills like html5 , css3 , javascript , react.js and
-                        backend node.js , mongodb .
                       </p>
                     </div>
                   </div>

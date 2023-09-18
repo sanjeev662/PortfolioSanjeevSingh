@@ -21,8 +21,7 @@
     flex: 25%;
     max-width: 25%;
     width: 100%;
-    margin-right: 2rem;
-    margin-top: 2rem;
+    margin: 2rem 1rem 0 1rem !important;
     padding: 1.1rem 1.5rem;
     align-self: normal !important;
     border-radius: 5px;

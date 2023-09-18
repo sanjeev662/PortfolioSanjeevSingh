@@ -57,14 +57,14 @@ function About() {
                   </div>
                   <div className="info-item padd-15">
                     <p>
-                      FreeLance / Intern: <span> Available </span>
+                      Job / Intern: <span> Available </span>
                     </p>
                   </div>
                 </div>
                 <div className="row">
                   <div className="buttons">
                     <a
-                      href="https://drive.google.com/file/d/1z1P7g1AcfjWl8TCElfa7aMlEmZvJnkX0/view?usp=sharing"
+                      href="https://drive.google.com/file/d/1owTJHwvsvIn8PpVRFsKLpSqQIarMIKe9/view"
                       target="_blank"
                       className="btn"
                     >
@@ -83,27 +83,27 @@ function About() {
               <div className="skills padd-15">
                 <div className="row">
                   <div className="skill-items padd-15">
-                    <h5>Front End(Bootstrap, React, and Javascript)</h5>
+                    <h5>Front End (React, Bootstrap, Javascript, ...)</h5>
                     <div className="progress">
-                      <div className="progress-in" style={{ width: "70%" }} />
+                      <div className="progress-in" style={{ width: "85%" }} />
                     </div>
                   </div>
                   <div className="skill-items padd-15">
-                    <h5>Back End(NodeJs, Express, SQL, MongoDB, ...)</h5>
+                    <h5>Back End (NodeJs, Express, SQL, MongoDB, ...)</h5>
                     <div className="progress">
                       <div className="progress-in" style={{ width: "80%" }} />
                     </div>
                   </div>
                   <div className="skill-items padd-15">
-                    <h5>Data Structure and Algorithm</h5>
+                    <h5>Data Structure and Algorithm (Java)</h5>
                     <div className="progress">
-                      <div className="progress-in" style={{ width: "85%" }} />
+                      <div className="progress-in" style={{ width: "82%" }} />
                     </div>
                   </div>
                   <div className="skill-items padd-15">
-                    <h5>Competitive Programming</h5>
+                    <h5>Competitive Programming (Java)</h5>
                     <div className="progress">
-                      <div className="progress-in" style={{ width: "85%" }} />
+                      <div className="progress-in" style={{ width: "80%" }} />
                     </div>
                   </div>
                 </div>
@@ -174,6 +174,33 @@ function About() {
                         <div className="circle-dot" />
                         <h6 className="timeline-date">
                           <i className="fa fa-calendar" aria-hidden="true" />{" "}
+                          Jul 2023 - Sep 2023
+                        </h6>
+                        <h4 className="timeline-title">
+                          Fightage Pvt Ltd (Multigrad)
+                        </h4>
+                        <p className="timeline-text">
+                          <a
+                            href="https://drive.google.com/file/d/1pnetigvEpF4VFIMCwEWomPMKii3Y8rxS/view?usp=drive_link"
+                            target="_blank"
+                          >
+                            <span> Full stack devlopment intern </span>
+                          </a>{" "}
+                          <br />
+                          • Contributing to the domain of full stack web
+                          development as a proactive intern .<br />
+                          • Taking charge of Node.js and React.js projects,
+                          showcasing skills in both frontend and backend
+                          technologies.
+                          <br />• Collaborating within a team to build and
+                          enhance web applications using Figma .{" "}
+                        </p>
+                      </div>
+                      {/* Item 2 */}
+                      <div className="timeline-item">
+                        <div className="circle-dot" />
+                        <h6 className="timeline-date">
+                          <i className="fa fa-calendar" aria-hidden="true" />{" "}
                           Apr 2023 - Jun 2023
                         </h6>
                         <h4 className="timeline-title">
@@ -187,14 +214,17 @@ function About() {
                             <span> Full stack devlopment intern </span>
                           </a>{" "}
                           <br />
-                          • Collaborating with cross-functional teams to design
-                          , develop , and deploy applications from end-to-end
-                          using node js and react js <br />• Responsibilities:
-                          Implementing databases , developing RESTful APIs ,
-                          deploying applications on cloud platform .{" "}
+                          • Collaborating with cross-functional teams to design,
+                          develop and deploy application from end-to-end using
+                          MERN.
+                          <br />
+                          • Managed database implementation and optimized
+                          RESTful API development for seamless integration .
+                          <br />• Deployed cloud applications using
+                          strategic deployment and efficient techniques.{" "}
                         </p>
                       </div>
-                      {/* Item 2 */}
+                      {/* Item 3 */}
                       <div className="timeline-item">
                         <div className="circle-dot" />
                         <h6 className="timeline-date">
@@ -212,12 +242,12 @@ function About() {
                             <span>Web Devlopment Intern</span>
                           </a>{" "}
                           <br />
-                          • In this internship I got opprtunity to perform
-                          different projects , test my skills , and learn new
-                          concepts
-                          <br />• I have completed this internship using
-                          frontend skills like html5 , css3 , javascript ,
-                          react.js and backend node.js , mongodb .
+                          • Actively engaged in projects, refining skills and
+                          experimenting with various concepts .<br />
+                          • Utilized HTML5, CSS3, JavaScript, Bootstrap for
+                          interactive, responsive user interfaces.
+                          <br />• Developed and maintained full stack components
+                          using React.js, Node.js, Express and MongoDB.{" "}
                         </p>
                       </div>
                     </div>

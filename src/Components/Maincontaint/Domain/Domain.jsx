@@ -1,5 +1,6 @@
 import React from "react";
 import "./Domain.css";
+import icpcc from "../../Assets/Certificates/icpc.jpg";
 
 function Domain() {
 
@@ -16,7 +17,7 @@ function Domain() {
               <div className="services-item padd-15">
                 <div className="service-item-inner">
                   <div className="icon"><i className="fa fa-desktop" aria-hidden="true" /></div>
-                  <h4>Full stack Web Development</h4>
+                  <h4>Full stack Development</h4>
                   <p><strong>Front End Development</strong></p>
                   <p>HTML, CSS, Javascript, Bootstrap, React</p>
                   <p><strong>Backend End Development</strong></p>
@@ -41,6 +42,7 @@ function Domain() {
                   <p> CodeChef : <a href="https://www.codechef.com/users/sanjeev662" target="_blank"><span className="outer-links">sanjeev662</span></a></p>
                   <p> CodeForces : <a href="https://codeforces.com/profile/sanjeev662" target="_blank"><span className="outer-links">sanjeev662</span></a></p>
                   <p> HackerRank : <a href="https://www.hackerrank.com/sanjeev662" target="_blank"><span className="outer-links">sanjeev662</span></a></p>
+                  <a href={icpcc} target="_blank"><span className="outer-links">ICPC Regionalist'2022</span></a>
                 </div>
               </div>
               

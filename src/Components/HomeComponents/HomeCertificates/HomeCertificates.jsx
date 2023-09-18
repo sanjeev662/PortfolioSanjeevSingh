@@ -5,7 +5,7 @@ import "./HomeCertificates.css";
 
 import risec from "../../Assets/Certificates/rise.png";
 import icpcc from "../../Assets/Certificates/icpc.jpg";
-import mernc from "../../Assets/Certificates/udemy.jpg";
+import multigradc from "../../Assets/Certificates/multigrad.png";
 
 
 function Certificates() {
@@ -23,10 +23,10 @@ function Certificates() {
       tagline : "ICPC 2022 Regionalist"
     },
     {
-      title : "Udemy",
-      imgUrl : mernc,
-      siteUrl : "https://www.udemy.com/",
-      tagline : "Web Development Bootcamp"
+      title : "Fightage Pvt Ltd (Multigrad)",
+      imgUrl : multigradc,
+      siteUrl : "https://multigrad.in/",
+      tagline : "Full Stack Development Intern"
     },
   ];
 
@@ -34,10 +34,10 @@ function Certificates() {
     <section
       className="certificate"
       data-aos="fade-left"
-      style={{ padding: "25px" , minHeight:"80vh" }}
+      style={{ padding: "25px", minHeight:"80vh" }}
     >
       <div className="container">
-        <div className="section-title" style={{height:"5px"}}>
+        <div className="section-title" style={{height:"5px",paddingLeft:"1rem"}}>
           <h2>Certificate</h2>
         </div>
 

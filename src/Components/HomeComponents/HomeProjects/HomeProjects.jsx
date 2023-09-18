@@ -47,7 +47,7 @@ function Projects() {
 
   return (
     <div>
-        <Container fluid className="project-section-h" style={{paddingTop:"0px"}}>
+        <Container fluid className="project-section-h">
         <Container>
           <Row>
             
@@ -56,7 +56,7 @@ function Projects() {
               className="project-description d-flex justify-content-start"
             >
               <div className="row">
-                <div className="section-title padd-15">
+                <div className="section-title mb-2">
                   <h2>Projects</h2>
                 </div>
               </div>
