@@ -75,12 +75,6 @@ function Certificates() {
       tagline : "Web Dev Contest"
     },
     {
-      title : "Flipkart",
-      imgUrl : flipc,
-      siteUrl : "https://www.flipkart.com/",
-      tagline : "FlipKart Grid-4.0 dev-challenge"
-    },
-    {
       title : "Codechef",
       imgUrl : codechefc,
       siteUrl : "https://www.codechef.com/",
