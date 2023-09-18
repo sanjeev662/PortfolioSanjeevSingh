@@ -11,7 +11,7 @@
   .certificate .row {
     display: flex;
     flex-wrap: wrap;
-    padding: 0 2rem;
+    padding: 0 1rem;
     justify-content: center;
     align-items: center;
   }
@@ -21,8 +21,7 @@
     flex: 25%;
     max-width: 25%;
     width: 100%;
-    margin-right: 2rem;
-    margin-top: 2rem;
+    margin: 2rem 1rem 0 1rem !important;
     padding: 1.2rem 1.7rem;
     align-self: normal !important;
     border-radius: 5px;

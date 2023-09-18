@@ -11,7 +11,7 @@
   .certificate .row {
     display: flex;
     flex-wrap: wrap;
-    padding: 0 2rem;
+    padding: 0 1rem;
     justify-content: center;
     align-items: center;
   }
