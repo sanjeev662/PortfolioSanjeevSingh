@@ -220,7 +220,8 @@ function About() {
                           <br />
                           • Managed database implementation and optimized
                           RESTful API development for seamless integration .
-                          <br />• Deployed cloud applications using
+                          <br />
+                          • Deployed cloud applications using
                           strategic deployment and efficient techniques.{" "}
                         </p>
                       </div>

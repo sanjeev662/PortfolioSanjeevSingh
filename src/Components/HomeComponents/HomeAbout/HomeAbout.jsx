@@ -213,11 +213,15 @@ function About() {
                           <span> Full stack devlopment intern </span>
                         </a>{" "}
                         <br />
-                        • Collaborating with cross-functional teams to design ,
-                        develop , and deploy applications from end-to-end using
-                        node js and react js <br />• Responsibilities:
-                        Implementing databases , developing RESTful APIs ,
-                        deploying applications on cloud platform .{" "}
+                          • Collaborating with cross-functional teams to design,
+                          develop and deploy application from end-to-end using
+                          MERN.
+                          <br />
+                          • Managed database implementation and optimized
+                          RESTful API development for seamless integration .
+                          <br />
+                          • Deployed cloud applications using
+                          strategic deployment and efficient techniques.{" "}
                       </p>
                     </div>
                   </div>
