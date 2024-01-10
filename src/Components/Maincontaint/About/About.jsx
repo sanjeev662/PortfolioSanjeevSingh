@@ -126,7 +126,7 @@ function About() {
                           Bachelor of Technology in Information Technology
                         </h4>
                         <p className="timeline-text">
-                          Currently, I am a Pre Final undergraduate at{" "}
+                          Currently, I am a Final-year undergraduate at{" "}
                           <a
                             href="http://csjmu.ac.in/school-of-engineering-and-technology"
                             target="_blank"
