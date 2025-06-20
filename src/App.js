@@ -1,4 +1,6 @@
 import './App.css';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Navbar from "./Components/Navbar/Navbar";
 import Home from "./Components/Maincontaint/Home/Home";
@@ -11,10 +13,19 @@ import Domain from "./Components/Maincontaint/Domain/Domain";
 import Projects from "./Components/Maincontaint/Projects/Projects";
 import Skills from "./Components/Maincontaint/Skills/Skills";
 
-import { HashRouter, Routes, Route, BrowserRouter } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
+// Scroll to top component
+function ScrollToTop() {
+  const { pathname } = useLocation();
 
- 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <div className="App">
@@ -24,20 +35,19 @@ function App() {
 
     {/* hashrouter can easily deal routing as well as page refreshing */}
     <HashRouter>
-    <Navbar/>
-      <Routes>
-        <Route >
-
-        <Route path="/" element={<Home/>}/>
-        <Route path="about" element={<About/>}/>
-        <Route path="certificates" element={<Certificates/>}/>
-        <Route path="contacts" element={<Contacts/>}/>
-        <Route path="domain" element={<Domain/>}/>
-        <Route path="projects" element={<Projects/>}/>
-        {/* <Route path="skills" element={<Skills/>} /> */}
-
-        </Route>
-      </Routes>
+      <ScrollToTop />
+      <Navbar/>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="about" element={<About/>}/>
+          <Route path="certificates" element={<Certificates/>}/>
+          <Route path="contacts" element={<Contacts/>}/>
+          <Route path="domain" element={<Domain/>}/>
+          <Route path="projects" element={<Projects/>}/>
+          {/* <Route path="skills" element={<Skills/>} /> */}
+        </Routes>
+      </main>
       <Footer/>
     </HashRouter>  
       

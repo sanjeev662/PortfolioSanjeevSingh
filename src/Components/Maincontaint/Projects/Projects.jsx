@@ -1,8 +1,7 @@
 import React from "react";
 import "./Projects.css";
 import ProjectCard from "./ProjectCard";
-
-import { Container, Row, Col } from "react-bootstrap";
+import { motion } from "framer-motion";
 
 import toletp from "../../Assets/Projects/to-let-mern-app.png";
 import amazonp from "../../Assets/Projects/amazon-app.png";
@@ -18,7 +17,6 @@ import feedbackp from "../../Assets/Projects/feedback-app.png";
 import heritagep from "../../Assets/Projects/heritage-app.png";
 import shoppingp from "../../Assets/Projects/shopping-app.png";
 import thankup from "../../Assets/Projects/thanku-app.png";
-
 
 function Projects(props) {
   const projectlist = [
@@ -133,46 +131,32 @@ function Projects(props) {
   ];
 
   return (
-    <div>
-      <Container fluid className="project-section ">
-        <Container>
-          <Row>
-            <Col
-              md={12}
-              className="project-description d-flex justify-content-start"
-              style={{height:"70px"}}
-            >
-              <div className="row">
-                <div className="section-title padd-15">
-                  <h2>Projects</h2>
-                </div>
-              </div>
-            </Col>
+    <div className="project-section">
+      <div className="container">
+        <motion.div 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2>My Projects</h2>
+          <p>Explore my latest work and creative solutions</p>
+        </motion.div>
 
-            <Col md={12} className="mt-3">
-              <Row className="g-4">
-                {projectlist.map((element) => {
-                  return (
-                    <Col md={3}>
-                      <ProjectCard
-                        title={element.title}
-                        imgUrl={element.imgUrl}
-                        demoUrl={element.demoUrl}
-                        codeUrl={element.codeUrl}
-                        description={element.description}
-                        skills={element.skills}
-                      />
-
-                      {/* here first title is for passing value as props and second
-                            title for extracting value from given array data */}
-                    </Col>
-                  );
-                })}
-              </Row>
-            </Col>
-          </Row>
-        </Container>
-      </Container>
+        <div className="projects-grid">
+          {projectlist.map((element, index) => (
+            <ProjectCard
+              key={index}
+              title={element.title}
+              imgUrl={element.imgUrl}
+              demoUrl={element.demoUrl}
+              codeUrl={element.codeUrl}
+              description={element.description}
+              skills={element.skills}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

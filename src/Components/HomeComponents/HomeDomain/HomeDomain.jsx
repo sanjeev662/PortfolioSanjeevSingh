@@ -1,59 +1,127 @@
 import React from "react";
 import "./HomeDomain.css";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaCode, FaDatabase, FaLaptopCode, FaExternalLinkAlt } from "react-icons/fa";
 import icpcc from "../../Assets/Certificates/icpc.jpg";
 
 function Domain() {
+  const domains = [
+    {
+      icon: <FaLaptopCode />,
+      title: "Full Stack Development",
+      description: "End-to-end web application development",
+      details: [
+        { label: "Front End Development", tech: "HTML, CSS, Javascript, Bootstrap, React" },
+        { label: "Backend Development", tech: "NodeJS, ExpressJS, SQL, MongoDB, APIs" }
+      ],
+      link: "https://github.com/sanjeev662",
+      linkText: "View Projects"
+    },
+    {
+      icon: <FaDatabase />,
+      title: "Data Structure and Algorithms",
+      description: "Problem solving and algorithmic thinking",
+      details: [
+        { label: "College-DSA Repo", link: "https://github.com/sanjeev662/DS-JAVA", linkText: "My Codes" },
+        { label: "College-OOPS Repo", link: "https://github.com/sanjeev662/OOPS-JAVA", linkText: "My Codes" },
+        { label: "Geeks-For-Geeks DSA", link: "https://auth.geeksforgeeks.org/user/sanjeev662", linkText: "My Profile" }
+      ]
+    },
+    {
+      icon: <FaCode />,
+      title: "Competitive Programming",
+      description: "Algorithm competitions and coding challenges",
+      details: [
+        { label: "CodeChef", link: "https://www.codechef.com/users/sanjeev662", linkText: "sanjeev662" },
+        { label: "CodeForces", link: "https://codeforces.com/profile/sanjeev662", linkText: "sanjeev662" },
+        { label: "HackerRank", link: "https://www.hackerrank.com/sanjeev662", linkText: "sanjeev662" },
+        { label: "ICPC Regionalist'2022", link: icpcc, linkText: "Certificate", isImage: true }
+      ]
+    }
+  ];
 
   return (
-        <section className="services section" id="Domain" style={{ padding: "0px" }}>
-          <div className="container" style={{ padding: "20px 10px" }}>
-            <div className="row">
-              <div className="section-title padd-15">
-                <h2>Domains</h2>
-              </div>
-            </div>
-            <div className="row">
+    <section className="domains-section">
+      <div className="container">
+        <motion.div 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2>Technical Domains</h2>
+          <p>Areas of expertise and specialization</p>
+        </motion.div>
 
-              <div className="services-item padd-15">
-                <div className="service-item-inner">
-                  <div className="icon"><i className="fa fa-desktop" aria-hidden="true" /></div>
-                  <h4>Full stack Development</h4>
-                  <p><strong>Front End Development</strong></p>
-                  <p>HTML, CSS, Javascript, Bootstrap, React</p>
-                  <p><strong>Backend End Development</strong></p>
-                  <p>NodeJS, ExpressJS, SQL, MongoDB, APIs </p>
-                  <a href="https://github.com/sanjeev662" target="_blank"><span className="outer-links">View Projects</span></a>
-                </div>
+        <div className="domains-grid">
+          {domains.map((domain, index) => (
+            <motion.div 
+              key={index}
+              className="domain-card"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+            >
+              <div className="domain-icon">
+                {domain.icon}
               </div>
+              <h3>{domain.title}</h3>
+              <p className="domain-description">{domain.description}</p>
+              
+              <div className="domain-details">
+                {domain.details.map((detail, detailIndex) => (
+                  <div key={detailIndex} className="detail-item">
+                    <strong>{detail.label}:</strong>
+                    {detail.link ? (
+                      <a 
+                        href={detail.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="domain-link"
+                      >
+                        {detail.linkText}
+                        {detail.isImage ? (
+                          <img src={detail.link} alt="Certificate" className="certificate-thumbnail" />
+                        ) : (
+                          <FaExternalLinkAlt />
+                        )}
+                      </a>
+                    ) : (
+                      <span>{detail.tech}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              {domain.link && (
+                <a 
+                  href={domain.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="domain-action-link"
+                >
+                  {domain.linkText} <FaExternalLinkAlt />
+                </a>
+              )}
+            </motion.div>
+          ))}
+        </div>
 
-              <div className="services-item padd-15">
-                <div className="service-item-inner">
-                  <div className="icon"><i className="fa fa-object-group" aria-hidden="true" /></div>
-                  <h4>Data Structure and Algorithms</h4>
-                  <p>College-DSA Repo : <a href="https://github.com/sanjeev662/DS-JAVA" target="_blank"><span className="outer-links">My Codes</span></a></p>
-                  <p>College-OPPS Repo : <a href="https://github.com/sanjeev662/OOPS-JAVA" target="_blank"><span className="outer-links">My Codes</span></a></p>
-                  <p>Geeks-For-Geeks DSA : <a href="https://auth.geeksforgeeks.org/user/sanjeev662" target="_blank"><span className="outer-links">My Profile</span></a></p>
-                </div>
-              </div>
-              <div className="services-item padd-15">
-                <div className="service-item-inner">
-                  <div className="icon"><i className="fa fa-code" aria-hidden="true" /></div>
-                  <h4>Competitive Programming</h4>
-                  <p> CodeChef : <a href="https://www.codechef.com/users/sanjeev662" target="_blank"><span className="outer-links">sanjeev662</span></a></p>
-                  <p> CodeForces : <a href="https://codeforces.com/profile/sanjeev662" target="_blank"><span className="outer-links">sanjeev662</span></a></p>
-                  <p> HackerRank : <a href="https://www.hackerrank.com/sanjeev662" target="_blank"><span className="outer-links">sanjeev662</span></a></p>
-                  <a href={icpcc} target="_blank"><span className="outer-links">ICPC Regionalist'2022</span></a>
-                </div>
-              </div>
-            </div>
-            <div className="row" style={{ justifyContent:"center" , padding:"50px" }} >               
-                  <Link to="/domain" className="btn" style={{ maxWidth:"100%" }}>View More Domains..</Link>
-            </div>
-          </div> 
-        </section>
-
-);
+        <motion.div 
+          className="view-more-section"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <Link to="/domain" className="btn btn-outline">
+            <FaCode /> View All Domains
+            <FaExternalLinkAlt />
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
 }
 
 export default Domain;

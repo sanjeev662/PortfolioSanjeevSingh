@@ -1,157 +1,215 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FaPaperPlane, FaExclamationCircle } from "react-icons/fa";
 import "./Form.css";
 import { validateEmail, validateText } from "../../utils/helpers";
 
 function Form() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        message: ""
+    });
 
-    const [errorName, setErrorName] = useState("");
-    const [errorEmail, setErrorEmail] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errors, setErrors] = useState({
+        name: "",
+        email: "",
+        message: ""
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleInputChange = (e) => {
-        const { target } = e;
-        const inputType = target.name;
-        const inputValue = target.value;
+        const { name, value } = e.target;
+        
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
 
-        if (inputType === "name") {
-            setName(inputValue);
-            if (!validateText(inputValue)) {
-                setErrorName("Please enter a name.");
-                document.querySelector("#name-form").style.borderColor = "red";
-            } else {
-                setErrorName("");
-                document.querySelector("#name-form").style.borderColor =
-                    "#ced4da";
-            }
-        } else if (inputType === "email") {
-            setEmail(inputValue);
-            if (!validateEmail(inputValue)) {
-                setErrorEmail("Please enter a valid email.");
-                document.querySelector("#email-form").style.borderColor = "red";
-            } else {
-                setErrorEmail("");
-                document.querySelector("#email-form").style.borderColor =
-                    "#ced4da";
-            }
-        } else {
-            setMessage(inputValue);
-            if (!validateText(inputValue)) {
-                setErrorMessage("Please leave a message.");
-                document.querySelector("#message-form").style.borderColor =
-                    "red";
-            } else {
-                setErrorMessage("");
-                document.querySelector("#message-form").style.borderColor =
-                    "#ced4da";
-            }
+        // Clear error when user starts typing
+        if (errors[name]) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: ""
+            }));
         }
     };
 
-    const handleFormSubmit = (e) => {
-        // Preventing the default behavior of the form submit (which is to refresh the page)
+    const validateField = (name, value) => {
+        let error = "";
+        
+        if (name === "name") {
+            if (!validateText(value)) {
+                error = "Please enter a valid name.";
+            }
+        } else if (name === "email") {
+            if (!validateEmail(value)) {
+                error = "Please enter a valid email address.";
+            }
+        } else if (name === "message") {
+            if (!validateText(value)) {
+                error = "Please enter a message.";
+            }
+        }
+        
+        return error;
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        const error = validateField(name, value);
+        
+        setErrors(prev => ({
+            ...prev,
+            [name]: error
+        }));
+    };
+
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
-        let error = false;
-        // First we check to see if the email is not valid or if the userName is empty. If so we set an error message to be displayed on the page.
-        if (!validateText(name)) {
-            setErrorName(`Please enter a name.`);
-            error = true;
-            document.querySelector("#name-form").style.borderColor = "red";
-        }
+        // Validate all fields
+        const newErrors = {};
+        Object.keys(formData).forEach(key => {
+            const error = validateField(key, formData[key]);
+            if (error) {
+                newErrors[key] = error;
+            }
+        });
 
-        if (!validateEmail(email)) {
-            setErrorEmail("Please enter a valid email.");
-            error = true;
-            document.querySelector("#email-form").style.borderColor = "red";
-        }
-        if (!validateText(message)) {
-            setErrorMessage(`Please leave a message.`);
-            error = true;
-            document.querySelector("#message-form").style.borderColor = "red";
-        }
-
-        if (error) {
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            setIsSubmitting(false);
             return;
         }
 
-        window.open(
-            `mailto:singhsksingh662@gmail.com?subject=${name}&body=${message} %0d%0a%0d%0aName: ${name} %0d%0aEmail: ${email}`
-        );
-        setName("");
-        setEmail("");
-        setMessage("");
-        alert("Email generated");
+        try {
+            // Open email client with pre-filled data
+            const subject = `Portfolio Contact from ${formData.name}`;
+            const body = `${formData.message}\n\nName: ${formData.name}\nEmail: ${formData.email}`;
+            
+            window.open(
+                `mailto:sanjeevsinghkaushik662@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+            );
+
+            // Reset form
+            setFormData({
+                name: "",
+                email: "",
+                message: ""
+            });
+            
+            alert("Email client opened successfully!");
+        } catch (error) {
+            alert("There was an error. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
-        <div className="ms-3 me-3">
-            <form className="form">
-                <label className="form-label">Name</label>
-                {errorName && (
-                    <span className="error-text">
-                        &nbsp;&nbsp;
-                        <i className="fas fa-exclamation-circle"></i>
-                        &nbsp;{errorName}
-                    </span>
-                )}
-                <input
-                    id="name-form"
-                    className="form-control"
-                    value={name}
-                    name="name"
-                    onChange={handleInputChange}
-                    onMouseLeave={handleInputChange}
-                    type="text"
-                />
+        <div className="contact-form">
+            <h3>Send Message</h3>
+            <form onSubmit={handleFormSubmit} className="form">
+                <div className="form-group">
+                    <label htmlFor="name" className="form-label">
+                        Name *
+                    </label>
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        className={`form-input ${errors.name ? 'error' : ''}`}
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="Your full name"
+                        required
+                    />
+                    {errors.name && (
+                        <motion.div 
+                            className="error-message"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <FaExclamationCircle />
+                            {errors.name}
+                        </motion.div>
+                    )}
+                </div>
 
-                <label className="form-label mt-2">Email</label>
+                <div className="form-group">
+                    <label htmlFor="email" className="form-label">
+                        Email *
+                    </label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        className={`form-input ${errors.email ? 'error' : ''}`}
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="your.email@example.com"
+                        required
+                    />
+                    {errors.email && (
+                        <motion.div 
+                            className="error-message"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <FaExclamationCircle />
+                            {errors.email}
+                        </motion.div>
+                    )}
+                </div>
 
-                {errorEmail && (
-                    <span className="error-text">
-                        &nbsp;&nbsp;
-                        <i className="fas fa-exclamation-circle"></i>
-                        &nbsp;
-                        {errorEmail}
-                    </span>
-                )}
-                <input
-                    id="email-form"
-                    className="form-control"
-                    value={email}
-                    name="email"
-                    onChange={handleInputChange}
-                    onMouseLeave={handleInputChange}
-                    type="email"
-                />
-                <label className="form-label mt-2">Message</label>
-                {errorMessage && (
-                    <span className="error-text">
-                        &nbsp;&nbsp;
-                        <i className="fas fa-exclamation-circle"></i>
-                        &nbsp;{errorMessage}
-                    </span>
-                )}
+                <div className="form-group">
+                    <label htmlFor="message" className="form-label">
+                        Message *
+                    </label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        className={`form-input ${errors.message ? 'error' : ''}`}
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="Tell me about your project or opportunity..."
+                        rows="5"
+                        required
+                    />
+                    {errors.message && (
+                        <motion.div 
+                            className="error-message"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <FaExclamationCircle />
+                            {errors.message}
+                        </motion.div>
+                    )}
+                </div>
 
-                <textarea
-                    id="message-form"
-                    className="form-control"
-                    value={message}
-                    name="message"
-                    onChange={handleInputChange}
-                    onMouseLeave={handleInputChange}
-                    type="text"
-                />
-                <button
-                    className="btn mt-3"
+                <motion.button
                     type="submit"
-                    onClick={handleFormSubmit}
+                    className="submit-btn"
+                    disabled={isSubmitting}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                 >
-                    <i className="far fa-paper-plane"></i>&nbsp;&nbsp;Create
-                    Message
-                </button>
+                    {isSubmitting ? (
+                        <div className="loading-spinner"></div>
+                    ) : (
+                        <>
+                            <FaPaperPlane />
+                            Send Message
+                        </>
+                    )}
+                </motion.button>
             </form>
         </div>
     );

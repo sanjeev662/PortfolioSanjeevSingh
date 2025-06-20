@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaCode, FaExternalLinkAlt } from "react-icons/fa";
 import "./HomeProjects.css";
 import ProjectCard from "./HomeProjectCard";
-
-import { Container, Row, Col } from "react-bootstrap";
 
 import amazonp from "../../Assets/Projects/amazon-app.png";
 import chatp from "../../Assets/Projects/chat-app.png";
@@ -44,55 +44,54 @@ function Projects() {
     },    
   ];
 
-
   return (
-    <div>
-        <Container fluid className="project-section-h">
-        <Container>
-          <Row>
-            
-            <Col
-              md={12}
-              className="project-description d-flex justify-content-start"
+    <section className="home-projects-section">
+      <div className="container">
+        <motion.div 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2>Featured Projects</h2>
+          <p>Showcasing my best work and technical expertise</p>
+        </motion.div>
+
+        <div className="projects-grid">
+          {projectlist.map((element, index) => (
+            <motion.div 
+              key={index}
+              className="project-item"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
             >
-              <div className="row">
-                <div className="section-title mb-2">
-                  <h2>Projects</h2>
-                </div>
-              </div>
-            </Col>
+              <ProjectCard
+                title={element.title}
+                imgUrl={element.imgUrl}
+                uTubeUrl={element.uTubeUrl}
+                demoUrl={element.demoUrl}
+                codeUrl={element.codeUrl}
+                description={element.description}
+                skills={element.skills}
+              />
+            </motion.div>
+          ))}
+        </div>
 
-            <Col md={12} className="mt-3">
-              <Row className="g-4">
-                {projectlist.map((element) => {
-                  return (
-                    <Col md={4}>
-                      <ProjectCard
-                        title={element.title}
-                        imgUrl={element.imgUrl}
-                        uTubeUrl={element.uTubeUrl}
-                        demoUrl={element.demoUrl}
-                        codeUrl={element.codeUrl}
-                        description={element.description}
-                        skills={element.skills}
-                      />
-
-                      {/* here first title is for passing value as props and second
-                            title for extracting value from given array data */}
-                    </Col>
-                  );
-                })}
-              </Row>
-            </Col>
-
-
-          </Row>
-          </Container>
-        <Row className="row" style={{ justifyContent:"center" , padding:"50px" }} >               
-                  <Link to="/projects" className="btn" style={{ maxWidth:"87%" }}>View More Projects..</Link>
-        </Row>
-        </Container>
-    </div>
+        <motion.div 
+          className="view-more-section"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <Link to="/projects" className="btn btn-outline">
+            <FaCode /> View All Projects
+            <FaExternalLinkAlt />
+          </Link>
+        </motion.div>
+      </div>
+    </section>
   );
 }
 
