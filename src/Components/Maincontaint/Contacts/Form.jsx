@@ -51,7 +51,7 @@ function Form() {
     };
 
     const handleFormSubmit = (e) => {
-        // Preventing the default behavior of the form submit (which is to refresh the page)
+        //// Preventing the default behavior of the form submit (which is to refresh the page)
         e.preventDefault();
 
         let error = false;
