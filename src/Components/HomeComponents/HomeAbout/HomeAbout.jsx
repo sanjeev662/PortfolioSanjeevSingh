@@ -18,11 +18,7 @@ function About() {
                 I'm Sanjeev Singh and <span> Potential Learner (^_^)</span>
               </h3>
               <p>
-                Hi! My name is Sanjeev Singh. I'm a very dedicated and
-                hardworking person who always thrives working on end-to-end
-                products. With my experience and knowledge, I learn many skills
-                and make many successful projects. I enjoyed every step of
-                creation, learning, development, and collaboration.
+                Hi! My name is Sanjeev Singh. I'm a passionate Full Stack Developer with expertise in JavaScript, Java, React.js, Node.js, and Spring Boot. I have a strong foundation in Data Structures and Algorithms, and I'm continuously learning and enthusiastic about Open Source development. I enjoy working on end-to-end products and collaborating with teams to build innovative solutions.
               </p>
             </div>
           </div>
@@ -31,7 +27,7 @@ function About() {
               <div className="row">
                 <div className="info-item padd-15">
                   <p>
-                    Degree Persuing: <span> B-Tech I.T </span>
+                    Degree: <span> B-Tech Information Technology </span>
                   </p>
                 </div>
                 <div className="info-item padd-15">
@@ -41,12 +37,12 @@ function About() {
                 </div>
                 <div className="info-item padd-15">
                   <p>
-                    Age: <span> 21 </span>
+                    Age: <span> 23 </span>
                   </p>
                 </div>
                 <div className="info-item padd-15">
                   <p>
-                    City: <span> Ballia (U.P) </span>
+                    City: <span> New Delhi, India </span>
                   </p>
                 </div>
                 <div className="info-item padd-15">
@@ -56,7 +52,7 @@ function About() {
                 </div>
                 <div className="info-item padd-15">
                   <p>
-                    Job / Intern: <span> Available </span>
+                    Current Role: <span> Software Development Engineer (SDE) </span>
                   </p>
                 </div>
               </div>
@@ -82,27 +78,27 @@ function About() {
             <div className="skills padd-15">
               <div className="row">
                 <div className="skill-items padd-15">
-                  <h5>Front End (React, Bootstrap, Javascript, ...)</h5>
+                  <h5>Frontend (React.js, Next.js, TypeScript, MUI)</h5>
+                  <div className="progress">
+                    <div className="progress-in" style={{ width: "90%" }} />
+                  </div>
+                </div>
+                <div className="skill-items padd-15">
+                  <h5>Backend (Node.js, Spring Boot, MySQL, MongoDB)</h5>
+                  <div className="progress">
+                    <div className="progress-in" style={{ width: "88%" }} />
+                  </div>
+                </div>
+                <div className="skill-items padd-15">
+                  <h5>Data Structures & Algorithms (Java)</h5>
                   <div className="progress">
                     <div className="progress-in" style={{ width: "85%" }} />
                   </div>
                 </div>
                 <div className="skill-items padd-15">
-                  <h5>Back End (NodeJs, Express, SQL, MongoDB, ...)</h5>
-                  <div className="progress">
-                    <div className="progress-in" style={{ width: "82%" }} />
-                  </div>
-                </div>
-                <div className="skill-items padd-15">
-                  <h5>Data Structure and Algorithm (Java)</h5>
-                  <div className="progress">
-                    <div className="progress-in" style={{ width: "82%" }} />
-                  </div>
-                </div>
-                <div className="skill-items padd-15">
                   <h5>Competitive Programming (Java)</h5>
                   <div className="progress">
-                    <div className="progress-in" style={{ width: "83%" }} />
+                    <div className="progress-in" style={{ width: "82%" }} />
                   </div>
                 </div>
               </div>
@@ -118,44 +114,40 @@ function About() {
                     <div className="timeline-item">
                       <div className="circle-dot" />
                       <h6 className="timeline-date">
-                        <i className="fa fa-calendar" aria-hidden="true" /> 2020
-                        - Present
+                        <i className="fa fa-calendar" aria-hidden="true" /> November 2020 – June 2024
                       </h6>
                       <h4 className="timeline-title">
                         Bachelor of Technology in Information Technology
                       </h4>
                       <p className="timeline-text">
-                        Currently, I am a Final-year undergraduate at{" "}
+                        Graduated from{" "}
                         <a
                           href="http://csjmu.ac.in/school-of-engineering-and-technology"
                           target="_blank"
                         >
-                          <span>UIET CSJM University Kanpur</span>
+                          <span>Chhatrapati Shahu Ji Maharaj University, Kanpur</span>
                         </a>{" "}
-                        , here I am studying Information Technology to pursuing
-                        my technical degree in the subject of Engineering.{" "}
+                        with strong foundation in Data Structures, Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems, and Computer Networks.
                       </p>
                     </div>
                     {/* Item 2 */}
                     <div className="timeline-item">
                       <div className="circle-dot" />
                       <h6 className="timeline-date">
-                        <i className="fa fa-calendar" aria-hidden="true" /> 2012
-                        - 2019
+                        <i className="fa fa-calendar" aria-hidden="true" /> 2012 - 2019
                       </h6>
                       <h4 className="timeline-title">
                         Primary and Secondary Education
                       </h4>
                       <p className="timeline-text">
-                        I have completed all my higher and secondary from{" "}
+                        Completed higher and secondary education from{" "}
                         <a href="https://nagajimaldepur.in/" target="_blank">
                           <span>
                             Naga Ji Saraswati Vidya Mandir Senior Secondary
                             School, Maldepur - Ballia
                           </span>
                         </a>{" "}
-                        through CBSE Board with my subjects of P.C.M &amp;
-                        Sanskrit.{" "}
+                        through CBSE Board with subjects P.C.M &amp; Sanskrit.
                       </p>
                     </div>
                   </div>
@@ -171,27 +163,19 @@ function About() {
                     <div className="timeline-item">
                       <div className="circle-dot" />
                       <h6 className="timeline-date">
-                        <i className="fa fa-calendar" aria-hidden="true" /> Jul
-                        2023 - Sep 2023
+                        <i className="fa fa-calendar" aria-hidden="true" /> July 2024 – Present
                       </h6>
                       <h4 className="timeline-title">
-                        Fightage Pvt Ltd (Multigrad)
+                        Namekart Private Limited - Software Development Engineer (SDE)
                       </h4>
                       <p className="timeline-text">
-                        <a
-                          href="https://drive.google.com/file/d/1pnetigvEpF4VFIMCwEWomPMKii3Y8rxS/view?usp=drive_link"
-                          target="_blank"
-                        >
-                          <span> Full stack devlopment intern </span>
-                        </a>{" "}
-                        <br />
-                        • Contributing to the domain of full stack web
-                        development as a proactive intern .<br />
-                        • Taking charge of Node.js and React.js projects,
-                        showcasing skills in both frontend and backend
-                        technologies.
-                        <br />• Collaborating within a team to build and enhance
-                        web applications using Figma .{" "}
+                        <span>Noida, India</span><br />
+                        • Integrated AI-powered assistant using NLP, enabling natural language queries and real-time reports, reducing manual analysis time by 50%<br />
+                        • Developed Mailing system for bulk email management and marketing campaigns, achieving 60% increase in customer engagement<br />
+                        • Created location tracking system with 99% accuracy, monitoring 100+ daily user movements across 10+ cities<br />
+                        • Built data scraping system using puppeteer and cheerio with frontend visualization for operational analysis<br />
+                        • Redesigned main dashboard using microfrontend architecture for seamless integration of applications<br />
+                        • Tech: Java, Spring Boot, JPA, Microfrontend Architecture, React, Node.js, SQL
                       </p>
                     </div>
 
@@ -199,29 +183,19 @@ function About() {
                     <div className="timeline-item">
                       <div className="circle-dot" />
                       <h6 className="timeline-date">
-                        <i className="fa fa-calendar" aria-hidden="true" /> Apr
-                        2023 - Jun 2023
+                        <i className="fa fa-calendar" aria-hidden="true" /> November 2023 – June 2024
                       </h6>
                       <h4 className="timeline-title">
-                        Rise Higher Education Inc
+                        Rydeu Logistics India Pvt. Ltd. - Backend Developer Intern
                       </h4>
                       <p className="timeline-text">
-                        <a
-                          href="https://drive.google.com/file/d/11-jxusAkYH0Laxa4OXAXfuSmHCXtVNJU/view"
-                          target="_blank"
-                        >
-                          <span> Full stack devlopment intern </span>
-                        </a>{" "}
-                        <br />
-                          • Collaborating with cross-functional teams to design,
-                          develop and deploy application from end-to-end using
-                          MERN.
-                          <br />
-                          • Managed database implementation and optimized
-                          RESTful API development for seamless integration .
-                          <br />
-                          • Deployed cloud applications using
-                          strategic deployment and efficient techniques.{" "}
+                        <span>Bengaluru, India (Remote)</span><br />
+                        • Optimized 20+ critical APIs, reducing average response time from 2s to 1.2s, improving performance by 40%<br />
+                        • Engineered KeyCloak authentication system, enhancing security for 100+ users, reducing unauthorized access by 95%<br />
+                        • Designed international bank account system, managing 1000+ accounts across 10+ countries with 100% accuracy<br />
+                        • Developed automated vendor offer feature, reducing manual effort by 70% and increasing participation by 35%<br />
+                        • Integrated Freshwork CRM for customer interaction and email marketing, resulting in 30% increase in lead conversions<br />
+                        • Tech: Node.js, PostgreSQL, Sequelize, GitLab, Next.js, Redux, TypeScript, Material UI, Zoho CRM
                       </p>
                     </div>
                   </div>
