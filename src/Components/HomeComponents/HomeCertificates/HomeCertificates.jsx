@@ -3,31 +3,31 @@ import { Link } from "react-router-dom";
 import CertificateCard from "./HomeCertificateCard";
 import "./HomeCertificates.css";
 
-import risec from "../../Assets/Certificates/rise.png";
 import icpcc from "../../Assets/Certificates/icpc.jpg";
-import multigradc from "../../Assets/Certificates/multigrad.png";
+import namekart_Internc from "../../Assets/Certificates/namekart_intern.png";
+import rydeu_internc from "../../Assets/Certificates/rydeu_intern.png";
 
 
 function Certificates() {
   const certificatelist = [
     {
-      title : "Rise Higher Education Inc",
-      imgUrl : risec,
-      siteUrl : "https://www.risehighereducation.com/",
-      tagline : "Full Stack Development intern"
+      title : "Namekart Pvt. Ltd",
+      imgUrl : namekart_Internc,
+      siteUrl : "https://www.namekart.com/",
+      tagline : "SDE Intern"
+    },
+    {
+      title : "Rydeu Logistics India Pvt. Ltd",
+      imgUrl : rydeu_internc,
+      siteUrl : "https://www.rydeu.com/",
+      tagline : "Backend Development intern"
     },
     {
       title : "ACM-ICPC",
       imgUrl : icpcc,
       siteUrl : "https://icpc.global/",
       tagline : "ICPC 2022 Regionalist"
-    },
-    {
-      title : "Fightage Pvt Ltd (Multigrad)",
-      imgUrl : multigradc,
-      siteUrl : "https://multigrad.in/",
-      tagline : "Full Stack Development Intern"
-    },
+    }
   ];
 
   return (

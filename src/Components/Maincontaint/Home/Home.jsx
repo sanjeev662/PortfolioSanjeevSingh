@@ -21,7 +21,7 @@ function Home() {
           wrapper="h1"
           repeat={10}
         />
-        <h5>Full-Stack Developer</h5>
+        <h5>Software Development Engineer (SDE) | Java | JavaScript</h5>
       </div>
 
       <HomeAbout />

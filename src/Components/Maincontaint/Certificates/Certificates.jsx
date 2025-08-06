@@ -4,6 +4,9 @@ import "./Certificates.css";
 import { Container, Row, Col } from "react-bootstrap";
 
 import multigradc from "../../Assets/Certificates/multigrad.png"
+import namekart_Internc from "../../Assets/Certificates/namekart_intern.png";
+import rydeu_internc from "../../Assets/Certificates/rydeu_intern.png";
+import iitk_mlc from "../../Assets/Certificates/iitk_ml.png";
 
 import risec from "../../Assets/Certificates/rise.png";
 import icpcc from "../../Assets/Certificates/icpc.jpg";
@@ -26,10 +29,16 @@ function Certificates() {
 
   const certificatelist=[
     {
-      title : "Fightage Pvt Ltd (Multigrad)",
-      imgUrl : multigradc,
-      siteUrl : "https://multigrad.in/",
-      tagline : "Full Stack Development Intern"
+      title : "Namekart Pvt. Ltd",
+      imgUrl : namekart_Internc,
+      siteUrl : "https://www.namekart.com/",
+      tagline : "SDE Intern"
+    },
+    {
+      title : "Rydeu Logistics India Pvt. Ltd",
+      imgUrl : rydeu_internc,
+      siteUrl : "https://www.rydeu.com/",
+      tagline : "Backend Development intern"
     },
     {
       title : "ACM-ICPC",
@@ -38,10 +47,10 @@ function Certificates() {
       tagline : "ICPC 2022 Regionalist"
     },
     {
-      title : "Rise Higher Education Inc",
-      imgUrl : risec,
-      siteUrl : "https://www.risehighereducation.com/",
-      tagline : "Full Stack Development intern"
+      title : "IIT Kanpur",
+      imgUrl : iitk_mlc,
+      siteUrl : "https://www.iitk.ac.in/",
+      tagline : "Machine Learning Course"
     },
     {
       title : "Udemy",
@@ -50,10 +59,28 @@ function Certificates() {
       tagline : "Web Development Bootcamp"
     },
     {
+      title : "ISRO",
+      imgUrl : isro,
+      siteUrl : "https://www.isro.gov.in/",
+      tagline : "Machine Learning"
+    },
+    {
+      title : "Rise Higher Education Inc",
+      imgUrl : risec,
+      siteUrl : "https://www.risehighereducation.com/",
+      tagline : "Full Stack Development intern"
+    },
+    {
       title : "The Sparks Foundation",
       imgUrl : tsfc,
       siteUrl : "https://www.thesparksfoundationsingapore.org/",
       tagline : "Web Development & Designing Intern"
+    },
+    {
+      title : "Fightage Pvt Ltd (Multigrad)",
+      imgUrl : multigradc,
+      siteUrl : "https://multigrad.in/",
+      tagline : "Full Stack Development Intern"
     },
     {
       title : "UNICompiler",
@@ -91,13 +118,7 @@ function Certificates() {
       imgUrl : uiet,
       siteUrl : "http://csjmu.ac.in/",
       tagline : "Internet of Things(IOT)"
-    },   
-    {
-      title : "ISRO",
-      imgUrl : isro,
-      siteUrl : "https://www.isro.gov.in/",
-      tagline : "Machine Learning"
-    },
+    }
   ]
 
 
