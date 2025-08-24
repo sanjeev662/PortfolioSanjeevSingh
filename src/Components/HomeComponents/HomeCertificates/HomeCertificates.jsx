@@ -76,7 +76,7 @@ function Certificates() {
           </motion.div>
 
           {/* Certificates Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2">
             {certificatelist.map((certificate, index) => (
               <motion.div key={certificate.title} variants={itemVariants}>
                 <CertificateCard

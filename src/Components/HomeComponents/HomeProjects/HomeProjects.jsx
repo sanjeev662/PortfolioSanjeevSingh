@@ -101,7 +101,7 @@ function HomeProjects() {
           {/* Projects Grid */}
           <motion.div
             variants={containerVariants}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2"
           >
             {projectlist.map((project, index) => (
               <motion.div
@@ -117,7 +117,7 @@ function HomeProjects() {
 
           {/* View More Button */}
           <motion.div variants={itemVariants} className="text-center">
-            <Button variant="outline" size="lg" className="group" asChild>
+            <Button variant="gradient" size="lg" className="group" asChild>
               <Link to="/projects">
                 View All Projects
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

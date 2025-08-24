@@ -49,7 +49,7 @@ function Contacts() {
           </motion.div>
 
           {/* Contact Form */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={itemVariants} className="p-2">
             <Form />
           </motion.div>
         </motion.div>

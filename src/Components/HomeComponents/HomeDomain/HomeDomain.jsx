@@ -105,7 +105,7 @@ function HomeDomain() {
           </motion.div>
 
           {/* Domains Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2">
             {domains.map((domain, index) => (
               <motion.div key={domain.title} variants={itemVariants}>
                 <GlassCard className="h-full p-6 group hover:scale-105 transition-all duration-300">
