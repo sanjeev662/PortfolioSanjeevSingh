@@ -1,4 +1,4 @@
-# 🚀 Portfolio - Sanjeev Singh
+# 🚀 Portfolio - Sanjeev Kumar Singh
 
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.2-purple.svg)](https://getbootstrap.com/)
@@ -6,44 +6,43 @@
 
 ## 📋 Overview
 
-This is my **personal portfolio website** built with React.js, showcasing my professional journey, technical skills, projects, and achievements. The portfolio serves as a comprehensive digital resume reflecting my accomplishments and expertise in software development.
+This is my **personal portfolio website** built with React.js, showcasing my professional journey as a **Full Stack Developer** specializing in **JavaScript** and **Java**. The portfolio serves as a comprehensive digital resume reflecting my accomplishments and expertise in software development.
 
-**🔗 [View My Resume](https://drive.google.com/file/d/your-resume-link/view)** *(Please update this link with your actual resume URL)*
+**🔗 [View My Resume](https://drive.google.com/file/d/1owTJHwvsvIn8PpVRFsKLpSqQIarMIKe9/view)** | **🌐 [Live Portfolio](https://portfolio-sanjeev-singh.vercel.app/)** | **🌐 [Live Portfolio-Stage](https://portfolio-sanjeev-singh-stage.vercel.app/)**
 
 ## 👨‍💻 About Me - The Heart of This Portfolio ⭐
 
-**This portfolio is designed around my personal and professional story.** The "About Me" section is the cornerstone, providing visitors with:
+**This portfolio is designed around my personal and professional story.** I'm **Sanjeev Kumar Singh**, a passionate Full Stack Developer based in **Noida, India**, with expertise in modern web technologies and a strong foundation in competitive programming.
 
-- 🎓 **Educational Background** & Academic journey
-- 💼 **Professional Experience** & Career milestones  
-- 🌟 **Personal Values** & What drives me as a developer
-- 🎯 **Career Objectives** & Future aspirations
-- 🏆 **Key Achievements** & Notable accomplishments
+- 🎓 **Education**: B.Tech in Information Technology 
+- 💼 **Role**: Software Development Engineer (SDE)
+- 🌟 **Specialization**: Full Stack Development with JavaScript, Java, React.js, and Spring Boot
+- 🏆 **Achievements**: Competitive Programming & Professional Certifications
+- 💡 **Passion**: Problem-Solving & Building Innovative Solutions
 
 ## 🏗️ Portfolio Architecture
 
 This portfolio follows a **strategic two-tier information structure**:
 
 ### 🏠 Home Page - Quick Overviews
-- **Condensed previews** of each major section
-- **Interactive cards** with snapshot information
+- **Professional introduction** with animated typing effects
+- **Interactive preview cards** for each major section
+- **Key highlights** of achievements and skills
 - **Call-to-action buttons** directing to detailed sections
 
 ### 📄 Dedicated Pages - Comprehensive Details
-- **About**: Complete professional and personal story
-- **Projects**: In-depth project showcases with technical details
-- **Certificates**: Full certification gallery
-- **Domain Expertise**: Comprehensive skill breakdowns
-- **Contact**: Multiple ways to connect
-
-**Navigation Flow:** Home Overviews → Click for Details → Deep Dive Content
+- **About**: Complete professional journey and personal story
+- **Projects**: Featured full-stack applications and technical showcases
+- **Certificates**: Professional certifications and competitive programming achievements
+- **Domain Expertise**: Technical skills and areas of specialization
+- **Contact**: Professional contact form and social media links
 
 ## ✨ Key Features
 
 - **🏠 Home Section**: Professional introduction with animated typing effects
 - **👨‍💻 About Me**: Detailed background, education, and career journey ⭐ *FEATURED*
-- **💼 Projects**: Showcase of applications with live demos and code repositories
-- **🏆 Certificates**: Professional certifications from leading companies and institutions
+- **💼 Projects**: Showcase of full-stack applications with live demos
+- **🏆 Certificates**: Professional certifications and competitive programming achievements
 - **🎯 Domain Expertise**: Technical skills and areas of specialization
 - **📞 Contact**: Professional contact form and social media links
 - **📱 Responsive Design**: Optimized for all device sizes
@@ -61,15 +60,15 @@ This portfolio follows a **strategic two-tier information structure**:
 PortfolioSanjeevSingh/
 ├── src/Components/
 │   ├── HomeComponents/     # Home page overview components
-│   │   ├── HomeAbout/      # About preview
-│   │   ├── HomeProjects/   # Projects preview
-│   │   └── HomeCertificates/ # Certificates preview
+│   │   ├── HomeAbout/      # Professional introduction preview
+│   │   ├── HomeProjects/   # Featured projects preview
+│   │   └── HomeCertificates/ # Achievements preview
 │   ├── Maincontaint/       # Detailed page components
-│   │   ├── About/          # Complete About section ⭐
-│   │   ├── Projects/       # Detailed projects portfolio
-│   │   ├── Certificates/   # Full certificates showcase
-│   │   └── Contacts/       # Contact form and info
-│   └── Assets/             # Images, certificates, project screenshots
+│   │   ├── About/          # Complete professional story ⭐
+│   │   ├── Projects/       # Detailed project showcases
+│   │   ├── Certificates/   # Full achievements gallery
+│   │   └── Contacts/       # Professional contact form
+│   └── Assets/             # Project screenshots, certificates
 ```
 
 ## 🚀 Getting Started
@@ -79,7 +78,7 @@ PortfolioSanjeevSingh/
 
 ### Installation
 ```bash
-git clone https://github.com/your-username/PortfolioSanjeevSingh.git
+git clone https://github.com/sanjeev662/PortfolioSanjeevSingh.git
 cd PortfolioSanjeevSingh
 npm install
 npm start
@@ -94,17 +93,21 @@ Navigate to `http://localhost:3000` to view the portfolio.
 
 ## 🎯 Design Philosophy
 
-- **User-Centric**: Easy navigation between overview and detailed content
-- **Progressive Disclosure**: Information revealed based on user interest
-- **Professional Aesthetics**: Clean, modern design reflecting technical expertise
-- **Performance Optimized**: Fast loading with smooth interactions
+- **Professional Showcase**: Highlighting technical expertise and professional journey
+- **User-Centric Navigation**: Easy transition from overviews to detailed information
+- **Performance Optimized**: Fast loading with smooth animations using Framer Motion
+- **Responsive Design**: Optimized for all devices and screen sizes
 
-## 📞 Contact
+## 📞 Contact Information
 
-- **📧 Email**: [your-email@example.com](mailto:your-email@example.com)
-- **💼 LinkedIn**: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
-- **🐙 GitHub**: [Your GitHub Profile](https://github.com/your-username)
-- **🌐 Portfolio**: [Live Portfolio Link](https://your-portfolio-url.com)
+**Let's connect for collaboration opportunities!**
+
+- **📧 Email**: [sanjeevsinghkaushik662@gmail.com](mailto:sanjeevsinghkaushik662@gmail.com)
+- **📱 Phone**: +91-9506009121
+- **💼 LinkedIn**: [linkedin.com/in/sanjeev662](https://www.linkedin.com/in/sanjeev662/)
+- **🐙 GitHub**: [github.com/sanjeev662](https://github.com/sanjeev662)
+- **🌐 Portfolio**: [portfolio-sanjeev-singh.vercel.app](https://portfolio-sanjeev-singh.vercel.app/)
+- **📍 Location**: Noida, India
 
 ## 📄 License
 
@@ -114,6 +117,6 @@ This project is licensed under the MIT License.
 
 **⭐ If you found this portfolio helpful or inspiring, please consider giving it a star!**
 
-*This portfolio represents my journey as a software developer - from quick overviews to detailed deep-dives.*
+*This portfolio represents my journey as a full-stack developer, showcasing technical skills and professional growth through an intuitive user experience.*
 
 *Last updated: August 2025*
