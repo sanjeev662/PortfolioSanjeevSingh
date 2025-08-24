@@ -14,7 +14,7 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
       <GlassCard className="overflow-hidden h-full">
         <div className="relative">
           {/* Certificate Image */}
-          <div className="aspect-[4/3] overflow-hidden">
+          <div className="aspect-[3/2] overflow-hidden">
             <img 
               src={imgUrl} 
               alt={title}
@@ -24,37 +24,37 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
           
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="absolute bottom-0 left-0 right-0 p-6">
+            <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="flex items-end justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-bold text-lg mb-2 line-clamp-2">
+                  <h3 className="text-white font-bold text-base mb-1 line-clamp-2">
                     {title}
                   </h3>
-                  <p className="text-white/90 text-sm mb-4 line-clamp-2">
+                  <p className="text-white/90 text-xs mb-3 line-clamp-2">
                     {tagline}
                   </p>
                 </div>
                 
-                <div className="flex space-x-2 ml-4">
+                <div className="flex space-x-1 ml-3">
                   <Button
                     variant="secondary"
                     size="sm"
-                    className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
+                    className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 h-7 w-7 p-0"
                     asChild
                   >
                     <a href={imgUrl} target="_blank" rel="noopener noreferrer">
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-3 h-3" />
                     </a>
                   </Button>
                   
                   <Button
                     variant="secondary"
                     size="sm"
-                    className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
+                    className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 h-7 w-7 p-0"
                     asChild
                   >
                     <a href={siteUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4" />
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                   </Button>
                 </div>
@@ -64,32 +64,32 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
         </div>
         
         {/* Card Content */}
-        <div className="p-6">
-          <div className="flex items-start space-x-3">
-            <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
-              <Award className="w-5 h-5 text-primary" />
+        <div className="p-4">
+          <div className="flex items-start space-x-2">
+            <div className="p-1.5 rounded-lg bg-primary/10 flex-shrink-0">
+              <Award className="w-4 h-4 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-base mb-1 line-clamp-2 group-hover:text-primary transition-colors">
                 {title}
               </h3>
-              <p className="text-muted-foreground text-sm line-clamp-2">
+              <p className="text-muted-foreground text-xs line-clamp-2">
                 {tagline}
               </p>
             </div>
           </div>
           
-          <div className="flex space-x-2 mt-4">
-            <Button variant="outline" size="sm" className="flex-1" asChild>
+          <div className="flex space-x-2 mt-3">
+            <Button variant="outline" size="sm" className="flex-1 text-xs h-8" asChild>
               <a href={imgUrl} target="_blank" rel="noopener noreferrer">
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye className="w-3 h-3 mr-1" />
                 View Certificate
               </a>
             </Button>
             
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
               <a href={siteUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink className="w-3 h-3" />
               </a>
             </Button>
           </div>

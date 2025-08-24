@@ -58,25 +58,25 @@ function Certificates() {
   };
 
   return (
-    <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-accent/5">
-      <div className="container-custom">
+    <section ref={ref} className="py-12 md:py-16 bg-gradient-to-br from-background via-background to-accent/5">
+      <div className="container mx-auto px-4 md:px-6 max-w-6xl">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-12"
+          className="space-y-8"
         >
           {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Certificates</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <motion.div variants={itemVariants} className="text-center space-y-3">
+            <h2 className="text-xl md:text-2xl font-bold gradient-text">Certificates</h2>
+            <div className="w-16 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Professional certifications and achievements that showcase my expertise and continuous learning
             </p>
           </motion.div>
 
           {/* Certificates Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {certificatelist.map((certificate, index) => (
               <motion.div key={certificate.title} variants={itemVariants}>
                 <CertificateCard
@@ -90,7 +90,7 @@ function Certificates() {
           </div>
 
           {/* View More Button */}
-          <motion.div variants={itemVariants} className="text-center">
+          <motion.div variants={itemVariants} className="text-center mt-8">
             <Button variant="gradient" size="lg" className="group" asChild>
               <Link to="/certificates">
                 <Award className="w-5 h-5 mr-2" />

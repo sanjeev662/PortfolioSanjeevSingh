@@ -141,25 +141,25 @@ function Certificates() {
   };
 
   return (
-    <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-accent/5">
-      <div className="container-custom">
+    <section ref={ref} className="py-12 md:py-16 bg-gradient-to-br from-background via-background to-accent/5">
+      <div className="container mx-auto px-4 md:px-6 max-w-6xl">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-12"
+          className="space-y-8"
         >
           {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Certificates & Achievements</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              A comprehensive collection of professional certifications, internship completions, and competitive programming achievements that demonstrate my commitment to continuous learning and excellence in software development.
+          <motion.div variants={itemVariants} className="text-center space-y-3">
+            <h2 className="text-xl md:text-2xl font-bold gradient-text">Certificates & Achievements</h2>
+            <div className="w-16 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Professional certifications, internship completions, and competitive programming achievements demonstrating continuous learning and excellence.
             </p>
           </motion.div>
 
           {/* Certificates Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {certificatelist.map((certificate, index) => (
               <motion.div key={`${certificate.title}-${index}`} variants={itemVariants}>
                 <CertificateCard
@@ -173,22 +173,22 @@ function Certificates() {
           </div>
 
           {/* Stats Section */}
-          <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">15+</div>
-              <div className="text-sm text-muted-foreground">Total Certificates</div>
+          <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-12">
+            <div className="text-center p-4 rounded-lg bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800">
+              <div className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-1">15+</div>
+              <div className="text-xs text-muted-foreground">Total Certificates</div>
             </div>
-            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">6+</div>
-              <div className="text-sm text-muted-foreground">Internships</div>
+            <div className="text-center p-4 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800">
+              <div className="text-xl font-bold text-green-600 dark:text-green-400 mb-1">6+</div>
+              <div className="text-xs text-muted-foreground">Internships</div>
             </div>
-            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border border-purple-200 dark:border-purple-800">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">5+</div>
-              <div className="text-sm text-muted-foreground">Tech Courses</div>
+            <div className="text-center p-4 rounded-lg bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border border-purple-200 dark:border-purple-800">
+              <div className="text-xl font-bold text-purple-600 dark:text-purple-400 mb-1">5+</div>
+              <div className="text-xs text-muted-foreground">Tech Courses</div>
             </div>
-            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-orange-200 dark:border-orange-800">
-              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-2">3+</div>
-              <div className="text-sm text-muted-foreground">Competitions</div>
+            <div className="text-center p-4 rounded-lg bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-orange-200 dark:border-orange-800">
+              <div className="text-xl font-bold text-orange-600 dark:text-orange-400 mb-1">3+</div>
+              <div className="text-xs text-muted-foreground">Competitions</div>
             </div>
           </motion.div>
         </motion.div>
