@@ -58,13 +58,13 @@ const experience = [
     company: "Namekart Private Limited",
     location: "Noida, India",
     achievements: [
-      "Integrated AI-powered assistant using NLP, enabling natural language queries and real-time reports, reducing manual analysis time by 50%",
-      "Developed Mailing system for bulk email management and marketing campaigns, achieving 60% increase in customer engagement",
+      "Integrated an LLM-powered AI assistant with RAG using NLP, enabling users to ask any query in natural language and receive real-time reports and data summaries, reducing manual analysis time by 50% and enhancing decision-making across teams",
+      "Developed a Mailing system that streamlines bulk email management and automates marketing campaigns, facilitating effective tracking of email performance and achieving a 60% increase in customer engagement",
       "Created location tracking system with 99% accuracy, monitoring 100+ daily user movements across 10+ cities",
-      "Built data scraping system using puppeteer and cheerio with frontend visualization for operational analysis",
-      "Redesigned main dashboard using microfrontend architecture for seamless integration of applications"
+      "Built a data scraping system using puppeteer and cheerio for data extraction, with frontend visualization for operational analysis",
+      "Redesigned the main dashboard using microfrontend architecture, enabling seamless integration of applications developed independently by different teams, enhancing flexibility for development and testing"
     ],
-    tech: "Java, Spring Boot, JPA, Microfrontend Architecture, React, Node.js, SQL"
+    tech: "Java, Spring Boot, JPA, Microservices Architecture, React, Node.js, MySQL, Docker, Azure"
   },
   {
     period: "November 2023 – June 2024",
