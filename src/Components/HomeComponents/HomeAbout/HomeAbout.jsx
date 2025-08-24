@@ -98,7 +98,7 @@ function HomeAbout() {
         >
           {/* Section Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">About Me</h2>
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text">About Me</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
           </motion.div>
 
@@ -109,7 +109,7 @@ function HomeAbout() {
               <GlassCard className="p-8">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                    <h3 className="text-xl md:text-2xl font-bold mb-4">
                       I'm Sanjeev Singh and{" "}
                       <span className="gradient-text">Potential Learner (^_^)</span>
                     </h3>

@@ -68,7 +68,7 @@ function Certificates() {
         >
           {/* Section Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">Certificates</h2>
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Certificates</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Professional certifications and achievements that showcase my expertise and continuous learning

@@ -227,10 +227,10 @@ function Projects() {
             <motion.div variants={itemVariants} className="text-center space-y-4">
               <div className="flex items-center justify-center space-x-3">
                 <FolderOpen className="w-8 h-8 text-primary" />
-                <h1 className="text-4xl md:text-6xl font-bold gradient-text">My Projects</h1>
+                <h1 className="text-2xl md:text-4xl font-bold gradient-text">My Projects</h1>
               </div>
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 A showcase of my technical skills and creativity through various web applications and software solutions
               </p>
             </motion.div>
@@ -323,7 +323,7 @@ function Projects() {
                 className="text-center py-12"
               >
                 <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-2xl font-bold mb-2">No projects found</h3>
+                <h3 className="text-xl font-bold mb-2">No projects found</h3>
                 <p className="text-muted-foreground mb-6">
                   Try adjusting your search terms or category filters
                 </p>
@@ -344,25 +344,25 @@ function Projects() {
               <GlassCard className="p-8">
                 <div className="grid md:grid-cols-4 gap-8 text-center">
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">
+                    <div className="text-2xl font-bold text-primary mb-2">
                       {projectlist.length}
                     </div>
                     <div className="text-muted-foreground">Total Projects</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">
+                    <div className="text-2xl font-bold text-primary mb-2">
                       {projectlist.filter(p => p.featured).length}
                     </div>
                     <div className="text-muted-foreground">Featured Projects</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">
+                    <div className="text-2xl font-bold text-primary mb-2">
                       {categories.length - 1}
                     </div>
                     <div className="text-muted-foreground">Categories</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">
+                    <div className="text-2xl font-bold text-primary mb-2">
                       {new Set(projectlist.flatMap(p => p.skills)).size}
                     </div>
                     <div className="text-muted-foreground">Technologies Used</div>

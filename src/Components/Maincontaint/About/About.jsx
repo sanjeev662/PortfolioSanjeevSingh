@@ -184,9 +184,9 @@ function About() {
           >
             {/* Header */}
             <motion.div variants={itemVariants} className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold gradient-text">About Me</h1>
+              <h1 className="text-2xl md:text-4xl font-bold gradient-text">About Me</h1>
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 Passionate Full Stack Developer with expertise in modern web technologies and a strong foundation in problem-solving
               </p>
             </motion.div>
@@ -197,7 +197,7 @@ function About() {
                 <GlassCard className="p-8 h-full">
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                      <h2 className="text-xl md:text-2xl font-bold mb-4">
                         I'm Sanjeev Singh and{" "}
                         <span className="gradient-text">Potential Learner (^_^)</span>
                       </h2>
@@ -235,7 +235,7 @@ function About() {
               <motion.div variants={itemVariants}>
                 <GlassCard className="p-8 h-full">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl font-bold flex items-center">
+                    <CardTitle className="text-xl font-bold flex items-center">
                       <User className="w-6 h-6 mr-2 text-primary" />
                       Personal Information
                     </CardTitle>
@@ -309,7 +309,7 @@ function About() {
               <motion.div variants={itemVariants}>
                 <GlassCard className="p-8 h-full">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl font-bold flex items-center">
+                    <CardTitle className="text-xl font-bold flex items-center">
                       <GraduationCap className="w-6 h-6 mr-2 text-primary" />
                       Education
                     </CardTitle>
@@ -354,7 +354,7 @@ function About() {
               <motion.div variants={itemVariants}>
                 <GlassCard className="p-8 h-full">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl font-bold flex items-center">
+                    <CardTitle className="text-xl font-bold flex items-center">
                       <Briefcase className="w-6 h-6 mr-2 text-primary" />
                       Professional Experience
                     </CardTitle>

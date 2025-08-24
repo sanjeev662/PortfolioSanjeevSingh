@@ -15,7 +15,7 @@
     z-index: 7;
   }
   .aboutme-heading{
-    font-size: 4.6em;
+    font-size: 3.2em;
     /* color:#fbd9ad; */
     color: black !important;
   }
@@ -31,7 +31,7 @@
       padding-top: 0px !important;
     }
     .aboutme-heading{
-      font-size: 3.6em;
+      font-size: 2.4em;
     }
   }
   

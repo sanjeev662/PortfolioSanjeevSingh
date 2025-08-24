@@ -105,7 +105,7 @@ function Domain() {
         >
           {/* Section Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">Technical Domains</h2>
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Technical Domains</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Explore my expertise across different technical domains and specializations
@@ -122,7 +122,7 @@ function Domain() {
                       <div className={`p-4 rounded-xl bg-gradient-to-r ${domain.color} shadow-lg group-hover:shadow-xl transition-shadow`}>
                         <domain.icon className="w-8 h-8 text-white" />
                       </div>
-                      <CardTitle className="text-2xl font-bold group-hover:gradient-text transition-all duration-300">
+                      <CardTitle className="text-xl font-bold group-hover:gradient-text transition-all duration-300">
                         {domain.title}
                       </CardTitle>
                     </div>

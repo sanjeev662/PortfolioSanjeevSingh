@@ -13,7 +13,7 @@
   }
 
   .aboutme-heading{
-    font-size: 4.6em;
+    font-size: 3.2em;
     color:#fbd9ad;
   }
 
@@ -157,7 +157,7 @@
   @media (max-width: 767px) {
 
     .aboutme-heading{
-        font-size: 3.6em;
+        font-size: 2.4em;
       }
   }
 

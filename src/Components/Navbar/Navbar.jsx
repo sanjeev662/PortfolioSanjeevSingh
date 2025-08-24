@@ -76,7 +76,7 @@ function Navbar() {
                 whileTap={{ scale: 0.95 }}
               />
               <motion.span
-                className="text-xl font-bold gradient-text hidden sm:block"
+                className="text-lg font-bold gradient-text hidden sm:block"
                 whileHover={{ scale: 1.05 }}
               >
                 Sanjeev Singh

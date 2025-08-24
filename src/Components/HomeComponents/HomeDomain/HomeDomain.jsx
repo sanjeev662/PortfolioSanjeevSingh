@@ -100,7 +100,7 @@ function HomeDomain() {
         >
           {/* Section Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">Technical Domains</h2>
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Technical Domains</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
           </motion.div>
 
@@ -115,7 +115,7 @@ function HomeDomain() {
                         <domain.icon className="w-6 h-6 text-white" />
                       </div>
                     </div>
-                    <CardTitle className="text-xl font-bold group-hover:gradient-text transition-all duration-300">
+                    <CardTitle className="text-lg font-bold group-hover:gradient-text transition-all duration-300">
                       {domain.title}
                     </CardTitle>
                   </CardHeader>

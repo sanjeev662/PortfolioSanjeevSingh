@@ -144,14 +144,14 @@ function Home() {
                   ]}
                   wrapper="h1"
                   repeat={Infinity}
-                  className="text-4xl md:text-6xl font-bold gradient-text"
+                  className="text-2xl md:text-4xl font-bold gradient-text"
                 />
                 
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1, duration: 0.6 }}
-                  className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto"
+                  className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto"
                 >
                   Software Development Engineer (SDE) specializing in{" "}
                   <span className="text-primary font-semibold">Java</span> &{" "}
