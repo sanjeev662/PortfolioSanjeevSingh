@@ -8,7 +8,7 @@
 
 This is my **personal portfolio website** built with React.js, showcasing my professional journey as a **Full Stack Developer** specializing in **JavaScript** and **Java**. The portfolio serves as a comprehensive digital resume reflecting my accomplishments and expertise in software development.
 
-**🔗 [View My Resume](https://drive.google.com/file/d/your-resume-link/view)** | **🌐 [Live Portfolio](https://portfolio-sanjeev-singh.vercel.app/)**
+**🔗 [View My Resume](https://drive.google.com/file/d/your-resume-link/view)** | **🌐 [Live Portfolio](https://portfolio-sanjeev-singh.vercel.app/)** | **🌐 [Live Portfolio-Stage](https://portfolio-sanjeev-singh-stage.vercel.app/)**
 
 ## 👨‍💻 About Me - The Heart of This Portfolio ⭐
 
