@@ -208,7 +208,7 @@ function About() {
                   </p>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-6 min-h-[420px]">
+                <div className="flex flex-col lg:flex-row gap-12 min-h-[420px]">
                   {/* Left Column - Personal Information (60% width) */}
                   <div className="flex-[0.6] space-y-5 flex flex-col justify-between">
                     <div className="space-y-5">
