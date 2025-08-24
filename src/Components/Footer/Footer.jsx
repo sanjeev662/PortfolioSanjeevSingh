@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Github, 
@@ -9,8 +9,10 @@ import {
   Mail,
   Heart,
   Code,
-  Coffee
+  Coffee,
+  Quote
 } from "lucide-react";
+import { getRandomQuote } from "../../constants/codingQuotes";
 
 const socialLinks = [
   {
@@ -53,6 +55,12 @@ const socialLinks = [
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const [currentQuote, setCurrentQuote] = useState(() => getRandomQuote());
+
+  // Get a new random quote on component mount
+  useEffect(() => {
+    setCurrentQuote(getRandomQuote());
+  }, []);
 
   return (
     <footer className="bg-gradient-to-t from-accent/10 to-background border-t border-border/50">
@@ -119,26 +127,50 @@ function Footer() {
           </motion.div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom Section - Inspirational Quote */}
         <motion.div
           initial={{ opacity: 0, width: 0 }}
           whileInView={{ opacity: 1, width: "100%" }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-8 pt-8 border-t border-border/50"
         >
-          <div className="text-center">
-            <p className="text-xs text-muted-foreground">
-              Built with React, Tailwind CSS, Framer Motion, and modern web technologies
-            </p>
+          <div className="text-center max-w-3xl mx-auto">
             <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex items-center justify-center mb-3"
+            >
+              <Quote className="w-4 h-4 text-primary mr-2" />
+              <span className="text-xs font-medium text-primary tracking-wider uppercase">
+                Developer Wisdom
+              </span>
+            </motion.div>
+            <motion.blockquote
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-2"
+              className="text-sm md:text-base text-foreground font-medium italic mb-2 leading-relaxed"
             >
-              <span className="text-xs text-muted-foreground">
-                Designed & Developed with passion for clean code and great UX
-              </span>
+              "{currentQuote.quote}"
+            </motion.blockquote>
+            <motion.cite
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="text-xs text-muted-foreground font-semibold not-italic"
+            >
+              — {currentQuote.author}
+            </motion.cite>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+              className="mt-4 pt-4 border-t border-border/30"
+            >
+              <p className="text-xs text-muted-foreground">
+                Crafted with passion, powered by innovation • Refresh for new wisdom
+              </p>
             </motion.div>
           </div>
         </motion.div>
