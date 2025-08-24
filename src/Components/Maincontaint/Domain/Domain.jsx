@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
   Code, 
@@ -70,8 +70,12 @@ const domains = [
 
 function Domain() {
   const { ref, hasIntersected } = useIntersectionObserver();
+  
+  // Memoize domains data to prevent re-creation
+  const memoizedDomains = useMemo(() => domains, []);
 
-  const containerVariants = {
+  // Memoize animation variants
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -80,19 +84,19 @@ function Domain() {
         delayChildren: 0.1,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4, // Reduced for better performance
         ease: "easeOut",
       },
     },
-  };
+  }), []);
 
   return (
     <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-primary/5">
@@ -114,7 +118,7 @@ function Domain() {
 
           {/* Domains Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2">
-            {domains.map((domain, index) => (
+            {memoizedDomains.map((domain, index) => (
               <motion.div key={domain.title} variants={itemVariants}>
                 <GlassCard className="h-full p-6 group hover:scale-105 transition-all duration-300">
                   <CardHeader className="px-0 pt-0 pb-4">
@@ -206,4 +210,4 @@ function Domain() {
   );
 }
 
-export default Domain;
+export default React.memo(Domain);

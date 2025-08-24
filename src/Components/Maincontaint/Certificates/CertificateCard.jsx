@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Award, ExternalLink, Eye } from "lucide-react";
 import { GlassCard } from "../../ui/card";
 import { Button } from "../../ui/button";
+import LazyImage from "../../ui/LazyImage";
 
 function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
   return (
@@ -15,10 +16,10 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
         <div className="relative">
           {/* Certificate Image */}
           <div className="aspect-[3/2] overflow-hidden">
-            <img 
+            <LazyImage 
               src={imgUrl} 
               alt={title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full h-full transition-transform duration-500 group-hover:scale-110"
             />
           </div>
           
@@ -76,4 +77,4 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
   );
 }
 
-export default CertificateCard;
+export default React.memo(CertificateCard);

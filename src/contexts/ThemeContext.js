@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react'
 
 const ThemeContext = createContext({
   theme: 'dark',
@@ -22,6 +22,11 @@ export const ThemeProvider = ({ children, defaultTheme = 'dark', storageKey = 'p
     return defaultTheme
   })
 
+  const handleSetTheme = useCallback((newTheme) => {
+    localStorage.setItem(storageKey, newTheme)
+    setTheme(newTheme)
+  }, [storageKey])
+
   useEffect(() => {
     const root = window.document.documentElement
     
@@ -36,13 +41,10 @@ export const ThemeProvider = ({ children, defaultTheme = 'dark', storageKey = 'p
     root.classList.add(theme)
   }, [theme])
 
-  const value = {
+  const value = useMemo(() => ({
     theme,
-    setTheme: (theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
-    },
-  }
+    setTheme: handleSetTheme,
+  }), [theme, handleSetTheme])
 
   return (
     <ThemeContext.Provider {...props} value={value}>

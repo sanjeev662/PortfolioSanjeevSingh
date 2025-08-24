@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
   User, 
@@ -31,7 +31,8 @@ function Form() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  const handleInputChange = (e) => {
+  // Memoize event handlers for better performance
+  const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     
     setFormData(prev => ({
@@ -55,7 +56,7 @@ function Form() {
     } else if (name === "message" && value && !validateText(value)) {
       setErrors(prev => ({ ...prev, message: "Please enter a message." }));
     }
-  };
+  }, [errors]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -98,12 +99,13 @@ function Form() {
     }
   };
 
-  const inputVariants = {
+  // Memoize static data
+  const inputVariants = useMemo(() => ({
     focus: { scale: 1.01, transition: { duration: 0.2 } },
     blur: { scale: 1, transition: { duration: 0.2 } }
-  };
+  }), []);
 
-  const contactInfo = [
+  const contactInfo = useMemo(() => [
     {
       icon: Mail,
       label: "Email",
@@ -122,7 +124,7 @@ function Form() {
       value: "New Delhi, India",
       href: null
     }
-  ];
+  ], []);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
@@ -334,4 +336,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default React.memo(Form);

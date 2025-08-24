@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
   MessageSquare, 
@@ -49,7 +49,11 @@ function Contacts() {
     }
   ];
 
-  const containerVariants = {
+  // Memoize social links to prevent re-creation
+  const memoizedSocialLinks = useMemo(() => socialLinks, []);
+
+  // Memoize animation variants
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -58,19 +62,19 @@ function Contacts() {
         delayChildren: 0.1,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4, // Reduced for better performance
         ease: "easeOut",
       },
     },
-  };
+  }), []);
 
   return (
     <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-primary/5">
@@ -128,4 +132,4 @@ function Contacts() {
   );
 }
 
-export default Contacts;
+export default React.memo(Contacts);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import { 
@@ -175,15 +175,23 @@ function Projects() {
 
   const categories = ["All", "Full Stack", "Frontend", "E-commerce", "Real-time App", "Web App"];
 
-  const filteredProjects = projectlist.filter(project => {
-    const matchesCategory = selectedCategory === "All" || project.category === selectedCategory;
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  // Memoize static data
+  const memoizedProjects = useMemo(() => projectlist, []);
+  const memoizedCategories = useMemo(() => categories, []);
 
-  const containerVariants = {
+  // Memoize filtered projects to prevent unnecessary recalculations
+  const filteredProjects = useMemo(() => {
+    return memoizedProjects.filter(project => {
+      const matchesCategory = selectedCategory === "All" || project.category === selectedCategory;
+      const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           project.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [memoizedProjects, selectedCategory, searchTerm]);
+
+  // Memoize animation variants
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -192,19 +200,37 @@ function Projects() {
         delayChildren: 0.2,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4, // Reduced for better performance
         ease: "easeOut",
       },
     },
-  };
+  }), []);
+  
+  // Memoize event handlers
+  const handleSearchChange = useCallback((e) => {
+    setSearchTerm(e.target.value);
+  }, []);
+  
+  const handleCategoryChange = useCallback((category) => {
+    setSelectedCategory(category);
+  }, []);
+  
+  const handleViewModeChange = useCallback((mode) => {
+    setViewMode(mode);
+  }, []);
+  
+  const clearFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedCategory("All");
+  }, []);
 
   return (
     <>
@@ -245,19 +271,19 @@ function Projects() {
                       type="text"
                       placeholder="Search projects..."
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={handleSearchChange}
                       className="w-full pl-10 pr-4 py-2 bg-background/50 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
                     />
                   </div>
 
                   {/* Category Filters */}
                   <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
+                    {memoizedCategories.map((category) => (
                       <Button
                         key={category}
                         variant={selectedCategory === category ? "default" : "outline"}
                         size="sm"
-                        onClick={() => setSelectedCategory(category)}
+                        onClick={() => handleCategoryChange(category)}
                         className="transition-all duration-200"
                       >
                         {category}
@@ -270,14 +296,14 @@ function Projects() {
                     <Button
                       variant={viewMode === "grid" ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setViewMode("grid")}
+                      onClick={() => handleViewModeChange("grid")}
                     >
                       <Grid3X3 className="w-4 h-4" />
                     </Button>
                     <Button
                       variant={viewMode === "list" ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setViewMode("list")}
+                      onClick={() => handleViewModeChange("list")}
                     >
                       <List className="w-4 h-4" />
                     </Button>
@@ -286,7 +312,7 @@ function Projects() {
 
                 {/* Results Count */}
                 <div className="mt-4 text-sm text-muted-foreground">
-                  Showing {filteredProjects.length} of {projectlist.length} projects
+                  Showing {filteredProjects.length} of {memoizedProjects.length} projects
                 </div>
               </GlassCard>
             </motion.div>
@@ -327,10 +353,7 @@ function Projects() {
                   Try adjusting your search terms or category filters
                 </p>
                 <Button
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSelectedCategory("All");
-                  }}
+                  onClick={clearFilters}
                   variant="outline"
                 >
                   Clear Filters
@@ -344,13 +367,13 @@ function Projects() {
                 <div className="grid md:grid-cols-4 gap-8 text-center">
                   <div>
                     <div className="text-2xl font-bold text-primary mb-2">
-                      {projectlist.length}
+                      {memoizedProjects.length}
                     </div>
                     <div className="text-muted-foreground">Total Projects</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-primary mb-2">
-                      {projectlist.filter(p => p.featured).length}
+                      {memoizedProjects.filter(p => p.featured).length}
                     </div>
                     <div className="text-muted-foreground">Featured Projects</div>
                   </div>
@@ -362,7 +385,7 @@ function Projects() {
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-primary mb-2">
-                      {new Set(projectlist.flatMap(p => p.skills)).size}
+                      {new Set(memoizedProjects.flatMap(p => p.skills)).size}
                     </div>
                     <div className="text-muted-foreground">Technologies Used</div>
                   </div>
@@ -376,4 +399,4 @@ function Projects() {
   );
 }
 
-export default Projects;
+export default React.memo(Projects);

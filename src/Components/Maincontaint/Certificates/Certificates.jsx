@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Award } from "lucide-react";
 import CertificateCard from "./CertificateCard";
@@ -117,7 +117,11 @@ function Certificates() {
     }
   ];
 
-  const containerVariants = {
+  // Memoize certificate list to prevent re-creation
+  const memoizedCertificates = useMemo(() => certificatelist, []);
+
+  // Memoize animation variants
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -126,19 +130,19 @@ function Certificates() {
         delayChildren: 0.1,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4, // Reduced for better performance
         ease: "easeOut",
       },
     },
-  };
+  }), []);
 
   return (
     <section ref={ref} className="py-12 md:py-16 bg-gradient-to-br from-background via-background to-accent/5">
@@ -160,7 +164,7 @@ function Certificates() {
 
           {/* Certificates Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {certificatelist.map((certificate, index) => (
+            {memoizedCertificates.map((certificate, index) => (
               <motion.div key={`${certificate.title}-${index}`} variants={itemVariants}>
                 <CertificateCard
                   title={certificate.title}
@@ -197,4 +201,4 @@ function Certificates() {
   );
 }
 
-export default Certificates;
+export default React.memo(Certificates);

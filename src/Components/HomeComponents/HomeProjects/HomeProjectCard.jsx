@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ExternalLink, 
@@ -14,6 +14,7 @@ import {
 
 import { Button } from "../../ui/button";
 import { GlassCard, Card, CardContent, CardHeader } from "../../ui/card";
+import { useLazyImage } from "../../../lib/utils";
 
 function ProjectCard({ 
   title, 
@@ -28,6 +29,23 @@ function ProjectCard({
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  
+  // Lazy load image for better performance
+  const { imgRef, imageSrc, isLoaded } = useLazyImage(imgUrl);
+  
+  const toggleVideo = useCallback(() => setShowVideo(true), []);
+  const closeVideo = useCallback(() => setShowVideo(false), []);
+  
+  const skillTags = useMemo(() => 
+    skills.map((skill, index) => (
+      <span
+        key={index}
+        className="px-2 py-1 bg-accent/50 text-accent-foreground text-xs rounded-md font-medium"
+      >
+        {skill}
+      </span>
+    )), [skills]
+  );
 
   return (
     <motion.div
@@ -62,7 +80,7 @@ function ProjectCard({
                 <Button
                   variant="secondary"
                   size="icon"
-                  onClick={() => setShowVideo(false)}
+                  onClick={closeVideo}
                   className="absolute top-2 right-2 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground"
                 >
                   <X className="w-4 h-4" />
@@ -76,11 +94,23 @@ function ProjectCard({
                 exit={{ opacity: 0 }}
                 className="relative w-full h-full"
               >
-                <img
-                  src={imgUrl}
-                  alt={title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+                <div ref={imgRef} className="w-full h-full">
+                  {imageSrc && (
+                    <img
+                      src={imageSrc}
+                      alt={title}
+                      className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+                        isLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      loading="lazy"
+                    />
+                  )}
+                  {!isLoaded && (
+                    <div className="w-full h-full bg-muted animate-pulse flex items-center justify-center">
+                      <div className="text-muted-foreground">Loading...</div>
+                    </div>
+                  )}
+                </div>
                 
                 {/* Overlay */}
                 <motion.div
@@ -93,7 +123,7 @@ function ProjectCard({
                       <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => setShowVideo(true)}
+                        onClick={toggleVideo}
                         className="backdrop-blur-sm"
                       >
                         <Play className="w-4 h-4 mr-2" />
@@ -152,14 +182,7 @@ function ProjectCard({
 
             {/* Skills Tags */}
             <div className="flex flex-wrap gap-2">
-              {skills.map((skill, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-1 bg-accent/50 text-accent-foreground text-xs rounded-md font-medium"
-                >
-                  {skill}
-                </span>
-              ))}
+              {skillTags}
             </div>
           </div>
 
@@ -194,4 +217,4 @@ function ProjectCard({
   );
 }
 
-export default ProjectCard;
+export default React.memo(ProjectCard);

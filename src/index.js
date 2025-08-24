@@ -5,10 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+
+// Only use StrictMode in development for better production performance
+const AppComponent = process.env.NODE_ENV === 'development' ? (
   <React.StrictMode>
     <App />
   </React.StrictMode>
+) : (
+  <App />
 );
+
+root.render(AppComponent);
 
 reportWebVitals();

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 
 import { useTheme } from "../../contexts/ThemeContext";
+import { throttle } from "../../lib/utils";
 import { Button } from "../ui/button";
 import logo from "../Assets/Images/logo.png";
 
@@ -23,25 +24,37 @@ function Navbar() {
   const { theme, setTheme } = useTheme();
   const location = useLocation();
 
-  useEffect(() => {
-    const handleScroll = () => {
+  const handleScroll = useCallback(
+    throttle(() => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
+      const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
       
       setScrolled(scrollTop > 50);
       setScrollProgress(scrollPercent);
-    };
+    }, 16), // ~60fps throttling
+    []
+  );
 
-    window.addEventListener("scroll", handleScroll);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");
-  };
+  }, [theme, setTheme]);
 
-  const closeMenu = () => setIsOpen(false);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  const navbarClasses = useMemo(() => 
+    `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled
+        ? "glass-effect shadow-lg backdrop-blur-md"
+        : "bg-transparent"
+    }`,
+    [scrolled]
+  );
 
   return (
     <>
@@ -49,19 +62,12 @@ function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "glass-effect shadow-lg backdrop-blur-md"
-            : "bg-transparent"
-        }`}
+        className={navbarClasses}
       >
         {/* Scroll Progress Bar */}
-        <motion.div
-          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
+        <div
+          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-75"
           style={{ width: `${scrollProgress}%` }}
-          initial={{ width: 0 }}
-          animate={{ width: `${scrollProgress}%` }}
-          transition={{ duration: 0.1 }}
         />
 
         <div className="container-custom px-4 sm:px-6 lg:px-8">
@@ -192,4 +198,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default React.memo(Navbar);

@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react';
-import { HashRouter, Routes, Route } from "react-router-dom";
+import React, { Suspense, lazy, useMemo } from 'react';
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -17,11 +17,11 @@ const Contacts = lazy(() => import("./Components/Maincontaint/Contacts/Contacts"
 const Domain = lazy(() => import("./Components/Maincontaint/Domain/Domain"));
 const Projects = lazy(() => import("./Components/Maincontaint/Projects/Projects"));
 
-// Page transition variants
+// Optimized page transition variants - reduced duration for performance
 const pageVariants = {
   initial: {
     opacity: 0,
-    y: 20,
+    y: 10,
   },
   in: {
     opacity: 1,
@@ -29,15 +29,28 @@ const pageVariants = {
   },
   out: {
     opacity: 0,
-    y: -20,
+    y: -10,
   },
 };
 
 const pageTransition = {
   type: "tween",
-  ease: "anticipate",
-  duration: 0.5,
+  ease: "easeInOut",
+  duration: 0.3, // Reduced from 0.5 for snappier transitions
 };
+
+// Route component wrapper to reduce re-renders
+const RouteWrapper = React.memo(({ children }) => (
+  <motion.div
+    initial="initial"
+    animate="in"
+    exit="out"
+    variants={pageVariants}
+    transition={pageTransition}
+  >
+    {children}
+  </motion.div>
+));
 
 function App() {
   return (
@@ -50,90 +63,12 @@ function App() {
               <AnimatePresence mode="wait">
                 <Suspense fallback={<LoadingSpinner />}>
                   <Routes>
-                    <Route 
-                      path="/" 
-                      element={
-                        <motion.div
-                          initial="initial"
-                          animate="in"
-                          exit="out"
-                          variants={pageVariants}
-                          transition={pageTransition}
-                        >
-                          <Home />
-                        </motion.div>
-                      }
-                    />
-                    <Route 
-                      path="/about" 
-                      element={
-                        <motion.div
-                          initial="initial"
-                          animate="in"
-                          exit="out"
-                          variants={pageVariants}
-                          transition={pageTransition}
-                        >
-                          <About />
-                        </motion.div>
-                      }
-                    />
-                    <Route 
-                      path="/certificates" 
-                      element={
-                        <motion.div
-                          initial="initial"
-                          animate="in"
-                          exit="out"
-                          variants={pageVariants}
-                          transition={pageTransition}
-                        >
-                          <Certificates />
-                        </motion.div>
-                      }
-                    />
-                    <Route 
-                      path="/contacts" 
-                      element={
-                        <motion.div
-                          initial="initial"
-                          animate="in"
-                          exit="out"
-                          variants={pageVariants}
-                          transition={pageTransition}
-                        >
-                          <Contacts />
-                        </motion.div>
-                      }
-                    />
-                    <Route 
-                      path="/domain" 
-                      element={
-                        <motion.div
-                          initial="initial"
-                          animate="in"
-                          exit="out"
-                          variants={pageVariants}
-                          transition={pageTransition}
-                        >
-                          <Domain />
-                        </motion.div>
-                      }
-                    />
-                    <Route 
-                      path="/projects" 
-                      element={
-                        <motion.div
-                          initial="initial"
-                          animate="in"
-                          exit="out"
-                          variants={pageVariants}
-                          transition={pageTransition}
-                        >
-                          <Projects />
-                        </motion.div>
-                      }
-                    />
+                    <Route path="/" element={<RouteWrapper><Home /></RouteWrapper>} />
+                    <Route path="/about" element={<RouteWrapper><About /></RouteWrapper>} />
+                    <Route path="/certificates" element={<RouteWrapper><Certificates /></RouteWrapper>} />
+                    <Route path="/contacts" element={<RouteWrapper><Contacts /></RouteWrapper>} />
+                    <Route path="/domain" element={<RouteWrapper><Domain /></RouteWrapper>} />
+                    <Route path="/projects" element={<RouteWrapper><Projects /></RouteWrapper>} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

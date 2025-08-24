@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
@@ -141,8 +141,15 @@ const experience = [
 
 function About() {
   const { ref, hasIntersected } = useIntersectionObserver();
+  
+  // Memoize static data to prevent re-creation
+  const memoizedPersonalInfo = useMemo(() => personalInfo, []);
+  const memoizedSkills = useMemo(() => skills, []);
+  const memoizedEducation = useMemo(() => education, []);
+  const memoizedExperience = useMemo(() => experience, []);
 
-  const containerVariants = {
+  // Memoize animation variants to prevent re-creation
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -151,19 +158,19 @@ function About() {
         delayChildren: 0.2,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4, // Reduced for better performance
         ease: "easeOut",
       },
     },
-  };
+  }), []);
 
   return (
     <>
@@ -214,7 +221,7 @@ function About() {
                     <div className="space-y-5">
                       <h3 className="text-xl font-bold text-left">Personal Information</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {personalInfo.map((info, index) => (
+                        {memoizedPersonalInfo.map((info, index) => (
                           <motion.div
                             key={info.label}
                             variants={itemVariants}
@@ -254,7 +261,7 @@ function About() {
                     <div className="space-y-5">
                       <h3 className="text-xl font-bold text-center lg:text-left">Technical Skills</h3>
                       <div className="space-y-4">
-                        {skills.map((skill, index) => (
+                        {memoizedSkills.map((skill, index) => (
                           <motion.div
                             key={skill.name}
                             variants={itemVariants}
@@ -300,7 +307,7 @@ function About() {
                   </CardHeader>
                   <CardContent className="px-0 pb-0">
                     <div className="space-y-6">
-                      {education.map((edu, index) => (
+                      {memoizedEducation.map((edu, index) => (
                         <motion.div
                           key={index}
                           variants={itemVariants}
@@ -343,7 +350,7 @@ function About() {
                   </CardHeader>
                   <CardContent className="px-0 pb-0">
                     <div className="space-y-8">
-                      {experience.map((exp, index) => (
+                      {memoizedExperience.map((exp, index) => (
                         <motion.div
                           key={index}
                           variants={itemVariants}
@@ -408,4 +415,4 @@ function About() {
   );
 }
 
-export default About;
+export default React.memo(About);

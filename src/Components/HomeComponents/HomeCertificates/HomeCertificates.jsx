@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Award, ArrowRight } from "lucide-react";
@@ -33,6 +33,9 @@ function Certificates() {
       tagline: "ICPC 2022 Regionalist"
     }
   ];
+
+  // Memoize certificate list to prevent re-creation on every render
+  const memoizedCertificates = useMemo(() => certificatelist, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -77,7 +80,7 @@ function Certificates() {
 
           {/* Certificates Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {certificatelist.map((certificate, index) => (
+            {memoizedCertificates.map((certificate, index) => (
               <motion.div key={certificate.title} variants={itemVariants}>
                 <CertificateCard
                   title={certificate.title}
@@ -105,4 +108,4 @@ function Certificates() {
   );
 }
 
-export default Certificates;
+export default React.memo(Certificates);

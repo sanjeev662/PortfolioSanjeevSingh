@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, FolderOpen } from "lucide-react";
@@ -54,6 +54,9 @@ function HomeProjects() {
     },    
   ];
 
+  // Memoize project list to prevent re-creation on every render
+  const memoizedProjects = useMemo(() => projectlist, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -100,7 +103,7 @@ function HomeProjects() {
             variants={containerVariants}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2"
           >
-            {projectlist.map((project, index) => (
+            {memoizedProjects.map((project, index) => (
               <motion.div
                 key={project.title}
                 variants={itemVariants}
@@ -127,4 +130,4 @@ function HomeProjects() {
   );
 }
 
-export default HomeProjects;
+export default React.memo(HomeProjects);

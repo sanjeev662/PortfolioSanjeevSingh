@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { Helmet } from "react-helmet-async";
@@ -35,12 +35,29 @@ const socialLinks = [
 ];
 
 function Home() {
-  const scrollToNext = () => {
+  const scrollToNext = useCallback(() => {
     const nextSection = document.getElementById('about-section');
     if (nextSection) {
       nextSection.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
+
+  // Memoize social links to prevent re-renders
+  const memoizedSocialLinks = useMemo(() => socialLinks, []);
+
+  // Preload critical images for better performance
+  useEffect(() => {
+    const preloadImage = (src) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      document.head.appendChild(link);
+    };
+    
+    // Preload hero image
+    preloadImage(logo);
+  }, []);
 
   return (
     <>
@@ -60,32 +77,10 @@ function Home() {
           {/* Background Elements */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
           
-          {/* Animated Background Shapes */}
+          {/* Static Background Shapes - Reduced animation for performance */}
           <div className="absolute inset-0 overflow-hidden">
-            <motion.div
-              className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"
-              animate={{
-                scale: [1, 1.2, 1],
-                rotate: [0, 180, 360],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-            <motion.div
-              className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/20 rounded-full blur-3xl"
-              animate={{
-                scale: [1.2, 1, 1.2],
-                rotate: [360, 180, 0],
-              }}
-              transition={{
-                duration: 25,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}} />
           </div>
 
           <div className="relative z-10 container-custom section-padding text-center">
@@ -114,12 +109,9 @@ function Home() {
                     className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover shadow-2xl ring-4 ring-primary/20"
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
+                    loading="eager"
                   />
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 animate-spin" style={{animationDuration: '10s'}} />
                 </div>
               </motion.div>
 
@@ -166,7 +158,7 @@ function Home() {
                 transition={{ delay: 1.2, duration: 0.6 }}
                 className="flex justify-center space-x-6"
               >
-                {socialLinks.map((social, index) => (
+                {memoizedSocialLinks.map((social, index) => (
                   <motion.a
                     key={social.label}
                     href={social.href}
@@ -293,4 +285,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default React.memo(Home);
