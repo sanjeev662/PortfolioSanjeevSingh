@@ -24,6 +24,11 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+    
+    /* Hero background gradients */
+    --hero-gradient-from: 220 60% 97%;
+    --hero-gradient-via: 0 0% 100%;
+    --hero-gradient-to: 270 60% 97%;
   }
 
   .dark {
@@ -46,6 +51,119 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 94.1%;
+    
+    /* Hero background gradients - Exact Tailwind gray-900/gray-800 colors */
+    --hero-gradient-from: 220 13% 11%;   /* gray-900: #111827 */
+    --hero-gradient-via: 220 13% 18%;    /* gray-800: #1f2937 */
+    --hero-gradient-to: 220 13% 11%;     /* gray-900: #111827 */
+  }
+
+  .midnight {
+    --background: 220 30% 6%;
+    --foreground: 220 15% 95%;
+    --card: 220 30% 8%;
+    --card-foreground: 220 15% 95%;
+    --popover: 220 30% 8%;
+    --popover-foreground: 220 15% 95%;
+    --primary: 220 85% 60%;
+    --primary-foreground: 220 30% 6%;
+    --secondary: 220 25% 12%;
+    --secondary-foreground: 220 15% 95%;
+    --muted: 220 25% 12%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 220 25% 12%;
+    --accent-foreground: 220 15% 95%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 220 15% 95%;
+    --border: 220 25% 12%;
+    --input: 220 25% 12%;
+    --ring: 220 85% 60%;
+    
+    /* Hero background gradients - Midnight theme colors */
+    --hero-gradient-from: 220 30% 6%;    /* midnight background */
+    --hero-gradient-via: 220 25% 12%;    /* midnight secondary */
+    --hero-gradient-to: 220 30% 6%;      /* midnight background */
+  }
+
+  .obsidian {
+    --background: 270 15% 4%;
+    --foreground: 270 8% 95%;
+    --card: 270 15% 6%;
+    --card-foreground: 270 8% 95%;
+    --popover: 270 15% 6%;
+    --popover-foreground: 270 8% 95%;
+    --primary: 270 85% 65%;
+    --primary-foreground: 270 15% 4%;
+    --secondary: 270 12% 10%;
+    --secondary-foreground: 270 8% 95%;
+    --muted: 270 12% 10%;
+    --muted-foreground: 270 6% 65%;
+    --accent: 270 12% 10%;
+    --accent-foreground: 270 8% 95%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 270 8% 95%;
+    --border: 270 12% 10%;
+    --input: 270 12% 10%;
+    --ring: 270 85% 65%;
+    
+    /* Hero background gradients - Obsidian theme colors */
+    --hero-gradient-from: 270 15% 4%;    /* obsidian background */
+    --hero-gradient-via: 270 12% 10%;    /* obsidian secondary */
+    --hero-gradient-to: 270 15% 4%;      /* obsidian background */
+  }
+
+  .dawn {
+    --background: 30 25% 97%;
+    --foreground: 30 20% 10%;
+    --card: 30 25% 95%;
+    --card-foreground: 30 20% 10%;
+    --popover: 30 25% 95%;
+    --popover-foreground: 30 20% 10%;
+    --primary: 25 85% 55%;
+    --primary-foreground: 30 25% 97%;
+    --secondary: 30 15% 90%;
+    --secondary-foreground: 30 20% 10%;
+    --muted: 30 15% 90%;
+    --muted-foreground: 30 12% 45%;
+    --accent: 30 15% 90%;
+    --accent-foreground: 30 20% 10%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 30 25% 97%;
+    --border: 30 15% 85%;
+    --input: 30 15% 85%;
+    --ring: 25 85% 55%;
+    
+    /* Hero background gradients */
+    --hero-gradient-from: 25 60% 95%;
+    --hero-gradient-via: 30 25% 97%;
+    --hero-gradient-to: 35 50% 95%;
+  }
+
+  .arctic {
+    --background: 200 25% 97%;
+    --foreground: 200 20% 10%;
+    --card: 200 25% 95%;
+    --card-foreground: 200 20% 10%;
+    --popover: 200 25% 95%;
+    --popover-foreground: 200 20% 10%;
+    --primary: 195 85% 50%;
+    --primary-foreground: 200 25% 97%;
+    --secondary: 200 15% 90%;
+    --secondary-foreground: 200 20% 10%;
+    --muted: 200 15% 90%;
+    --muted-foreground: 200 12% 45%;
+    --accent: 200 15% 90%;
+    --accent-foreground: 200 20% 10%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 200 25% 97%;
+    --border: 200 15% 85%;
+    --input: 200 15% 85%;
+    --ring: 195 85% 50%;
+    
+    /* Hero background gradients */
+    --hero-gradient-from: 195 50% 95%;
+    --hero-gradient-via: 200 25% 97%;
+    --hero-gradient-to: 205 40% 95%;
   }
 }
 
@@ -88,11 +206,61 @@
 
 @layer components {
   .glass-effect {
-    @apply backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10;
+    @apply backdrop-blur-md border;
+  }
+
+  .light .glass-effect {
+    @apply bg-white/80 border-white/30;
+  }
+
+  .dark .glass-effect,
+  .midnight .glass-effect,
+  .obsidian .glass-effect {
+    @apply bg-black/20 border-white/10;
+  }
+
+  .dawn .glass-effect {
+    @apply bg-orange-50/80 border-orange-200/30;
+  }
+
+  .arctic .glass-effect {
+    @apply bg-cyan-50/80 border-cyan-200/30;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+
+  .light .gradient-text {
+    @apply from-blue-600 to-purple-600;
+  }
+
+  .dark .gradient-text {
+    @apply from-blue-400 to-purple-400;
+  }
+
+  .midnight .gradient-text {
+    @apply from-blue-400 to-indigo-400;
+  }
+
+  .obsidian .gradient-text {
+    @apply from-purple-400 to-violet-400;
+  }
+
+  .dawn .gradient-text {
+    @apply from-orange-500 to-red-500;
+  }
+
+  .arctic .gradient-text {
+    @apply from-cyan-500 to-blue-500;
+  }
+
+  .hero-gradient-bg {
+    background: linear-gradient(135deg, 
+      hsl(var(--hero-gradient-from)), 
+      hsl(var(--hero-gradient-via)), 
+      hsl(var(--hero-gradient-to))
+    );
   }
 
   .section-padding {
@@ -110,6 +278,22 @@
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
+
+  .midnight .animate-glow {
+    animation: glow-midnight 2s ease-in-out infinite alternate;
+  }
+
+  .obsidian .animate-glow {
+    animation: glow-obsidian 2s ease-in-out infinite alternate;
+  }
+
+  .dawn .animate-glow {
+    animation: glow-dawn 2s ease-in-out infinite alternate;
+  }
+
+  .arctic .animate-glow {
+    animation: glow-arctic 2s ease-in-out infinite alternate;
+  }
 }
 
 @keyframes float {
@@ -123,9 +307,45 @@
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
   }
   to {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.8);
+  }
+}
+
+@keyframes glow-midnight {
+  from {
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px rgba(96, 165, 250, 0.8);
+  }
+}
+
+@keyframes glow-obsidian {
+  from {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+  }
+}
+
+@keyframes glow-dawn {
+  from {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px rgba(249, 115, 22, 0.8);
+  }
+}
+
+@keyframes glow-arctic {
+  from {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.8);
   }
 }

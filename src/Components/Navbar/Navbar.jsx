@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Zap, Sunrise, Snowflake } from "lucide-react";
 
 import { useTheme } from "../../contexts/ThemeContext";
 import { throttle } from "../../lib/utils";
@@ -21,7 +21,7 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const { theme, setTheme } = useTheme();
+  const { theme, cycleTheme, availableThemes } = useTheme();
   const location = useLocation();
 
   const handleScroll = useCallback(
@@ -41,9 +41,25 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  }, [theme, setTheme]);
+  // Get the appropriate icon for the current theme
+  const getThemeIcon = useCallback((themeName) => {
+    const iconName = availableThemes[themeName]?.icon || 'Moon';
+    switch (iconName) {
+      case 'Sun': return Sun;
+      case 'Moon': return Moon;
+      case 'Zap': return Zap;
+      case 'Sunrise': return Sunrise;
+      case 'Snowflake': return Snowflake;
+      default: return Moon;
+    }
+  }, [availableThemes]);
+
+  const ThemeIcon = getThemeIcon(theme);
+
+  // Check if current theme is dark (needs logo inversion)
+  const isDarkTheme = useCallback(() => {
+    return ['dark', 'midnight', 'obsidian'].includes(theme);
+  }, [theme]);
 
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
@@ -77,7 +93,9 @@ function Navbar() {
               <motion.img
                 src={logo}
                 alt="Sanjeev Singh"
-                className="w-10 h-10 rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all duration-300 dark:filter dark:brightness-0 dark:invert dark:bg-white/10 dark:p-1"
+                className={`w-10 h-10 rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all duration-300 ${
+                  isDarkTheme() ? 'filter brightness-0 invert bg-white/10 p-1' : ''
+                }`}
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
               />
@@ -121,19 +139,19 @@ function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={toggleTheme}
+                onClick={cycleTheme}
                 className="rounded-full"
+                title={`Current theme: ${availableThemes[theme]?.name || theme}. Click to cycle themes.`}
               >
                 <motion.div
                   initial={false}
-                  animate={{ rotate: theme === "dark" ? 180 : 0 }}
+                  animate={{ 
+                    rotate: theme === "dark" ? 180 : theme === "midnight" ? 270 : theme === "obsidian" ? 360 : 0,
+                    scale: [1, 1.1, 1]
+                  }}
                   transition={{ duration: 0.3 }}
                 >
-                  {theme === "dark" ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
+                  <ThemeIcon className="h-5 w-5" />
                 </motion.div>
               </Button>
 
