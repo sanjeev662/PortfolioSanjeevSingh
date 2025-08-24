@@ -113,14 +113,14 @@ function HomeDomain() {
               <motion.div key={domain.title} variants={itemVariants}>
                 <GlassCard className="h-full p-6 group hover:scale-105 transition-all duration-300">
                   <CardHeader className="px-0 pt-0 pb-4">
-                    <div className="flex items-center space-x-3 mb-4">
+                    <div className="flex items-center space-x-4 mb-4">
                       <div className={`p-3 rounded-lg bg-gradient-to-r ${domain.color} shadow-lg`}>
                         <domain.icon className="w-6 h-6 text-white" />
                       </div>
+                      <CardTitle className="text-lg font-bold group-hover:gradient-text transition-all duration-300">
+                        {domain.title}
+                      </CardTitle>
                     </div>
-                    <CardTitle className="text-lg font-bold group-hover:gradient-text transition-all duration-300">
-                      {domain.title}
-                    </CardTitle>
                   </CardHeader>
                   
                   <CardContent className="px-0 pb-0 space-y-4">

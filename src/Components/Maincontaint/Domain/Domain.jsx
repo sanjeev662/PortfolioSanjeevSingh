@@ -113,22 +113,22 @@ function Domain() {
           </motion.div>
 
           {/* Domains Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2">
             {domains.map((domain, index) => (
               <motion.div key={domain.title} variants={itemVariants}>
-                <GlassCard className="h-full p-8 group hover:scale-105 transition-all duration-300">
-                  <CardHeader className="px-0 pt-0 pb-6">
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div className={`p-4 rounded-xl bg-gradient-to-r ${domain.color} shadow-lg group-hover:shadow-xl transition-shadow`}>
-                        <domain.icon className="w-8 h-8 text-white" />
+                <GlassCard className="h-full p-6 group hover:scale-105 transition-all duration-300">
+                  <CardHeader className="px-0 pt-0 pb-4">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className={`p-3 rounded-lg bg-gradient-to-r ${domain.color} shadow-lg`}>
+                        <domain.icon className="w-6 h-6 text-white" />
                       </div>
-                      <CardTitle className="text-xl font-bold group-hover:gradient-text transition-all duration-300">
+                      <CardTitle className="text-lg font-bold group-hover:gradient-text transition-all duration-300">
                         {domain.title}
                       </CardTitle>
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="px-0 pb-0 space-y-6">
+                  <CardContent className="px-0 pb-0 space-y-4">
                     {/* Sections for Full Stack Development */}
                     {domain.sections && (
                       <div className="space-y-4">
@@ -160,19 +160,19 @@ function Domain() {
                     {domain.links && (
                       <div className="space-y-3">
                         {domain.links.map((link, idx) => (
-                          <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-200">
+                          <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50 hover:border-primary/50 transition-colors">
                             <div className="flex items-center space-x-2">
                               <link.icon className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-sm font-medium">{link.label}</span>
+                              <span className="text-sm font-medium">{link.label}:</span>
                             </div>
                             <a 
                               href={link.url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="flex items-center space-x-1 text-primary hover:text-primary/80 transition-colors group"
+                              className="flex items-center space-x-1 text-primary hover:text-primary/80 transition-colors"
                             >
-                              <span className="text-sm font-medium">{link.text}</span>
-                              <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                              <span className="text-sm">{link.text}</span>
+                              <ExternalLink className="w-3 h-3" />
                             </a>
                           </div>
                         ))}
@@ -181,17 +181,16 @@ function Domain() {
 
                     {/* Achievement for Competitive Programming */}
                     {domain.achievement && (
-                      <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border border-yellow-200 dark:border-yellow-800 hover:shadow-lg transition-shadow">
-                        <div className="flex items-center space-x-3">
-                          <Award className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                      <div className="mt-4 p-3 rounded-lg bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border border-yellow-200 dark:border-yellow-800">
+                        <div className="flex items-center space-x-2">
+                          <Award className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
                           <a 
                             href={domain.achievement.image} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 hover:underline flex items-center space-x-1 group"
+                            className="text-sm font-medium text-yellow-700 dark:text-yellow-300 hover:underline"
                           >
-                            <span>{domain.achievement.text}</span>
-                            <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                            {domain.achievement.text}
                           </a>
                         </div>
                       </div>
