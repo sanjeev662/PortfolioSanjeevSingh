@@ -14,11 +14,11 @@ This is my **personal portfolio website** built with React.js, showcasing my pro
 
 **This portfolio is designed around my personal and professional story.** I'm **Sanjeev Kumar Singh**, a passionate Full Stack Developer based in **Noida, India**, with expertise in modern web technologies and a strong foundation in competitive programming.
 
-- 🎓 **Education**: B.Tech in Information Technology from Chhatrapati Shahu Ji Maharaj University (2020-2024)
-- 💼 **Current Role**: Software Development Engineer (SDE) at Namekart Private Limited
+- 🎓 **Education**: B.Tech in Information Technology 
+- 💼 **Role**: Software Development Engineer (SDE)
 - 🌟 **Specialization**: Full Stack Development with JavaScript, Java, React.js, and Spring Boot
-- 🏆 **Achievements**: ICPC Mathura-Kanpur Regionals 2022 Qualifier (Top 10% among 5000+ participants)
-- 💡 **Problem Solver**: 700+ algorithmic problems solved across various coding platforms
+- 🏆 **Achievements**: Competitive Programming & Professional Certifications
+- 💡 **Passion**: Problem-Solving & Building Innovative Solutions
 
 ## 🏗️ Portfolio Architecture
 
@@ -32,74 +32,27 @@ This portfolio follows a **strategic two-tier information structure**:
 
 ### 📄 Dedicated Pages - Comprehensive Details
 - **About**: Complete professional journey and personal story
-- **Projects**: Featured projects like To-Let (RoomOnRent) and Route-Finder-Application
-- **Certificates**: Professional certifications from Udemy, HackerRank, and competitive programming
-- **Domain Expertise**: Full stack development skills and technical proficiencies
+- **Projects**: Featured full-stack applications and technical showcases
+- **Certificates**: Professional certifications and competitive programming achievements
+- **Domain Expertise**: Technical skills and areas of specialization
 - **Contact**: Professional contact form and social media links
 
-## ✨ Professional Experience
+## ✨ Key Features
 
-### 💼 **Current Position**: Software Development Engineer at Namekart Private Limited
-*July 2024 - Present | Noida, India*
+- **🏠 Home Section**: Professional introduction with animated typing effects
+- **👨‍💻 About Me**: Detailed background, education, and career journey ⭐ *FEATURED*
+- **💼 Projects**: Showcase of full-stack applications with live demos
+- **🏆 Certificates**: Professional certifications and competitive programming achievements
+- **🎯 Domain Expertise**: Technical skills and areas of specialization
+- **📞 Contact**: Professional contact form and social media links
+- **📱 Responsive Design**: Optimized for all device sizes
+- **🎨 Modern UI/UX**: Clean design with smooth animations
 
-- 🤖 **AI Integration**: Built LLM-powered AI assistant with RAG using NLP, reducing manual analysis time by 50%
-- 📧 **Mailing System**: Developed bulk email management system, achieving 60% increase in customer engagement
-- 📍 **Location Tracking**: Created location tracking system with 99% accuracy for 100+ daily users across 10+ cities
-- 🏗️ **Microfrontend Architecture**: Redesigned main dashboard enabling seamless integration across teams
-- 🔧 **Tech Stack**: Java, Spring Boot, JPA, Microservices, React, Node.js, MySQL, Docker, Azure
+## 🛠️ Tech Stack
 
-### 🚀 **Previous Role**: Backend Developer Intern at Rydeu Logistics
-*November 2023 - June 2024 | Bengaluru, India (Remote)*
+**Frontend:** React.js (18.3.1) • React Router DOM • Bootstrap • React Bootstrap • Framer Motion • React Icons • React Type Animation
 
-- ⚡ **API Optimization**: Improved 20+ critical APIs, reducing response time from 2s to 1.2s (40% improvement)
-- 🔐 **Security Enhancement**: Engineered KeyCloak authentication system, reducing unauthorized access by 95%
-- 🏦 **International Banking**: Designed bank account system managing 1000+ accounts across 10+ countries
-- 🤝 **CRM Integration**: Integrated Freshwork CRM, increasing lead conversions by 30%
-
-## 🛠️ Technical Skills
-
-**Languages:** JavaScript (ES6+), Java, HTML5, CSS3, TypeScript
-
-**Frontend:** React.js, Next.js, Redux, Bootstrap, Tailwind CSS, Material UI
-
-**Backend:** Node.js, Express.js, Spring Boot, RESTful APIs
-
-**Databases:** MySQL, PostgreSQL, MongoDB
-
-**Tools:** Git, GitHub, GitLab, Docker, Azure, Postman, Figma
-
-## 🚀 Featured Projects
-
-### 🏠 **To-Let (RoomOnRent)** - MERN Stack Application
-*Tech: React.js, Node.js, MongoDB, Real-time Chat, Google Maps*
-
-- Eliminates door-to-door room search with comprehensive property booking platform
-- Integrated real-time chat for seamless user-owner communication
-- Implemented Google Maps for precise location tracking and search
-- **[Live Demo](https://to-let-room-on-rent.vercel.app/)** | **[GitHub](https://github.com/sanjeev662/ToLet-RoomOnRent)**
-
-### 🗺️ **Route-Finder-Application** - Fitness & Navigation App
-*Tech: React.js, Node.js, MongoDB, Google Maps API*
-
-- Personalized walking routes for fitness enthusiasts with 99% accuracy
-- Daily unique path generation to avoid routine routes
-- Autocomplete place suggestions reducing user input time by 60%
-- **[Live Demo](https://route-finder-application.vercel.app/)** | **[GitHub](https://github.com/sanjeev662/Route-Finder-Application)**
-
-## 🏆 Achievements & Certifications
-
-### 🥇 **Competitive Programming**
-- **ICPC Mathura-Kanpur Regionals 2022 Qualifier** (Top 10% among 5000+ participants)
-- **CodeChef**: 3-star rating
-- **HackerRank**: 5-star rating
-- **GeeksforGeeks**: Institute Rank 2 among 500+ students
-- **700+ Problems Solved** across various coding platforms
-
-### 📜 **Professional Certifications**
-- **Full Stack Web Development** (Udemy - 95%)
-- **Java Programming** (HackerRank - 100%)
-- **Soft Skills Development**
-- **ICPC Regionalist Certificate**
+**Development:** Create React App • Web Vitals • Testing Library
 
 ## 📁 Project Structure
 
@@ -140,7 +93,7 @@ Navigate to `http://localhost:3000` to view the portfolio.
 
 ## 🎯 Design Philosophy
 
-- **Professional Showcase**: Highlighting real-world experience and technical expertise
+- **Professional Showcase**: Highlighting technical expertise and professional journey
 - **User-Centric Navigation**: Easy transition from overviews to detailed information
 - **Performance Optimized**: Fast loading with smooth animations using Framer Motion
 - **Responsive Design**: Optimized for all devices and screen sizes
@@ -164,6 +117,6 @@ This project is licensed under the MIT License.
 
 **⭐ If you found this portfolio helpful or inspiring, please consider giving it a star!**
 
-*This portfolio represents my journey from a competitive programming enthusiast to a professional full-stack developer, showcasing real-world projects and continuous learning.*
+*This portfolio represents my journey as a full-stack developer, showcasing technical skills and professional growth through an intuitive user experience.*
 
 *Last updated: August 2025*
