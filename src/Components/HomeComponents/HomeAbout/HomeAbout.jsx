@@ -279,9 +279,7 @@ function HomeAbout() {
                                 rel="noopener noreferrer"
                                 className="text-primary hover:underline flex items-center space-x-1"
                               >
-                                <Building2 className="w-4 h-4" />
                                 <span>{edu.institution}</span>
-                                <ExternalLink className="w-3 h-3" />
                               </a>
                               <p className="text-muted-foreground text-sm leading-relaxed">
                                 {edu.description}

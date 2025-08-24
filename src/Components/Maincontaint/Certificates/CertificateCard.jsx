@@ -34,30 +34,6 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
                     {tagline}
                   </p>
                 </div>
-                
-                <div className="flex space-x-1 ml-3">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 h-7 w-7 p-0"
-                    asChild
-                  >
-                    <a href={imgUrl} target="_blank" rel="noopener noreferrer">
-                      <Eye className="w-3 h-3" />
-                    </a>
-                  </Button>
-                  
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 h-7 w-7 p-0"
-                    asChild
-                  >
-                    <a href={siteUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </Button>
-                </div>
               </div>
             </div>
           </div>
@@ -87,9 +63,10 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
               </a>
             </Button>
             
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
+            <Button variant="outline" size="sm" className="flex-1 h-8 text-xs" asChild>
               <a href={siteUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-3 h-3" />
+                <ExternalLink className="w-3 h-3 mr-1" />
+                Visit Site
               </a>
             </Button>
           </div>
