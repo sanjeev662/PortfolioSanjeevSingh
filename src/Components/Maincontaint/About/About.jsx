@@ -275,7 +275,7 @@ function About() {
                                   <p className="text-sm text-muted-foreground truncate">{skill.tech}</p>
                                 </div>
                               </div>
-                              <span className="text-sm font-medium text-primary">{skill.percentage}%</span>
+                              {/* <span className="text-sm font-medium text-primary">{skill.percentage}%</span> */}
                             </div>
                             <div className="relative h-1.5 bg-muted rounded-full overflow-hidden">
                               <motion.div
