@@ -71,7 +71,7 @@ function Navbar() {
               <motion.img
                 src={logo}
                 alt="Sanjeev Singh"
-                className="w-10 h-10 rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all duration-300"
+                className="w-10 h-10 rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all duration-300 dark:filter dark:brightness-0 dark:invert dark:bg-white/10 dark:p-1"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
               />
