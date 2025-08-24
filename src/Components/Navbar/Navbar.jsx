@@ -1,54 +1,194 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, Sun, Moon } from "lucide-react";
 
-import "./Navbar.css";
+import { useTheme } from "../../contexts/ThemeContext";
+import { Button } from "../ui/button";
 import logo from "../Assets/Images/logo.png";
 
+const navItems = [
+  { path: "/", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/domain", label: "Domain" },
+  { path: "/projects", label: "Projects" },
+  { path: "/certificates", label: "Certificates" },
+  { path: "/contacts", label: "Contact" },
+];
+
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const { theme, setTheme } = useTheme();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      
+      setScrolled(scrollTop > 50);
+      setScrollProgress(scrollPercent);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const closeMenu = () => setIsOpen(false);
+
   return (
-    <nav className="navbar fixed-top navbar-expand-md navbar-light">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <img
-            src={logo}
-            alt=""
-            width="40"
-            height="40"
-            className="d-inline-block"
-          />
-          &nbsp;&nbsp;Sanjeev Singh
-        </Link>
+    <>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "glass-effect shadow-lg backdrop-blur-md"
+            : "bg-transparent"
+        }`}
+      >
+        {/* Scroll Progress Bar */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
+          style={{ width: `${scrollProgress}%` }}
+          initial={{ width: 0 }}
+          animate={{ width: `${scrollProgress}%` }}
+          transition={{ duration: 0.1 }}
+        />
 
-        {/* for responsive button  */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        <div className="container-custom px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group">
+              <motion.img
+                src={logo}
+                alt="Sanjeev Singh"
+                className="w-10 h-10 rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all duration-300"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+              />
+              <motion.span
+                className="text-xl font-bold gradient-text hidden sm:block"
+                whileHover={{ scale: 1.05 }}
+              >
+                Sanjeev Singh
+              </motion.span>
+            </Link>
 
-        
-        <div
-          className="collapse navbar-collapse text-center"
-          id="navbarNavAltMarkup"
-        >
-          <div className="navbar-nav ms-auto ">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/about" className="nav-link">About Me</Link>
-            <Link to="/domain" className="nav-link">Domain</Link>
-            <Link to="/projects" className="nav-link">Projects</Link>
-            <Link to="/certificates" className="nav-link">Certificate</Link>
-            {/* <Link to="/skills" className="nav-link">Skills</Link> */}
-            <Link to="/contacts" className="nav-link">Contact Me</Link>
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-1">
+              {navItems.map((item) => (
+                <Link key={item.path} to={item.path} onClick={closeMenu}>
+                  <motion.div
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
+                      location.pathname === item.path
+                        ? "text-primary"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.label}
+                    {location.pathname === item.path && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                        layoutId="activeTab"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Theme Toggle & Mobile Menu Button */}
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="rounded-full"
+              >
+                <motion.div
+                  initial={false}
+                  animate={{ rotate: theme === "dark" ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </motion.div>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(!isOpen)}
+                className="md:hidden rounded-full"
+              >
+                <motion.div
+                  initial={false}
+                  animate={{ rotate: isOpen ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </motion.div>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden glass-effect border-t border-white/10"
+            >
+              <div className="px-4 py-4 space-y-2">
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.path}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link
+                      to={item.path}
+                      onClick={closeMenu}
+                      className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        location.pathname === item.path
+                          ? "text-primary bg-primary/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
+
+      {/* Spacer to prevent content from hiding behind fixed navbar */}
+      <div className="h-16" />
+    </>
   );
 }
 
