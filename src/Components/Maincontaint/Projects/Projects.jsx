@@ -226,11 +226,10 @@ function Projects() {
             {/* Header */}
             <motion.div variants={itemVariants} className="text-center space-y-4">
               <div className="flex items-center justify-center space-x-3">
-                <FolderOpen className="w-8 h-8 text-primary" />
-                <h1 className="text-2xl md:text-4xl font-bold gradient-text">My Projects</h1>
+                <h2 className="text-2xl md:text-3xl font-bold gradient-text">My Projects</h2>
               </div>
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 A showcase of my technical skills and creativity through various web applications and software solutions
               </p>
             </motion.div>

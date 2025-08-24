@@ -86,7 +86,7 @@ const skills = [
   { 
     name: "Frontend Development", 
     tech: "React.js, Next.js, TypeScript, MUI",
-    percentage: 90,
+    percentage: 84,
     icon: Code,
     color: "from-blue-500 to-cyan-500"
   },
@@ -107,7 +107,7 @@ const skills = [
   { 
     name: "Competitive Programming", 
     tech: "Java",
-    percentage: 82,
+    percentage: 86,
     icon: Trophy,
     color: "from-orange-500 to-red-500"
   },
