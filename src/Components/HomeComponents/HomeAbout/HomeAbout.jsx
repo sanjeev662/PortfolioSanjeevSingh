@@ -52,7 +52,7 @@ function About() {
                 </div>
                 <div className="info-item padd-15">
                   <p>
-                    Current Role: <span> Software Development Engineer (SDE) </span>
+                    Current Role: <span> Software Development Engineer (SDE-1) </span>
                   </p>
                 </div>
               </div>
