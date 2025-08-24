@@ -88,10 +88,7 @@ function HomeProjects() {
         >
           {/* Section Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <div className="flex items-center justify-center space-x-3">
-              <FolderOpen className="w-8 h-8 text-primary" />
-              <h2 className="text-2xl md:text-3xl font-bold gradient-text">Featured Projects</h2>
-            </div>
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Featured Projects</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Showcasing my latest work in full-stack development, real-time applications, and modern web technologies

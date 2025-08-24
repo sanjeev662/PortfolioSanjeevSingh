@@ -184,7 +184,7 @@ function About() {
           >
             {/* Header */}
             <motion.div variants={itemVariants} className="text-center space-y-4">
-              <h1 className="text-2xl md:text-4xl font-bold gradient-text">About Me</h1>
+              <h2 className="text-2xl md:text-3xl font-bold gradient-text">About Me</h2>
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 Passionate Full Stack Developer with expertise in modern web technologies and a strong foundation in problem-solving
