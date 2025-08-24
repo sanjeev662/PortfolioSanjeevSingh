@@ -8,7 +8,8 @@ import {
   Tag,
   Eye,
   Code2,
-  Zap
+  Zap,
+  X
 } from "lucide-react";
 
 import { Button } from "../../ui/button";
@@ -33,26 +34,40 @@ function ProjectCard({
       className="h-full"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      whileHover={{ y: -8 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
     >
       <GlassCard className="h-full overflow-hidden group">
         {/* Project Image/Video */}
-        <div className="relative aspect-video overflow-hidden">
+        <div className="relative aspect-video overflow-hidden bg-black">
           <AnimatePresence mode="wait">
             {showVideo && uTubeUrl ? (
-              <motion.iframe
+              <motion.div
                 key="video"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                src={uTubeUrl}
-                title={`${title} demo video`}
-                className="w-full h-full"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
+                className="relative w-full h-full flex items-center justify-center"
+              >
+                <iframe
+                  src={uTubeUrl}
+                  title={`${title} demo video`}
+                  className="max-w-full max-h-full"
+                  style={{ aspectRatio: '16/9' }}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+                {/* Close Video Button */}
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  onClick={() => setShowVideo(false)}
+                  className="absolute top-2 right-2 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </motion.div>
             ) : (
               <motion.div
                 key="image"
@@ -64,7 +79,7 @@ function ProjectCard({
                 <img
                   src={imgUrl}
                   alt={title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 
                 {/* Overlay */}
@@ -102,8 +117,8 @@ function ProjectCard({
             )}
           </AnimatePresence>
 
-          {/* Featured Badge */}
-          {featured && (
+          {/* Featured Badge - Hidden when video is playing */}
+          {featured && !showVideo && (
             <div className="absolute top-4 left-4">
               <div className="flex items-center space-x-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                 <Star className="w-3 h-3" />
@@ -112,24 +127,14 @@ function ProjectCard({
             </div>
           )}
 
-          {/* Category Badge */}
-          <div className="absolute top-4 right-4">
-            <div className="flex items-center space-x-1 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
-              <Tag className="w-3 h-3" />
-              <span>{category}</span>
+          {/* Category Badge - Also hidden when video is playing to avoid overlap */}
+          {!showVideo && (
+            <div className="absolute top-4 right-4">
+              <div className="flex items-center space-x-1 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
+                <Tag className="w-3 h-3" />
+                <span>{category}</span>
+              </div>
             </div>
-          </div>
-
-          {/* Close Video Button */}
-          {showVideo && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setShowVideo(false)}
-              className="absolute top-4 left-4 backdrop-blur-sm"
-            >
-              ← Back to Image
-            </Button>
           )}
         </div>
 
