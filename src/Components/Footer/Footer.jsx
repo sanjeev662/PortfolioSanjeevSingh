@@ -135,17 +135,6 @@ function Footer() {
           className="mt-8 pt-8 border-t border-border/50"
         >
           <div className="text-center max-w-3xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex items-center justify-center mb-3"
-            >
-              <Quote className="w-4 h-4 text-primary mr-2" />
-              <span className="text-xs font-medium text-primary tracking-wider uppercase">
-                Developer Wisdom
-              </span>
-            </motion.div>
             <motion.blockquote
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -169,7 +158,7 @@ function Footer() {
               className="mt-4 pt-4 border-t border-border/30"
             >
               <p className="text-xs text-muted-foreground">
-                Crafted with passion, powered by innovation • Refresh for new wisdom
+                Debugged with patience, deployed with pride • Refresh for new wisdom
               </p>
             </motion.div>
           </div>
