@@ -12,10 +12,10 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
       transition={{ duration: 0.3 }}
       className="group"
     >
-      <GlassCard className="overflow-hidden h-full">
+      <GlassCard className="overflow-hidden h-full bg-white/70 dark:bg-black/10 border-border/50">
         <div className="relative">
           {/* Certificate Image */}
-          <div className="aspect-[3/2] overflow-hidden">
+          <div className="aspect-[3/2] overflow-hidden border-b border-border/30">
             <LazyImage 
               src={imgUrl} 
               alt={title}
@@ -41,13 +41,13 @@ function CertificateCard({ imgUrl, title, tagline, siteUrl }) {
         </div>
         
         {/* Card Content */}
-        <div className="p-4">
+        <div className="p-4 bg-card/80 dark:bg-transparent">
           <div className="flex items-start space-x-2">
-            <div className="p-1.5 rounded-lg bg-primary/10 flex-shrink-0">
+            <div className="p-1.5 rounded-lg bg-primary/15 flex-shrink-0">
               <Award className="w-4 h-4 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-base mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-base mb-1 line-clamp-2 group-hover:text-primary transition-colors text-card-foreground">
                 {title}
               </h3>
               <p className="text-muted-foreground text-xs line-clamp-2">
