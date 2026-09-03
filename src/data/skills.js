@@ -15,7 +15,7 @@ export const SKILLS = [
   {
     id: "backend-development",
     name: "Backend Development",
-    tech: "Java, Spring Boot, Spring Security, JPA, Microservices",
+    tech: "Java, Spring Boot, Node.js, Microservices, REST APIs",
     percentage: 88,
     icon: "Server",
   },

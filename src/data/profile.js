@@ -67,7 +67,6 @@ export const PERSONAL_INFO = [
     label: "Graduation Year",
     value: PROFILE.graduationYear,
   },
-  { id: "age", icon: "User", label: "Age", value: String(getAge()) },
   { id: "phone", icon: "Phone", label: "Phone", value: PROFILE.phone },
   { id: "city", icon: "MapPin", label: "City", value: PROFILE.location },
   { id: "email", icon: "Mail", label: "E-mail", value: PROFILE.email },

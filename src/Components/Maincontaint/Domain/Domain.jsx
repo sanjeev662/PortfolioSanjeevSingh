@@ -10,7 +10,7 @@ import {
   makeStagger,
   useIntersectionObserver,
 } from "../../../lib/utils";
-import { DOMAINS, getIcon } from "../../../data";
+import { DOMAINS, SKILL_GROUPS, getIcon } from "../../../data";
 
 // The full "Technical Domains" page. The cards read from DOMAINS in src/data,
 // which is also where the ICPC certificate image import now lives.
@@ -190,6 +190,45 @@ function Domain() {
               );
             })}
           </div>
+
+          {/* The full technology matrix from the CV. The three cards above say
+              what the work is; this says what it is built with. */}
+          <motion.div variants={itemVariants} className="space-y-6 pt-2">
+            <div className="space-y-2 text-center">
+              <h2 className="text-xl font-bold sm:text-2xl">Technical Skills</h2>
+              <p className="mx-auto max-w-2xl text-sm text-muted-foreground sm:text-base">
+                The languages, frameworks and tooling I work with day to day
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+              {SKILL_GROUPS.map((group) => {
+                const GroupIcon = getIcon(group.icon);
+
+                return (
+                  <GlassCard key={group.id} className="flex h-full flex-col p-5">
+                    <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary">
+                      <GroupIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      {group.title}
+                    </h3>
+                    <ul
+                      aria-label={`${group.title} technologies`}
+                      className="mt-3 flex flex-wrap gap-2"
+                    >
+                      {group.items.map((item) => (
+                        <li
+                          key={item}
+                          className="rounded-md border border-border/60 bg-accent/40 px-2 py-1 text-xs font-medium text-accent-foreground"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </GlassCard>
+                );
+              })}
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
