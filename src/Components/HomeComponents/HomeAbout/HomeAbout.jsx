@@ -49,7 +49,7 @@ function HomeAbout() {
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-8 sm:space-y-10"
+          className="space-y-10 sm:space-y-14 lg:space-y-16"
         >
           {/* Section heading */}
           <motion.div variants={itemVariants}>

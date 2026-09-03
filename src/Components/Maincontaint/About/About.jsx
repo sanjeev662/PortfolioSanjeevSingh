@@ -58,7 +58,7 @@ function About() {
             variants={containerVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
-            className="space-y-10 sm:space-y-12"
+            className="space-y-12 sm:space-y-16 lg:space-y-20"
           >
             {/* Page heading */}
             <motion.div variants={itemVariants}>
