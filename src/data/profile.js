@@ -11,8 +11,8 @@
  * Two deliberate corrections vs. the old hardcoded copy:
  *  - "Age: 23" was a frozen literal that silently rots. It is now derived from
  *    `birthYear` via getAge().
- *  - There is no known phone number, so no phone row exists. Do not re-add a
- *    placeholder like "+91 XXXXX XXXXX".
+ *  - The phone number comes from the CV. It was previously a placeholder
+ *    ("+91 XXXXX XXXXX") and had been removed rather than shipped as a fake.
  */
 
 /**
@@ -31,16 +31,23 @@ export function getAge() {
 export const PROFILE = {
   name: "Sanjeev Kumar Singh",
   shortName: "Sanjeev Singh",
+  /** Job title, as it appears on the CV. */
   role: "Software Development Engineer (SDE)",
+  /** The positioning line from the top of the CV — used in the hero. */
+  headline: "Java Full Stack Developer",
+  specialisms: ["Java", "Spring Boot", "React.js"],
   tagline:
-    "Passionate Full Stack Developer with expertise in modern web technologies and a strong foundation in problem-solving",
-  bio: "Hi! My name is Sanjeev Singh. I'm a passionate Full Stack Developer with expertise in JavaScript, Java, React.js, Node.js, and Spring Boot. I have a strong foundation in Data Structures and Algorithms, and I'm continuously learning and enthusiastic about Open Source development. I enjoy working on end-to-end products and collaborating with teams to build innovative solutions.",
+    "Java Full Stack Developer building production backends with Spring Boot and PostgreSQL, and the React interfaces on top of them",
+  bio: "Hi! My name is Sanjeev Singh. I'm a Java Full Stack Developer at Namekart, where I own a domain-name platform end to end — from a Spring Boot domain-intelligence microservice ingesting 280K rows a day, to multi-agent AI services orchestrated with Temporal, to the React interfaces the team works in. I have a strong foundation in Data Structures and Algorithms, having solved 800+ problems in Java, and I enjoy taking products from first commit to production.",
   /** The split heading above the bio — the second half renders as gradient text. */
   intro: {
     lead: "I'm Sanjeev Singh and",
     highlight: "Potential Learner (^_^)",
   },
   email: "sanjeevsinghkaushik662@gmail.com",
+  /** Display form and the tel: form, which must have no spaces or dashes. */
+  phone: "+91 95060 09121",
+  phoneHref: "tel:+919506009121",
   location: "New Delhi, India",
   degree: "B-Tech Information Technology",
   graduationYear: "2024",
@@ -65,6 +72,7 @@ export const PERSONAL_INFO = [
     value: PROFILE.graduationYear,
   },
   { id: "age", icon: "User", label: "Age", value: String(getAge()) },
+  { id: "phone", icon: "Phone", label: "Phone", value: PROFILE.phone },
   { id: "city", icon: "MapPin", label: "City", value: PROFILE.location },
   { id: "email", icon: "Mail", label: "E-mail", value: PROFILE.email },
   {
@@ -75,10 +83,7 @@ export const PERSONAL_INFO = [
   },
 ];
 
-/**
- * The "Get In Touch" rows on the contact page.
- * The phone row is intentionally gone — the number was a placeholder.
- */
+/** The "Get In Touch" rows on the contact page. */
 export const CONTACT_INFO = [
   {
     id: "email",
@@ -86,6 +91,13 @@ export const CONTACT_INFO = [
     label: "Email",
     value: PROFILE.email,
     href: `mailto:${PROFILE.email}`,
+  },
+  {
+    id: "phone",
+    icon: "Phone",
+    label: "Phone",
+    value: PROFILE.phone,
+    href: PROFILE.phoneHref,
   },
   {
     id: "location",

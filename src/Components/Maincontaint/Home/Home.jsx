@@ -59,10 +59,10 @@ function Home() {
     <>
       <Helmet>
         <title>{`${PROFILE.name} - Full Stack Developer | Portfolio`}</title>
-        <meta name="description" content="Full Stack Developer specializing in JavaScript, Java, React.js, and Spring Boot. Explore my projects, certificates, and professional journey." />
+        <meta name="description" content="Java Full Stack Developer specialising in Java, Spring Boot and React.js. Explore my projects, experience and certifications." />
         <meta name="keywords" content="Sanjeev Singh, Full Stack Developer, JavaScript, Java, React, Spring Boot, Portfolio" />
         <meta property="og:title" content={`${PROFILE.name} - Full Stack Developer`} />
-        <meta property="og:description" content="Full Stack Developer specializing in JavaScript, Java, React.js, and Spring Boot" />
+        <meta property="og:description" content="Java Full Stack Developer specialising in Java, Spring Boot and React.js" />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={PROFILE.siteUrl} />
       </Helmet>
@@ -161,7 +161,7 @@ function Home() {
                         500,
                         `Hi, I'm ${PROFILE.name}`,
                         2000,
-                        "Hi, I'm a Full Stack Developer",
+                        `Hi, I'm a ${PROFILE.headline}`,
                         2000,
                         "Hi, I'm a Problem Solver",
                         2000,
@@ -180,9 +180,13 @@ function Home() {
                   }}
                   className="mx-auto max-w-3xl text-base text-muted-foreground sm:text-lg md:text-xl"
                 >
-                  {PROFILE.role} specializing in{" "}
-                  <span className="font-semibold text-primary">Java</span> &{" "}
-                  <span className="font-semibold text-primary">JavaScript</span>
+                  {PROFILE.role} at Namekart — specialising in{" "}
+                  {PROFILE.specialisms.map((item, index) => (
+                    <React.Fragment key={item}>
+                      {index > 0 && (index === PROFILE.specialisms.length - 1 ? " & " : ", ")}
+                      <span className="font-semibold text-primary">{item}</span>
+                    </React.Fragment>
+                  ))}
                 </motion.p>
               </motion.div>
 

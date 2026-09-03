@@ -4,95 +4,105 @@
  * Consumed by BOTH the full About page and the homepage About teaser.
  * Do NOT re-declare a `skills` array inside a component body.
  *
- * SKILLS is the four proficiency bars, verbatim from About.jsx.
- * SKILL_GROUPS is a tokenised view of the SAME technologies, assembled only
- * from names that already appear elsewhere in this portfolio — About's skill
- * strings, Domain's sections, the project skill tags and the experience tech
- * arrays. Nothing here was invented; if a technology is not already claimed
- * somewhere else in the repo, it does not belong in this file.
+ * SKILLS is the four proficiency bars shown beside the personal-information
+ * grid. SKILL_GROUPS mirrors the "Technical Skills" table on the CV, using its
+ * categories and its wording, so the two never disagree.
  *
  * Icons are STRING names; resolve them with `getIcon()` from ./icons.
  */
 
 export const SKILLS = [
   {
+    id: "backend-development",
+    name: "Backend Development",
+    tech: "Java, Spring Boot, Spring Security, JPA, Microservices",
+    percentage: 88,
+    icon: "Server",
+  },
+  {
     id: "frontend-development",
     name: "Frontend Development",
-    tech: "React.js, Next.js, TypeScript, MUI",
+    tech: "React.js, Next.js, TypeScript, Redux, Tailwind CSS",
     percentage: 84,
     icon: "Code",
   },
   {
-    id: "backend-development",
-    name: "Backend Development",
-    tech: "Node.js, Spring Boot, MySQL, MongoDB",
-    percentage: 88,
+    id: "databases-and-cloud",
+    name: "Databases & Cloud",
+    tech: "MySQL, PostgreSQL, MongoDB, Docker, CI/CD",
+    percentage: 85,
     icon: "Database",
   },
   {
     id: "data-structures-algorithms",
     name: "Data Structures & Algorithms",
-    tech: "Java",
-    percentage: 85,
-    icon: "Brain",
-  },
-  {
-    id: "competitive-programming",
-    name: "Competitive Programming",
-    tech: "Java",
+    tech: "Java — 800+ problems solved",
     percentage: 86,
-    icon: "Trophy",
+    icon: "Brain",
   },
 ];
 
+/** The CV's "Technical Skills" table, category for category. */
 export const SKILL_GROUPS = [
   {
-    id: "frontend",
-    title: "Frontend",
+    id: "languages",
+    title: "Languages",
     icon: "Code",
-    items: [
-      "React.js",
-      "Next.js",
-      "Redux",
-      "Material UI",
-      "Tailwind CSS",
-      "Bootstrap",
-      "HTML",
-      "CSS",
-    ],
+    items: ["Java", "JavaScript (ES6+)", "TypeScript", "SQL"],
   },
   {
     id: "backend",
     title: "Backend",
     icon: "Server",
     items: [
+      "Spring Boot",
+      "Spring Security",
+      "JPA",
+      "Microservices",
+      "RESTful APIs",
       "Node.js",
       "Express.js",
-      "Spring Boot",
-      "JPA",
-      "RESTful APIs",
-      "Microservices Architecture",
-      "Socket.IO",
+      "Kafka",
+      "WebSockets",
+      "SSE",
     ],
+  },
+  {
+    id: "frontend",
+    title: "Frontend",
+    icon: "Brain",
+    items: ["React.js", "Next.js", "Redux", "Tailwind CSS", "Material UI"],
   },
   {
     id: "databases",
     title: "Databases",
     icon: "Database",
-    items: ["MySQL", "PostgreSQL", "MongoDB", "SQL", "Sequelize"],
+    items: ["MySQL", "PostgreSQL", "MongoDB"],
   },
   {
-    id: "languages-and-tools",
-    title: "Languages & Tools",
+    id: "cloud-devops-monitoring",
+    title: "Cloud, DevOps & Monitoring",
     icon: "Wrench",
     items: [
-      "Java",
-      "JavaScript",
-      "TypeScript",
       "Docker",
+      "Hetzner Cloud",
       "Azure",
-      "GitLab",
-      "Figma",
+      "GitHub Actions (CI/CD)",
+      "Prometheus",
+      "Grafana",
+      "Loki",
+    ],
+  },
+  {
+    id: "core-concepts",
+    title: "Core Concepts",
+    icon: "Trophy",
+    items: [
+      "Data Structures & Algorithms",
+      "OOP",
+      "SOLID Principles",
+      "Design Patterns",
+      "LLM Integration & RAG",
     ],
   },
 ];

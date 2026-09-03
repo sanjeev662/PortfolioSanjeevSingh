@@ -98,7 +98,7 @@ export const DOMAINS = [
       },
     ],
     achievement: {
-      text: "ICPC Regionalist'2022 (Top 10%)",
+      text: "ICPC Mathura–Kanpur Regionals 2022 Qualifier — Top 10% of 5000+ participants",
       image: icpcImg,
     },
   },

@@ -32,8 +32,8 @@ export const PROJECTS = [
     codeUrl: "https://github.com/sanjeev662/ToLet-RoomOnRent",
     uTubeUrl: "https://www.youtube.com/embed/0Esg-oJse-c",
     description:
-      "App eliminates door-to-door room search problem. Users can search, book and save properties, and owners can post. Integrated real-time chat for seamless user-owner communication. Implemented Google Maps for precise room location.",
-    skills: ["MERN", "React.js", "Node.js", "Socket.io", "Google Maps"],
+      "A property platform where renters search, save and book listings and owners manage their own. Secured with JWT authentication plus OAuth 2.0 social sign-in, real-time tenant-to-owner chat over Socket.io, and map-based discovery that filters properties by geographic area using Google Maps.",
+    skills: ["MERN", "React.js", "Node.js", "WebSocket", "JWT", "OAuth", "Google Maps"],
     category: "Full Stack",
     featured: true,
     year: "2024",
