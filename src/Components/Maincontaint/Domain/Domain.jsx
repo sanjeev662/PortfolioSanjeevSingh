@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Award, ExternalLink, Github } from "lucide-react";
+import { ArrowDownRight, Award, ExternalLink, Github } from "lucide-react";
 
 import { Button } from "../../ui/button";
 import { GlassCard, CardContent, CardHeader, CardTitle } from "../../ui/card";
@@ -65,7 +65,23 @@ function Domain() {
                           />
                         </span>
                         <CardTitle className="text-base sm:text-lg font-bold">
-                          {domain.title}
+                          {domain.sections ? (
+                            <a
+                              href="#technical-skills"
+                              className="focus-ring inline-flex items-center gap-1.5 rounded-sm hover:text-primary"
+                            >
+                              {domain.title}
+                              <ArrowDownRight
+                                className="h-4 w-4 shrink-0 text-primary"
+                                aria-hidden="true"
+                              />
+                              <span className="sr-only">
+                                — jump to the full technical skills list
+                              </span>
+                            </a>
+                          ) : (
+                            domain.title
+                          )}
                         </CardTitle>
                       </div>
                     </CardHeader>
@@ -193,7 +209,11 @@ function Domain() {
 
           {/* The full technology matrix from the CV. The three cards above say
               what the work is; this says what it is built with. */}
-          <motion.div variants={itemVariants} className="space-y-6 pt-2">
+          <motion.div
+            id="technical-skills"
+            variants={itemVariants}
+            className="scroll-mt-24 space-y-6 pt-2"
+          >
             <div className="space-y-2 text-center">
               <h2 className="text-xl font-bold sm:text-2xl">Technical Skills</h2>
               <p className="mx-auto max-w-2xl text-sm text-muted-foreground sm:text-base">

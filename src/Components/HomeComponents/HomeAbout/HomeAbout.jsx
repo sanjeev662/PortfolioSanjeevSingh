@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import {
+  ArrowUpRight,
   ArrowRight,
   Award,
   Briefcase,
@@ -133,7 +134,16 @@ function HomeAbout() {
 
             {/* Technical skills */}
             <div className="space-y-5 lg:col-span-2">
-              <h3 className="text-lg sm:text-xl font-bold">Technical Skills</h3>
+              <h3 className="text-lg sm:text-xl font-bold">
+                <Link
+                  to="/domain#technical-skills"
+                  className="focus-ring inline-flex items-center gap-1.5 rounded-sm hover:text-primary"
+                >
+                  Technical Skills
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="sr-only">— see the full skills breakdown</span>
+                </Link>
+              </h3>
 
               <ul className="space-y-4">
                 {SKILLS.map((skill, index) => {

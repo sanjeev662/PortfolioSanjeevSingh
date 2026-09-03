@@ -81,9 +81,39 @@ const RouteWrapper = React.memo(({ children }) => {
  * mid-page when moving from the bottom of one route to another.
  */
 const ScrollToTopOnNavigate = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    // A link like /domain#technical-skills should land on that section, not the
+    // top of the page — React Router does not do this on its own.
+    //
+    // The target lives inside a lazy route, so on a cross-page jump the chunk
+    // is still downloading and the element does not exist yet. Poll briefly
+    // rather than looking once and giving up.
+    if (hash) {
+      const id = hash.slice(1);
+      let timer = null;
+      let attempts = 0;
+
+      const tryScroll = () => {
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+            block: "start",
+          });
+          return;
+        }
+        // ~2s of grace, then stop; a bad hash shouldn't poll forever.
+        if (attempts++ < 20) timer = window.setTimeout(tryScroll, 100);
+      };
+
+      tryScroll();
+      return () => {
+        if (timer !== null) window.clearTimeout(timer);
+      };
+    }
+
     // "auto" defers to the CSS scroll-behavior, and the global
     // prefers-reduced-motion block in index.css forces that to auto (instant).
     window.scrollTo({
@@ -91,7 +121,8 @@ const ScrollToTopOnNavigate = () => {
       left: 0,
       behavior: prefersReducedMotion() ? "auto" : "smooth",
     });
-  }, [pathname]);
+    return undefined;
+  }, [pathname, hash]);
 
   return null;
 };

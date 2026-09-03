@@ -24,22 +24,22 @@ export const DOMAINS = [
       {
         id: "backend",
         title: "Backend Development",
-        tech: "Node.js, Express.js, Spring Boot, Spring Security, JPA, Microservices, RESTful APIs, Kafka, WebSockets, SSE",
+        tech: "Node.js, Express.js, Spring Boot, Microservices",
       },
       {
         id: "frontend",
         title: "Frontend Development",
-        tech: "React.js, Next.js, Redux, TypeScript, Tailwind CSS, Material UI",
+        tech: "React.js, Next.js, Redux, Tailwind CSS",
       },
       {
         id: "databases",
         title: "Databases",
-        tech: "MySQL, PostgreSQL, MongoDB, SQL",
+        tech: "MySQL, PostgreSQL, MongoDB",
       },
       {
         id: "cloud-devops",
         title: "Cloud, DevOps & Monitoring",
-        tech: "Docker, Hetzner Cloud, Azure, GitHub Actions (CI/CD), Prometheus, Grafana, Loki",
+        tech: "Docker, Hetzner Cloud, GitHub Actions (CI/CD)",
       },
     ],
     projectLink: {
