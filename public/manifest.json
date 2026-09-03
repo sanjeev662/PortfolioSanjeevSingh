@@ -1,12 +1,25 @@
 {
-  "name": "Sanjeev Kumar Singh — Software Development Engineer",
+  "name": "Sanjeev Kumar Singh \u2014 Software Development Engineer",
   "short_name": "Sanjeev Singh",
   "description": "Portfolio of Sanjeev Kumar Singh, a Software Development Engineer specializing in Java, Spring Boot, React.js and Node.js.",
   "icons": [
-    { "src": "favicon.ico", "type": "image/x-icon", "sizes": "16x16 32x32 48x48" },
-    { "src": "icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
-    { "src": "icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
-    { "src": "icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+    {
+      "src": "favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "16x16 32x32 48x48"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
   ],
   "start_url": "/",
   "scope": "/",
