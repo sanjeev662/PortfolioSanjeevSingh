@@ -1,10 +1,14 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority"
+import { useReducedMotion } from "framer-motion"
+import { Loader2 } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  // `relative` anchors the loading spinner. The coarse-pointer guard lifts every
+  // button to a 44px hit area on touch devices without bulking up the desktop UI.
+  "relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:min-w-[44px]",
   {
     variants: {
       variant: {
@@ -15,13 +19,20 @@ const buttonVariants = cva(
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        subtle:
+          "border-0 bg-muted text-foreground hover:bg-muted/70",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        gradient: "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200",
+        // Built from the primary token rather than a fixed blue-to-purple, so
+        // the main call-to-action matches whichever of the six themes is
+        // active. A hardcoded gradient clashed badly on dawn and arctic.
+        gradient:
+          "bg-gradient-to-r from-primary to-primary/75 text-primary-foreground hover:from-primary/90 hover:to-primary/65 shadow-lg hover:shadow-xl transition-all duration-200",
         glow: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-primary/50 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
+        xs: "h-8 rounded-md px-2.5 text-xs",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
@@ -34,16 +45,55 @@ const buttonVariants = cva(
   }
 )
 
-const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button"
-  return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
-  )
-})
+const Button = React.forwardRef(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading = false,
+      disabled = false,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const Comp = asChild ? Slot : "button"
+    const prefersReducedMotion = useReducedMotion()
+    const isDisabled = disabled || loading
+    // Slot requires exactly one child, so the spinner is only injected for real
+    // <button> elements. asChild links still advertise the busy/disabled state.
+    const showSpinner = loading && !asChild
+
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        aria-busy={loading || undefined}
+        aria-disabled={asChild && isDisabled ? true : undefined}
+        disabled={asChild ? undefined : isDisabled}
+        {...props}
+      >
+        {showSpinner ? (
+          <>
+            <Loader2
+              aria-hidden="true"
+              className={cn(
+                "absolute inset-0 m-auto h-4 w-4",
+                prefersReducedMotion ? "animate-pulse" : "animate-spin"
+              )}
+            />
+            {/* Children stay in flow so the button keeps its exact width. */}
+            <span className="invisible inline-flex items-center">{children}</span>
+          </>
+        ) : (
+          children
+        )}
+      </Comp>
+    )
+  }
+)
 Button.displayName = "Button"
 
 export { Button, buttonVariants }

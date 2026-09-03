@@ -1,11 +1,18 @@
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
-const Card = React.forwardRef(({ className, ...props }, ref) => (
+/**
+ * Card is a pure surface primitive: radius, border, background, base shadow.
+ * It deliberately owns NO hover transform. Pass `interactive` to opt into the
+ * shared `.hover-lift` helper (hover-capable pointers only) or apply a single
+ * framer-motion `whileHover` at the call site — never both.
+ */
+const Card = React.forwardRef(({ className, interactive = false, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
       "rounded-lg border bg-card text-card-foreground shadow-sm",
+      interactive && "hover-lift",
       className
     )}
     {...props}
@@ -16,21 +23,25 @@ Card.displayName = "Card"
 const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("flex flex-col space-y-1.5 p-4 sm:p-6", className)}
     {...props}
   />
 ))
 CardHeader.displayName = "CardHeader"
 
-const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
+// `children` is passed explicitly rather than via the spread so the
+// jsx-a11y/heading-has-content rule can see the heading is never empty.
+const CardTitle = React.forwardRef(({ className, children, ...props }, ref) => (
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-xl sm:text-2xl font-semibold leading-tight tracking-tight",
       className
     )}
     {...props}
-  />
+  >
+    {children}
+  </h3>
 ))
 CardTitle.displayName = "CardTitle"
 
@@ -44,25 +55,34 @@ const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
 CardDescription.displayName = "CardDescription"
 
 const CardContent = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn("p-4 pt-0 sm:p-6 sm:pt-0", className)}
+    {...props}
+  />
 ))
 CardContent.displayName = "CardContent"
 
 const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
+    className={cn("flex items-center p-4 pt-0 sm:p-6 sm:pt-0", className)}
     {...props}
   />
 ))
 CardFooter.displayName = "CardFooter"
 
-// Enhanced card variants
-const GlassCard = React.forwardRef(({ className, ...props }, ref) => (
+/**
+ * GlassCard — frosted surface built on theme tokens so it stays legible on all
+ * six themes. `.glass-effect` (index.css) supplies the per-theme tint; the token
+ * utilities below are the fallback before a theme class is on <html>.
+ */
+const GlassCard = React.forwardRef(({ className, interactive = false, ...props }, ref) => (
   <Card
     ref={ref}
+    interactive={interactive}
     className={cn(
-      "backdrop-blur-md bg-white/10 dark:bg-black/10 border-white/20 dark:border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105",
+      "glass-effect bg-card/70 backdrop-blur-md border-border/60 shadow-lg",
       className
     )}
     {...props}
@@ -70,11 +90,12 @@ const GlassCard = React.forwardRef(({ className, ...props }, ref) => (
 ))
 GlassCard.displayName = "GlassCard"
 
-const GradientCard = React.forwardRef(({ className, ...props }, ref) => (
+const GradientCard = React.forwardRef(({ className, interactive = false, ...props }, ref) => (
   <Card
     ref={ref}
+    interactive={interactive}
     className={cn(
-      "bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50 border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105",
+      "bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 shadow-lg",
       className
     )}
     {...props}

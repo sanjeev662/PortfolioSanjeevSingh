@@ -2,30 +2,134 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>Sanjeev Kumar Singh — Software Development Engineer</title>
     <meta
       name="description"
-      content="Portfolio site created using MERN stack."
+      content="Sanjeev Kumar Singh — Software Development Engineer specializing in Java, Spring Boot, React.js and Node.js. Explore my projects, experience and certifications."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
+    <meta name="author" content="Sanjeev Kumar Singh" />
+    <link rel="canonical" href="https://portfolio-sanjeev-singh.vercel.app/" />
+
+    <!-- Applies the persisted theme before first paint to avoid a flash of the wrong theme. -->
+    <script>
+      (function () {
+        try {
+          var THEMES = ["light", "dark", "midnight", "obsidian", "dawn", "arctic"];
+          var LIGHT_THEMES = ["light", "dawn", "arctic"];
+          var stored = null;
+          try {
+            stored = window.localStorage.getItem("portfolio-theme");
+          } catch (e) {}
+          var theme = THEMES.indexOf(stored) > -1 ? stored : null;
+          if (!theme) {
+            theme =
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          }
+          var root = document.documentElement;
+          root.classList.remove.apply(root.classList, THEMES);
+          root.classList.add(theme);
+          root.style.colorScheme =
+            LIGHT_THEMES.indexOf(theme) > -1 ? "light" : "dark";
+        } catch (e) {}
+      })();
+    </script>
+
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="dark light" />
+
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <title>Sanjeev Singh</title>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://portfolio-sanjeev-singh.vercel.app/" />
+    <meta property="og:site_name" content="Sanjeev Kumar Singh" />
+    <meta property="og:title" content="Sanjeev Kumar Singh — Software Development Engineer" />
+    <meta
+      property="og:description"
+      content="Sanjeev Kumar Singh — Software Development Engineer specializing in Java, Spring Boot, React.js and Node.js. Explore my projects, experience and certifications."
+    />
+    <meta property="og:image" content="https://portfolio-sanjeev-singh.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sanjeev Kumar Singh — Software Development Engineer" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- css for icon of domain section -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
-    
-    <!-- css will be added here -->
-    <!-- css will be added here -->
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sanjeev Kumar Singh — Software Development Engineer" />
+    <meta
+      name="twitter:description"
+      content="Sanjeev Kumar Singh — Software Development Engineer specializing in Java, Spring Boot, React.js and Node.js. Explore my projects, experience and certifications."
+    />
+    <meta name="twitter:image" content="https://portfolio-sanjeev-singh.vercel.app/og-image.png" />
+    <meta name="twitter:image:alt" content="Sanjeev Kumar Singh — Software Development Engineer" />
 
-
-
-
+    <!-- Structured data: helps search engines resolve name queries to this profile. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Sanjeev Kumar Singh",
+        "url": "https://portfolio-sanjeev-singh.vercel.app/",
+        "image": "https://portfolio-sanjeev-singh.vercel.app/og-image.png",
+        "jobTitle": "Software Development Engineer",
+        "email": "mailto:sanjeevsinghkaushik662@gmail.com",
+        "worksFor": { "@type": "Organization", "name": "Namekart Private Limited" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Noida",
+          "addressCountry": "IN"
+        },
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Chhatrapati Shahu Ji Maharaj University, Kanpur"
+        },
+        "knowsAbout": [
+          "Java", "Spring Boot", "React.js", "Node.js", "JavaScript",
+          "TypeScript", "MySQL", "MongoDB", "Microservices", "Docker"
+        ],
+        "sameAs": [
+          "https://github.com/sanjeev662",
+          "https://www.linkedin.com/in/sanjeev662/",
+          "https://www.codechef.com/users/sanjeev662",
+          "https://codeforces.com/profile/sanjeev662",
+          "https://www.hackerrank.com/sanjeev662"
+        ]
+      }
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+      <div style="max-width: 42rem; margin: 0 auto; padding: 2rem 1.25rem; font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6;">
+        <h1 style="margin: 0 0 0.5rem;">Sanjeev Kumar Singh</h1>
+        <p style="margin: 0 0 1rem; font-weight: 600;">Software Development Engineer</p>
+        <p style="margin: 0 0 1rem;">
+          Based in Noida, India, at Namekart Private Limited. I work with Java,
+          Spring Boot, React.js and Node.js. This portfolio lists my projects,
+          experience and certifications.
+        </p>
+        <p style="margin: 0 0 0.5rem;">
+          Email:
+          <a href="mailto:sanjeevsinghkaushik662@gmail.com">sanjeevsinghkaushik662@gmail.com</a>
+        </p>
+        <p style="margin: 0;">
+          <a href="https://github.com/sanjeev662">GitHub</a> &middot;
+          <a href="https://www.linkedin.com/in/sanjeev662/">LinkedIn</a>
+        </p>
+        <p style="margin: 1.5rem 0 0;">
+          The interactive portfolio requires JavaScript to be enabled.
+        </p>
+      </div>
+    </noscript>
     <div id="root"></div>
   </body>
 </html>

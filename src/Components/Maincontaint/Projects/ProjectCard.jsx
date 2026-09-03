@@ -1,90 +1,95 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ExternalLink, 
-  Github, 
-  Play, 
-  Star, 
-  Tag,
-  Eye,
-  Code2,
-  Zap,
-  X
-} from "lucide-react";
+import React, { useCallback, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ExternalLink, Github, Play, Star, Tag, X } from "lucide-react";
 
 import { Button } from "../../ui/button";
-import { GlassCard, Card, CardContent, CardHeader } from "../../ui/card";
+import { GlassCard } from "../../ui/card";
 import LazyImage from "../../ui/LazyImage";
 
-function ProjectCard({ 
-  title, 
-  imgUrl, 
-  uTubeUrl, 
-  demoUrl, 
-  codeUrl, 
-  description, 
-  skills = [], 
+/**
+ * The one project card. Both /projects and the homepage teaser render this, and
+ * its props match the shape in src/data/projects.js exactly (the field is
+ * `image`, not `imgUrl`) so a call site can just spread a project onto it.
+ *
+ * The card's only hover effect is the lift from `GlassCard interactive`. Don't
+ * add a framer-motion whileHover here or at the call site — stacking two was
+ * what made the old cards jitter.
+ */
+function ProjectCard({
+  title,
+  image,
+  uTubeUrl,
+  demoUrl,
+  codeUrl,
+  description,
+  skills = [],
   category,
   featured = false,
-  viewMode = "grid"
+  viewMode = "grid",
 }) {
-  const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  
-  // Memoize event handlers
-  const toggleVideo = useCallback(() => setShowVideo(true), []);
+  const prefersReducedMotion = useReducedMotion();
+
+  const playVideo = useCallback(() => setShowVideo(true), []);
   const closeVideo = useCallback(() => setShowVideo(false), []);
-  const handleHoverStart = useCallback(() => setIsHovered(true), []);
-  const handleHoverEnd = useCallback(() => setIsHovered(false), []);
-  
-  // Memoize skill tags to prevent re-renders
-  const skillTags = useMemo(() => 
-    skills.map((skill, index) => (
-      <span
-        key={index}
-        className="px-2 py-1 bg-accent/50 text-accent-foreground text-xs rounded-md font-medium"
-      >
-        {skill}
-      </span>
-    )), [skills]
-  );
+
+  const isList = viewMode === "list";
+  const fadeDuration = prefersReducedMotion ? 0 : 0.25;
+
+  // Only one project has a fifth tag, but capping keeps every card in a row the
+  // same height instead of letting one wrap onto an extra line.
+  const visibleSkills = skills.slice(0, 4);
+  const extraSkills = skills.slice(4);
 
   return (
-    <motion.div
-      className="h-full"
-      onHoverStart={handleHoverStart}
-      onHoverEnd={handleHoverEnd}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3 }}
+    <GlassCard
+      interactive
+      className={`group flex h-full overflow-hidden ${
+        isList ? "flex-col sm:flex-row" : "flex-col"
+      }`}
     >
-      <GlassCard className="h-full overflow-hidden group">
-        {/* Project Image/Video */}
-        <div className="relative aspect-video overflow-hidden">
-          <AnimatePresence mode="wait">
+      {/* In list view the image sits on the left at 40% and stretches to
+          whatever height the text column ends up being. Below sm it goes back
+          to sitting on top, same as the grid. */}
+      <div
+        className={`relative w-full shrink-0 overflow-hidden bg-muted ${
+          isList ? "sm:w-2/5 sm:self-stretch" : ""
+        }`}
+      >
+        <div
+          className={`relative aspect-video w-full ${
+            isList ? "sm:absolute sm:inset-0 sm:aspect-auto sm:h-full" : ""
+          }`}
+        >
+          <AnimatePresence mode="wait" initial={false}>
             {showVideo && uTubeUrl ? (
               <motion.div
                 key="video"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="relative w-full h-full"
+                transition={{ duration: fadeDuration }}
+                className="absolute inset-0"
               >
+                {/* Mounted only after a click, so nobody pays for a YouTube
+                    player on twelve cards just by opening the page. */}
                 <iframe
                   src={uTubeUrl}
                   title={`${title} demo video`}
-                  className="w-full h-full"
+                  className="h-full w-full"
+                  loading="lazy"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
-                {/* Close Video Button */}
                 <Button
                   variant="secondary"
                   size="icon"
                   onClick={closeVideo}
-                  className="absolute top-2 right-2 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground"
+                  aria-label={`Close the ${title} demo video`}
+                  className="absolute right-2 top-2 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </motion.div>
             ) : (
@@ -93,114 +98,118 @@ function ProjectCard({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="relative w-full h-full"
+                transition={{ duration: fadeDuration }}
+                className="absolute inset-0"
               >
                 <LazyImage
-                  src={imgUrl}
-                  alt={title}
-                  className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                  src={image}
+                  alt={`${title} screenshot`}
+                  aspectRatio="16/9"
+                  className="h-full w-full"
                 />
-                
-                {/* Overlay */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: isHovered ? 1 : 0 }}
-                  className="absolute inset-0 bg-black/60 flex items-center justify-center"
-                >
-                  <div className="flex space-x-4">
-                    {uTubeUrl && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={toggleVideo}
-                        className="backdrop-blur-sm"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Watch Demo
-                      </Button>
-                    )}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      asChild
-                      className="backdrop-blur-sm"
-                    >
-                      <a href={demoUrl} target="_blank" rel="noopener noreferrer">
-                        <Eye className="w-4 h-4 mr-2" />
-                        Live Demo
-                      </a>
-                    </Button>
-                  </div>
-                </motion.div>
+
+                {/* Decorative only. This used to hold duplicate "Watch Demo"
+                    and "Live Demo" buttons; because pointer-events:none does
+                    not remove anything from the tab order, keyboard and screen
+                    reader users hit two invisible, mouse-unreachable copies of
+                    every action. The real buttons live in the row below, where
+                    touch users can reach them too. */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Featured Badge */}
-          {featured && (
-            <div className="absolute top-4 left-4">
-              <div className="flex items-center space-x-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                <Star className="w-3 h-3" />
-                <span>Featured</span>
-              </div>
-            </div>
-          )}
-
-          {/* Category Badge */}
-          <div className="absolute top-4 right-4">
-            <div className="flex items-center space-x-1 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
-              <Tag className="w-3 h-3" />
-              <span>{category}</span>
-            </div>
-          </div>
         </div>
 
-        {/* Project Content */}
-        <CardContent className="p-6 flex-1 flex flex-col">
-          <div className="flex-1 space-y-4">
-            <div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                {title}
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
-                {description}
-              </p>
-            </div>
-
-            {/* Skills Tags */}
-            <div className="flex flex-wrap gap-2">
-              {skillTags}
-            </div>
+        {/* Both badges share one flex row so a long category name pushes itself
+            onto a second line instead of colliding with "Featured" on a narrow
+            card. Hidden while the video plays so they miss the player chrome. */}
+        {!showVideo && (
+          <div className="pointer-events-none absolute inset-x-0 top-0 flex flex-wrap items-start justify-between gap-2 p-3">
+            {featured && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
+                <Star className="h-3 w-3 shrink-0" aria-hidden="true" />
+                Featured
+              </span>
+            )}
+            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary/90 px-2.5 py-1 text-xs font-medium text-primary-foreground shadow-sm backdrop-blur-sm">
+              <Tag className="h-3 w-3 shrink-0" aria-hidden="true" />
+              {category}
+            </span>
           </div>
+        )}
+      </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-3 mt-6">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1 group/btn"
-              asChild
+      {/* flex-1 here plus mt-auto on the buttons is what bottom-aligns the
+          actions across cards of different description lengths. */}
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <h3 className="break-words text-lg font-bold leading-snug transition-colors group-hover:text-primary sm:text-xl">
+          {title}
+        </h3>
+
+        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+
+        <ul aria-label={`${title} technologies`} className="mt-4 flex flex-wrap gap-2">
+          {visibleSkills.map((skill) => (
+            <li
+              key={skill}
+              className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
             >
-              <a href={demoUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4 mr-2 group-hover/btn:rotate-45 transition-transform" />
-                Live Demo
-              </a>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1 group/btn"
-              asChild
+              {skill}
+            </li>
+          ))}
+          {extraSkills.length > 0 && (
+            <li
+              title={extraSkills.join(", ")}
+              className="rounded-md border border-border/60 px-2 py-1 text-xs font-medium text-muted-foreground"
             >
-              <a href={codeUrl} target="_blank" rel="noopener noreferrer">
-                <Github className="w-4 h-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
-                Source Code
-              </a>
+              +{extraSkills.length} more
+            </li>
+          )}
+        </ul>
+
+        {/* basis-36 lets the two links sit side by side when the card is wide
+            enough and drop to full-width rows when it isn't, instead of
+            squeezing "Source Code" past the edge of its button. */}
+        <div className="mt-auto flex flex-wrap gap-2 pt-5">
+          <Button variant="outline" size="sm" className="flex-1 basis-36" asChild>
+            <a href={demoUrl} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+              Live Demo
+            </a>
+          </Button>
+          <Button variant="outline" size="sm" className="flex-1 basis-36" asChild>
+            <a href={codeUrl} target="_blank" rel="noopener noreferrer">
+              <Github className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+              Source Code
+            </a>
+          </Button>
+          {/* Touch devices never get the hover overlay, so the video needs a
+              real button down here too. Kept mounted in both states so opening
+              the player doesn't resize the card. */}
+          {uTubeUrl && (
+            <Button
+              variant="subtle"
+              size="sm"
+              onClick={showVideo ? closeVideo : playVideo}
+              aria-expanded={showVideo}
+              className="basis-full"
+            >
+              {showVideo ? (
+                <X className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+              ) : (
+                <Play className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              {showVideo ? "Close Demo" : "Watch Demo"}
             </Button>
-          </div>
-        </CardContent>
-      </GlassCard>
-    </motion.div>
+          )}
+        </div>
+      </div>
+    </GlassCard>
   );
 }
 

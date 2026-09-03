@@ -173,17 +173,28 @@
   }
   
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Long emails / URLs must break rather than blow out narrow layouts. */
+    overflow-wrap: anywhere;
   }
 
   html {
     scroll-behavior: smooth;
+    /* Fixed navbar is h-16 (4rem); +1rem so anchor targets clear it. */
+    scroll-padding-top: 5rem;
+    /* Firefox scrollbar styling (the ::-webkit rules below are WebKit only). */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.3) hsl(var(--background));
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
   }
 
   /* Custom scrollbar */
@@ -201,6 +212,22 @@
 
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary/50;
+  }
+
+  /* Honour the OS "reduce motion" setting everywhere. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -263,12 +290,54 @@
     );
   }
 
+  /*
+   * Padding split: `.section-padding` owns VERTICAL rhythm only and
+   * `.container-custom` owns the HORIZONTAL gutter + max width. They are almost
+   * always used together (section > container), so keeping the axes separate
+   * means the two never double up, and an element using only
+   * `.container-custom` still gets a safe gutter instead of running
+   * edge-to-edge on mobile.
+   */
   .section-padding {
-    @apply px-4 sm:px-6 lg:px-8 py-12 lg:py-20;
+    @apply py-12 sm:py-16 lg:py-24;
   }
 
   .container-custom {
-    @apply max-w-7xl mx-auto;
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /*
+   * Hover lift for cards/links. Gated behind a real hover-capable pointer so
+   * the transform never sticks after a tap on touch devices. `will-change` is
+   * only set while hovering to avoid permanently promoting layers.
+   */
+  .hover-lift {
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -12px hsl(var(--foreground) / 0.25);
+      will-change: transform;
+    }
+  }
+
+  /* Focus ring for bare <a>/<Link> elements that don't go through Button. */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Visually hidden until focused, then pinned to the top-left. */
+  .skip-link {
+    @apply sr-only;
+  }
+
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    @apply not-sr-only fixed left-4 top-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    /* Above the fixed navbar (z-50). */
+    z-index: 100;
   }
 
   .animate-float {
@@ -293,6 +362,30 @@
 
   .arctic .animate-glow {
     animation: glow-arctic 2s ease-in-out infinite alternate;
+  }
+}
+
+@layer utilities {
+  /* Keeps a strip scrollable (filter chips, tag rows) but hides the bar. */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Inline text links are only ~17-24px tall, which is below the 24px WCAG
+     2.5.8 minimum and fiddly to hit with a thumb. On touch devices only, grow
+     the link to a comfortable 44px target. Mouse layouts are left alone, so
+     nothing shifts on desktop. */
+  @media (pointer: coarse) {
+    .tap-target {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
   }
 }
 

@@ -193,6 +193,9 @@ export const CODING_QUOTES = [
     author: "Scott McKay"
   },
   {
+    // A quotation about the language, not a script URL — the rule just
+    // pattern-matches the text.
+    // eslint-disable-next-line no-script-url
     quote: "JavaScript: the Lisp of the Web.",
     author: "Douglas Crockford"
   },

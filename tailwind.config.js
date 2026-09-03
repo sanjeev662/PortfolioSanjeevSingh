@@ -1,23 +1,51 @@
+const defaultTheme = require("tailwindcss/defaultTheme")
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
     './src/**/*.{js,jsx}',
-    './Components/**/*.{js,jsx}',
+    './public/index.html',
   ],
   prefix: "",
   theme: {
+    // Spread the defaults after `xs` so the extra breakpoint slots in BELOW sm.
+    screens: {
+      xs: "475px",
+      ...defaultTheme.screens,
+    },
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+        xl: "2rem",
+        "2xl": "2rem",
+      },
       screens: {
         "2xl": "1400px",
       },
     },
     extend: {
+      fontFamily: {
+        sans: [
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "Noto Sans",
+          "sans-serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
+        ],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -83,6 +111,20 @@ module.exports = {
           "0%, 100%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)" },
           "50%": { boxShadow: "0 0 40px rgba(59, 130, 246, 0.8)" },
         },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        // For skeletons: put this on an absolutely positioned gradient overlay
+        // inside an `overflow-hidden` parent.
+        "shimmer": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -91,6 +133,9 @@ module.exports = {
         "slide-in-left": "slide-in-left 0.6s ease-out",
         "slide-in-right": "slide-in-right 0.6s ease-out",
         "glow": "glow 2s ease-in-out infinite",
+        "fade-up": "fade-up 0.5s ease-out both",
+        "scale-in": "scale-in 0.3s ease-out both",
+        "shimmer": "shimmer 1.6s ease-in-out infinite",
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -101,6 +146,10 @@ module.exports = {
   plugins: [
     require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
-    require("@tailwindcss/aspect-ratio"),
+    // NOTE: @tailwindcss/aspect-ratio is deliberately NOT registered. That
+    // plugin swaps Tailwind's native `aspect-video` / `aspect-[3/2]`
+    // utilities for its own `aspect-w-N`/`aspect-h-N` API, which silently
+    // turned `aspect-video` into a no-op and collapsed image boxes to 0px.
+    // Tailwind 3.4 ships aspect-ratio natively.
   ],
 }
