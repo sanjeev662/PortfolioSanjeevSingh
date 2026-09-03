@@ -59,10 +59,10 @@ function Home() {
     <>
       <Helmet>
         <title>{`${PROFILE.name} - Full Stack Developer | Portfolio`}</title>
-        <meta name="description" content="Full Stack Developer specializing in JavaScript, Java, React.js, and Spring Boot. Explore my projects, certificates, and professional journey." />
+        <meta name="description" content="Full Stack Developer specializing in Java, Spring Boot, React.js, and Node.js. Explore my projects, certificates, and professional journey." />
         <meta name="keywords" content="Sanjeev Singh, Full Stack Developer, JavaScript, Java, React, Spring Boot, Portfolio" />
         <meta property="og:title" content={`${PROFILE.name} - Full Stack Developer`} />
-        <meta property="og:description" content="Full Stack Developer specializing in JavaScript, Java, React.js, and Spring Boot" />
+        <meta property="og:description" content="Full Stack Developer specializing in Java, Spring Boot, React.js, and Node.js" />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={PROFILE.siteUrl} />
       </Helmet>

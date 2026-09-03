@@ -46,8 +46,8 @@ function About() {
     <>
       <Helmet>
         <title>About - Sanjeev Kumar Singh | Full Stack Developer</title>
-        <meta name="description" content="Learn about Sanjeev Kumar Singh's professional journey, education, experience, and technical skills as a Full Stack Developer specializing in JavaScript and Java." />
-        <meta name="keywords" content="Sanjeev Singh About, Full Stack Developer Experience, Software Engineer Background, JavaScript Java Developer" />
+        <meta name="description" content="Learn about Sanjeev Kumar Singh's professional journey, education, experience, and technical skills as a Full Stack Developer specializing in Java, Spring Boot, React.js, and Node.js." />
+        <meta name="keywords" content="Sanjeev Singh About, Full Stack Developer Experience, Software Engineer Background, JavaScript, Java Developer" />
       </Helmet>
 
       <div className="min-h-screen section-padding">
