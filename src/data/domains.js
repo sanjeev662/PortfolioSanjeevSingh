@@ -22,19 +22,24 @@ export const DOMAINS = [
     title: "Full Stack Development",
     sections: [
       {
-        id: "frontend",
-        title: "Frontend Development",
-        tech: "React.js, Next.js, TypeScript, Bootstrap, Tailwind CSS, Material UI",
-      },
-      {
         id: "backend",
         title: "Backend Development",
-        tech: "Node.js, Express.js, Spring Boot",
+        tech: "Node.js, Express.js, Spring Boot, Spring Security, JPA, Microservices, RESTful APIs, Kafka, WebSockets, SSE",
+      },
+      {
+        id: "frontend",
+        title: "Frontend Development",
+        tech: "React.js, Next.js, Redux, TypeScript, Tailwind CSS, Material UI",
       },
       {
         id: "databases",
         title: "Databases",
-        tech: "SQL, MySQL, PostgreSQL, MongoDB",
+        tech: "MySQL, PostgreSQL, MongoDB, SQL",
+      },
+      {
+        id: "cloud-devops",
+        title: "Cloud, DevOps & Monitoring",
+        tech: "Docker, Hetzner Cloud, Azure, GitHub Actions (CI/CD), Prometheus, Grafana, Loki",
       },
     ],
     projectLink: {
