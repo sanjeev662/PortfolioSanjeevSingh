@@ -51,7 +51,7 @@
     --accent-foreground: 210 40% 98%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 222.2 84% 6%;
-    --border: 217.2 32.6% 17.5%;
+    --border: 217.2 30% 24%;
     --input: 217.2 32.6% 17.5%;
     --ring: 217.2 91.2% 59.8%;
     --primary-hover: 217.2 91.2% 68%;
@@ -81,7 +81,7 @@
     --accent-foreground: 220 15% 95%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 220 30% 6%;
-    --border: 220 25% 12%;
+    --border: 220 20% 22%;
     --input: 220 25% 12%;
     --ring: 220 85% 60%;
     --primary-hover: 220 85% 69%;
@@ -111,7 +111,7 @@
     --accent-foreground: 270 8% 95%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 270 15% 5%;
-    --border: 270 12% 10%;
+    --border: 270 14% 20%;
     --input: 270 12% 10%;
     --ring: 270 85% 65%;
     --primary-hover: 270 85% 74%;
@@ -256,7 +256,7 @@
      belonged to no token. --card and --border already differ per theme, so the
      surface tracks the theme for free. */
   .glass-effect {
-    @apply border border-border/60 bg-card/70 backdrop-blur-md;
+    @apply border border-border bg-card/80 backdrop-blur-md;
   }
 
   /* Derived from the theme's own primary rather than six hardcoded hue pairs

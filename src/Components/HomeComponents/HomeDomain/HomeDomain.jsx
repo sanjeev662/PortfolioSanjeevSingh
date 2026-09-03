@@ -55,14 +55,9 @@ function HomeDomain() {
                   <GlassCard interactive className="flex h-full flex-col p-5 sm:p-6">
                     <CardHeader className="p-0 pb-4 sm:p-0 sm:pb-4">
                       <div className="flex items-center gap-3 sm:gap-4">
-                        <span
-                          className={cn(
-                            "flex-shrink-0 rounded-lg bg-gradient-to-r p-3 shadow-lg",
-                            domain.color
-                          )}
-                        >
+                        <span className="flex-shrink-0 rounded-lg bg-primary p-3 shadow-sm">
                           <DomainIcon
-                            className="h-6 w-6 text-white"
+                            className="h-6 w-6 text-primary-foreground"
                             aria-hidden="true"
                           />
                         </span>

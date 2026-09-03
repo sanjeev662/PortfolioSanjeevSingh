@@ -169,8 +169,13 @@ function About() {
                             className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                             aria-hidden="true"
                           />
-                          <div className="min-w-0">
-                            <h4 className="text-sm font-semibold">{skill.name}</h4>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-baseline justify-between gap-3">
+                              <h4 className="text-sm font-semibold">{skill.name}</h4>
+                              <span className="shrink-0 text-xs font-semibold tabular-nums text-primary">
+                                {skill.percentage}%
+                              </span>
+                            </div>
                             {/* line-clamp, not truncate — the stack stays legible. */}
                             <p className="text-sm text-muted-foreground line-clamp-2">
                               {skill.tech}
@@ -184,14 +189,11 @@ function About() {
                           aria-valuemin={0}
                           aria-valuemax={100}
                           aria-label={`${skill.name} proficiency`}
-                          className="relative h-1.5 overflow-hidden rounded-full bg-muted"
+                          className="relative h-2 overflow-hidden rounded-full border border-border/70 bg-muted"
                         >
                           {/* Under reduced motion the bar starts full, so nothing sweeps. */}
                           <motion.div
-                            className={cn(
-                              "absolute inset-y-0 left-0 rounded-full bg-gradient-to-r",
-                              skill.color
-                            )}
+                            className="absolute inset-y-0 left-0 rounded-full bg-primary"
                             initial={{ width: reduced ? `${skill.percentage}%` : 0 }}
                             animate={{
                               width:
