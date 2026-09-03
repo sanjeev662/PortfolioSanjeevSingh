@@ -31,11 +31,7 @@ export function getAge() {
 export const PROFILE = {
   name: "Sanjeev Kumar Singh",
   shortName: "Sanjeev Singh",
-  /** Job title, as it appears on the CV. */
   role: "Software Development Engineer (SDE)",
-  /** The positioning line from the top of the CV — used in the hero. */
-  headline: "Java Full Stack Developer",
-  specialisms: ["Java", "Spring Boot", "React.js"],
   tagline:
     "Java Full Stack Developer building production backends with Spring Boot and PostgreSQL, and the React interfaces on top of them",
   bio: "Hi! My name is Sanjeev Singh. I'm a Java Full Stack Developer at Namekart, where I own a domain-name platform end to end — from a Spring Boot domain-intelligence microservice ingesting 280K rows a day, to multi-agent AI services orchestrated with Temporal, to the React interfaces the team works in. I have a strong foundation in Data Structures and Algorithms, having solved 800+ problems in Java, and I enjoy taking products from first commit to production.",

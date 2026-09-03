@@ -48,7 +48,7 @@ export const SKILL_GROUPS = [
     id: "languages",
     title: "Languages",
     icon: "Code",
-    items: ["Java", "JavaScript (ES6+)", "TypeScript", "SQL"],
+    items: ["Java", "JavaScript (ES6+)", "TypeScript", "HTML", "CSS", "SQL"],
   },
   {
     id: "backend",
