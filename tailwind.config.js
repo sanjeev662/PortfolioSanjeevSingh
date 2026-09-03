@@ -54,6 +54,7 @@ module.exports = {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          hover: "hsl(var(--primary-hover))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -63,6 +64,17 @@ module.exports = {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        // Semantic status colours, separate from the accent hue. Every theme
+        // defines these so success/warning states stop reaching for hardcoded
+        // green-500 / amber-500, which ignored the theme and failed contrast.
+        // Use them as tinted chips (bg-success/10 + text-success), not solid
+        // fills — that keeps text contrast safe on all six grounds.
+        success: {
+          DEFAULT: "hsl(var(--success))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

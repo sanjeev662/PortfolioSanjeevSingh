@@ -136,7 +136,7 @@ function CertificateCard({ image, title, tagline, siteUrl, issuer, year }) {
                 </p>
               ) : null}
               {meta ? (
-                <p className="mt-1 break-words text-xs text-muted-foreground/80">
+                <p className="mt-1 break-words text-xs text-muted-foreground">
                   {meta}
                 </p>
               ) : null}

@@ -18,11 +18,14 @@
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96%;
     --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84.2% 45%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
+    --primary-hover: 221.2 83.2% 45%;
+    --warning: 32 85% 33%;
+    --success: 152 65% 30%;
     --radius: 0.5rem;
     
     /* Hero background gradients */
@@ -46,11 +49,14 @@
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 222.2 84% 6%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
+    --ring: 217.2 91.2% 59.8%;
+    --primary-hover: 217.2 91.2% 68%;
+    --warning: 40 90% 58%;
+    --success: 152 55% 55%;
     
     /* Hero background gradients - Exact Tailwind gray-900/gray-800 colors */
     --hero-gradient-from: 220 13% 11%;   /* gray-900: #111827 */
@@ -73,11 +79,14 @@
     --muted-foreground: 220 10% 65%;
     --accent: 220 25% 12%;
     --accent-foreground: 220 15% 95%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 220 15% 95%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 220 30% 6%;
     --border: 220 25% 12%;
     --input: 220 25% 12%;
     --ring: 220 85% 60%;
+    --primary-hover: 220 85% 69%;
+    --warning: 40 90% 58%;
+    --success: 152 55% 55%;
     
     /* Hero background gradients - Midnight theme colors */
     --hero-gradient-from: 220 30% 6%;    /* midnight background */
@@ -100,11 +109,14 @@
     --muted-foreground: 270 6% 65%;
     --accent: 270 12% 10%;
     --accent-foreground: 270 8% 95%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 270 8% 95%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 270 15% 5%;
     --border: 270 12% 10%;
     --input: 270 12% 10%;
     --ring: 270 85% 65%;
+    --primary-hover: 270 85% 74%;
+    --warning: 40 90% 58%;
+    --success: 152 55% 55%;
     
     /* Hero background gradients - Obsidian theme colors */
     --hero-gradient-from: 270 15% 4%;    /* obsidian background */
@@ -119,19 +131,22 @@
     --card-foreground: 30 20% 10%;
     --popover: 30 25% 95%;
     --popover-foreground: 30 20% 10%;
-    --primary: 25 85% 55%;
+    --primary: 25 85% 37%;
     --primary-foreground: 30 25% 97%;
     --secondary: 30 15% 90%;
     --secondary-foreground: 30 20% 10%;
     --muted: 30 15% 90%;
-    --muted-foreground: 30 12% 45%;
+    --muted-foreground: 30 14% 40%;
     --accent: 30 15% 90%;
     --accent-foreground: 30 20% 10%;
-    --destructive: 0 75% 55%;
+    --destructive: 0 75% 45%;
     --destructive-foreground: 30 25% 97%;
     --border: 30 15% 85%;
     --input: 30 15% 85%;
-    --ring: 25 85% 55%;
+    --ring: 25 85% 37%;
+    --primary-hover: 25 85% 30%;
+    --warning: 32 85% 32%;
+    --success: 152 60% 28%;
     
     /* Hero background gradients */
     --hero-gradient-from: 25 60% 95%;
@@ -146,19 +161,22 @@
     --card-foreground: 200 20% 10%;
     --popover: 200 25% 95%;
     --popover-foreground: 200 20% 10%;
-    --primary: 195 85% 50%;
+    --primary: 195 90% 30%;
     --primary-foreground: 200 25% 97%;
     --secondary: 200 15% 90%;
     --secondary-foreground: 200 20% 10%;
     --muted: 200 15% 90%;
-    --muted-foreground: 200 12% 45%;
+    --muted-foreground: 200 14% 40%;
     --accent: 200 15% 90%;
     --accent-foreground: 200 20% 10%;
-    --destructive: 0 75% 55%;
+    --destructive: 0 75% 45%;
     --destructive-foreground: 200 25% 97%;
     --border: 200 15% 85%;
     --input: 200 15% 85%;
-    --ring: 195 85% 50%;
+    --ring: 195 90% 30%;
+    --primary-hover: 195 90% 24%;
+    --warning: 32 85% 32%;
+    --success: 152 60% 28%;
     
     /* Hero background gradients */
     --hero-gradient-from: 195 50% 95%;
@@ -232,54 +250,20 @@
 }
 
 @layer components {
+  /* One surface rule for all six themes. This used to be five per-theme rules
+     hardcoding white/black/orange-50/cyan-50, which meant adding a theme meant
+     remembering to add a glass rule too — and dawn/arctic got a tint that
+     belonged to no token. --card and --border already differ per theme, so the
+     surface tracks the theme for free. */
   .glass-effect {
-    @apply backdrop-blur-md border;
+    @apply border border-border/60 bg-card/70 backdrop-blur-md;
   }
 
-  .light .glass-effect {
-    @apply bg-white/80 border-white/30;
-  }
-
-  .dark .glass-effect,
-  .midnight .glass-effect,
-  .obsidian .glass-effect {
-    @apply bg-black/20 border-white/10;
-  }
-
-  .dawn .glass-effect {
-    @apply bg-orange-50/80 border-orange-200/30;
-  }
-
-  .arctic .glass-effect {
-    @apply bg-cyan-50/80 border-cyan-200/30;
-  }
-
+  /* Derived from the theme's own primary rather than six hardcoded hue pairs
+     (blue->purple, purple->violet, orange->red, cyan->blue). Each theme now
+     gets one accent, used consistently, instead of two arbitrary ones. */
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
-  }
-
-  .light .gradient-text {
-    @apply from-blue-600 to-purple-600;
-  }
-
-  .dark .gradient-text {
-    @apply from-blue-400 to-purple-400;
-  }
-
-  .midnight .gradient-text {
-    @apply from-blue-400 to-indigo-400;
-  }
-
-  .obsidian .gradient-text {
-    @apply from-purple-400 to-violet-400;
-  }
-
-  .dawn .gradient-text {
-    @apply from-orange-500 to-red-500;
-  }
-
-  .arctic .gradient-text {
-    @apply from-cyan-500 to-blue-500;
   }
 
   .hero-gradient-bg {

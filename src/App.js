@@ -107,7 +107,7 @@ const NotFound = () => (
     </p>
     <Link
       to="/"
-      className="focus-ring mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+      className="focus-ring mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
     >
       Back to home
     </Link>
@@ -191,7 +191,7 @@ class ErrorBoundary extends React.Component {
             <button
               type="button"
               onClick={this.handleRetry}
-              className="focus-ring mt-6 inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="focus-ring mt-6 inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
             >
               Reload page
             </button>

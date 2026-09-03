@@ -21,7 +21,6 @@ export const SKILLS = [
     tech: "React.js, Next.js, TypeScript, MUI",
     percentage: 84,
     icon: "Code",
-    color: "from-blue-500 to-cyan-500",
   },
   {
     id: "backend-development",
@@ -29,7 +28,6 @@ export const SKILLS = [
     tech: "Node.js, Spring Boot, MySQL, MongoDB",
     percentage: 88,
     icon: "Database",
-    color: "from-green-500 to-emerald-500",
   },
   {
     id: "data-structures-algorithms",
@@ -37,7 +35,6 @@ export const SKILLS = [
     tech: "Java",
     percentage: 85,
     icon: "Brain",
-    color: "from-purple-500 to-violet-500",
   },
   {
     id: "competitive-programming",
@@ -45,7 +42,6 @@ export const SKILLS = [
     tech: "Java",
     percentage: 86,
     icon: "Trophy",
-    color: "from-orange-500 to-red-500",
   },
 ];
 
@@ -54,7 +50,6 @@ export const SKILL_GROUPS = [
     id: "frontend",
     title: "Frontend",
     icon: "Code",
-    color: "from-blue-500 to-cyan-500",
     items: [
       "React.js",
       "Next.js",
@@ -70,7 +65,6 @@ export const SKILL_GROUPS = [
     id: "backend",
     title: "Backend",
     icon: "Server",
-    color: "from-green-500 to-emerald-500",
     items: [
       "Node.js",
       "Express.js",
@@ -85,14 +79,12 @@ export const SKILL_GROUPS = [
     id: "databases",
     title: "Databases",
     icon: "Database",
-    color: "from-purple-500 to-violet-500",
     items: ["MySQL", "PostgreSQL", "MongoDB", "SQL", "Sequelize"],
   },
   {
     id: "languages-and-tools",
     title: "Languages & Tools",
     icon: "Wrench",
-    color: "from-orange-500 to-red-500",
     items: [
       "Java",
       "JavaScript",

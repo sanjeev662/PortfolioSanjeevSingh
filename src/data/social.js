@@ -17,7 +17,6 @@ export const SOCIAL_LINKS = [
     label: "YouTube",
     href: "https://www.youtube.com/@sscreation101/featured",
     icon: "Youtube",
-    color: "hover:text-red-500",
     showIn: ["footer"],
   },
   {
@@ -28,7 +27,6 @@ export const SOCIAL_LINKS = [
     // GitHub has no brand colour that works on every theme, so it hovers to the
     // theme's own foreground. (A `dark:` pair would only fire on the `dark`
     // theme and come out near-invisible on midnight and obsidian.)
-    color: "hover:text-foreground",
     showIn: ["hero", "footer", "contact"],
   },
   {
@@ -36,7 +34,6 @@ export const SOCIAL_LINKS = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/sanjeev662/",
     icon: "Linkedin",
-    color: "hover:text-blue-600",
     showIn: ["hero", "footer", "contact"],
   },
   {
@@ -44,7 +41,6 @@ export const SOCIAL_LINKS = [
     label: "Instagram",
     href: "https://www.instagram.com/sanjeevsingh_24/",
     icon: "Instagram",
-    color: "hover:text-pink-500",
     showIn: ["footer"],
   },
   {
@@ -52,7 +48,6 @@ export const SOCIAL_LINKS = [
     label: "Facebook",
     href: "https://www.facebook.com/profile.php?id=100009128253547",
     icon: "Facebook",
-    color: "hover:text-blue-500",
     showIn: ["footer"],
   },
   {
@@ -60,7 +55,6 @@ export const SOCIAL_LINKS = [
     label: "Email",
     href: "mailto:sanjeevsinghkaushik662@gmail.com",
     icon: "Mail",
-    color: "hover:text-green-500",
     showIn: ["hero", "footer", "contact"],
   },
   {
@@ -68,7 +62,6 @@ export const SOCIAL_LINKS = [
     label: "Stack Overflow",
     href: "https://stackoverflow.com/users/22363267/sanjeev-kumar-singh",
     icon: "ExternalLink",
-    color: "hover:text-orange-500",
     showIn: ["contact"],
   },
 ];

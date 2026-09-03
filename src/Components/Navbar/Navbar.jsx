@@ -229,7 +229,7 @@ function Navbar() {
         <div
           ref={progressRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-full origin-left bg-gradient-to-r from-blue-500 to-purple-500"
+          className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-full origin-left bg-gradient-to-r from-primary to-primary/60"
           style={{ transform: "scaleX(0)" }}
         />
 

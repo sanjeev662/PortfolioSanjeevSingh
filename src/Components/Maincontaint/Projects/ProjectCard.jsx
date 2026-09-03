@@ -129,12 +129,12 @@ function ProjectCard({
         {!showVideo && (
           <div className="pointer-events-none absolute inset-x-0 top-0 flex flex-wrap items-start justify-between gap-2 p-3">
             {featured && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
+              <span className="inline-flex items-center gap-1 rounded-full border border-warning/40 bg-card/90 px-2.5 py-1 text-xs font-medium text-warning shadow-sm backdrop-blur-sm">
                 <Star className="h-3 w-3 shrink-0" aria-hidden="true" />
                 Featured
               </span>
             )}
-            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary/90 px-2.5 py-1 text-xs font-medium text-primary-foreground shadow-sm backdrop-blur-sm">
+            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground shadow-sm backdrop-blur-sm">
               <Tag className="h-3 w-3 shrink-0" aria-hidden="true" />
               {category}
             </span>

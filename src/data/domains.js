@@ -20,7 +20,6 @@ export const DOMAINS = [
     id: "full-stack-development",
     icon: "Code",
     title: "Full Stack Development",
-    color: "from-blue-500 to-cyan-500",
     sections: [
       {
         id: "frontend",
@@ -47,7 +46,6 @@ export const DOMAINS = [
     id: "data-structures-and-algorithms",
     icon: "Brain",
     title: "Data Structure and Algorithms",
-    color: "from-purple-500 to-violet-500",
     links: [
       {
         id: "college-dsa-repo",
@@ -76,7 +74,6 @@ export const DOMAINS = [
     id: "competitive-programming",
     icon: "Trophy",
     title: "Competitive Programming",
-    color: "from-orange-500 to-red-500",
     links: [
       {
         id: "codechef",

@@ -139,17 +139,17 @@ function Domain() {
                       )}
 
                       {/*
-                        A translucent amber tint instead of the old
+                        The semantic warning token instead of the old hardcoded
                         `from-yellow-50 ... dark:from-yellow-950/20` pair, which
                         only ever considered light and dark and looked wrong on
                         midnight, obsidian, dawn and arctic. The text uses
                         text-foreground so contrast follows the active theme.
                       */}
                       {domain.achievement && (
-                        <div className="mt-auto rounded-lg border border-amber-500/40 bg-amber-500/10 p-3">
+                        <div className="mt-auto rounded-lg border border-warning/40 bg-warning/10 p-3">
                           <div className="flex items-start gap-2">
                             <Award
-                              className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500"
+                              className="mt-0.5 h-4 w-4 flex-shrink-0 text-warning"
                               aria-hidden="true"
                             />
                             <a

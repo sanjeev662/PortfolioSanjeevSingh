@@ -125,7 +125,7 @@ function Contacts() {
                               href={link.href}
                               target={external ? "_blank" : undefined}
                               rel={external ? "noopener noreferrer" : undefined}
-                              className={`focus-ring inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/50 px-3 py-2 text-sm font-medium transition-colors hover:border-primary/50 [@media(pointer:coarse)]:min-h-[44px] ${link.color}`}
+                              className={`focus-ring inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/50 px-3 py-2 text-sm font-medium transition-colors hover:border-primary/50 [@media(pointer:coarse)]:min-h-[44px] hover:text-primary`}
                             >
                               <Icon className="h-4 w-4" aria-hidden="true" />
                               {link.label}

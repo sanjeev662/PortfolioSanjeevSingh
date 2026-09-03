@@ -137,10 +137,10 @@ function HomeDomain() {
                       {/* Amber tint built from a translucent accent so it reads
                           correctly on all six themes, not just light and dark. */}
                       {domain.achievement && (
-                        <div className="mt-auto rounded-lg border border-amber-500/40 bg-amber-500/10 p-3">
+                        <div className="mt-auto rounded-lg border border-warning/40 bg-warning/10 p-3">
                           <div className="flex items-start gap-2">
                             <Award
-                              className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500"
+                              className="mt-0.5 h-4 w-4 flex-shrink-0 text-warning"
                               aria-hidden="true"
                             />
                             <a

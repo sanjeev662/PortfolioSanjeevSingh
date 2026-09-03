@@ -205,7 +205,7 @@ function Home() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.label}
-                      className={`focus-ring flex h-12 w-12 items-center justify-center rounded-full border border-border/50 bg-background/50 text-muted-foreground backdrop-blur-sm transition-colors duration-300 ${social.color}`}
+                      className={`focus-ring flex h-12 w-12 items-center justify-center rounded-full border border-border/50 bg-background/50 text-muted-foreground backdrop-blur-sm transition-colors duration-300 hover:text-primary`}
                       whileHover={
                         prefersReducedMotion ? undefined : { scale: 1.1, y: -2 }
                       }

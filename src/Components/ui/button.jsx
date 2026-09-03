@@ -12,7 +12,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary-hover",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -23,12 +23,13 @@ const buttonVariants = cva(
           "border-0 bg-muted text-foreground hover:bg-muted/70",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Built from the primary token rather than a fixed blue-to-purple, so
-        // the main call-to-action matches whichever of the six themes is
-        // active. A hardcoded gradient clashed badly on dawn and arctic.
+        // The prominent call-to-action. Solid, not a gradient: a `to-primary/75`
+        // stop let the page background bleed through the right-hand end and
+        // dropped the label to ~3.2:1 in every theme. Depth comes from the
+        // shadow instead, which costs no contrast.
         gradient:
-          "bg-gradient-to-r from-primary to-primary/75 text-primary-foreground hover:from-primary/90 hover:to-primary/65 shadow-lg hover:shadow-xl transition-all duration-200",
-        glow: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-primary/50 transition-all duration-300",
+          "bg-primary text-primary-foreground shadow-lg hover:bg-primary-hover hover:shadow-xl transition-all duration-200",
+        glow: "bg-primary text-primary-foreground hover:bg-primary-hover shadow-lg hover:shadow-primary/50 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
