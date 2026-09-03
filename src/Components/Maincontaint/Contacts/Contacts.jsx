@@ -41,13 +41,12 @@ function Contacts() {
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-8 lg:space-y-12"
+          className="space-y-8 lg:space-y-10"
         >
           <motion.div variants={itemVariants}>
             <SectionHeading
               title="Contact Me"
               subtitle="Ready to start your next project? Let's connect and discuss how we can work together to bring your ideas to life."
-              icon={MessageSquare}
             />
           </motion.div>
 

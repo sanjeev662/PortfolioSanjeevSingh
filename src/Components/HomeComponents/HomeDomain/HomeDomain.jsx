@@ -34,7 +34,7 @@ function HomeDomain() {
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-10 sm:space-y-12"
+          className="space-y-8 sm:space-y-10"
         >
           {/* Section heading */}
           <motion.div variants={itemVariants}>

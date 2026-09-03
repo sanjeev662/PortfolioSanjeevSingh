@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import { FolderOpen, Grid3X3, List, Search, X } from "lucide-react";
+import { Grid3X3, List, Search, X } from "lucide-react";
 
 import { Button } from "../../ui/button";
 import { GlassCard } from "../../ui/card";
@@ -89,13 +89,12 @@ function Projects() {
             variants={containerVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
-            className="space-y-10 lg:space-y-12"
+            className="space-y-8 lg:space-y-10"
           >
             <motion.div variants={itemVariants}>
               <SectionHeading
                 title="My Projects"
                 subtitle="A showcase of my technical skills and creativity through various web applications and software solutions"
-                icon={FolderOpen}
               />
             </motion.div>
 

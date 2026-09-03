@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { Code, Coffee, Heart, Quote } from "lucide-react";
 
-import { FOOTER_SOCIAL_LINKS, NAV_ITEMS, PROFILE, getIcon } from "../../data";
+import { FOOTER_SOCIAL_LINKS, PROFILE, getIcon } from "../../data";
 import { getRandomQuote } from "../../constants/codingQuotes";
 
 function Footer() {
@@ -26,16 +25,19 @@ function Footer() {
   return (
     <footer className="border-t border-border/50 bg-gradient-to-t from-accent/10 to-background">
       <div className="container-custom section-padding">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
+        {/* Three across on desktop — branding, socials, copyright — stacking to
+            one centred column on mobile. The navbar already lists every page,
+            so the footer doesn't repeat them. */}
+        <div className="grid items-center gap-8 md:grid-cols-3">
           {/* Branding */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            className="text-center sm:text-left"
+            className="text-center md:text-left"
           >
-            <div className="mb-2 flex items-center justify-center gap-2 sm:justify-start">
+            <div className="mb-2 flex items-center justify-center gap-2 md:justify-start">
               <Code className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
               <span className="gradient-text text-lg font-bold">{PROFILE.shortName}</span>
             </div>
@@ -46,47 +48,16 @@ function Footer() {
             </p>
           </motion.div>
 
-          {/* Quick links — same NAV_ITEMS the navbar uses, so they can't drift */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ delay: prefersReducedMotion ? 0 : 0.1 }}
-            className="text-center sm:text-left"
-          >
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground">
-              Quick Links
-            </h2>
-            <nav aria-label="Footer">
-              <ul className="space-y-1">
-                {NAV_ITEMS.map((item) => (
-                  <li key={item.path}>
-                    <Link
-                      to={item.path}
-                      className="focus-ring inline-flex min-h-[36px] items-center rounded-md py-1 text-sm text-muted-foreground transition-colors hover:text-primary [@media(pointer:coarse)]:min-h-[44px]"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </motion.div>
-
           {/* Social links */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ delay: prefersReducedMotion ? 0 : 0.2 }}
-            className="text-center sm:text-left"
+            transition={{ delay: prefersReducedMotion ? 0 : 0.1 }}
+            className="flex justify-center"
           >
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground">
-              Connect
-            </h2>
-            <ul className="flex flex-wrap justify-center gap-3 sm:justify-start">
+            <ul className="flex flex-wrap justify-center gap-3">
               {FOOTER_SOCIAL_LINKS.map((social) => {
                 const Icon = getIcon(social.icon);
                 return (
@@ -114,8 +85,8 @@ function Footer() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ delay: prefersReducedMotion ? 0 : 0.3 }}
-            className="text-center sm:text-left md:text-right"
+            transition={{ delay: prefersReducedMotion ? 0 : 0.2 }}
+            className="text-center md:text-right"
           >
             <p className="text-sm text-muted-foreground">
               © {currentYear} {PROFILE.shortName}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, FolderOpen } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "../../ui/button";
 import SectionHeading from "../../ui/SectionHeading";
@@ -50,13 +50,12 @@ function HomeProjects() {
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-10 lg:space-y-12"
+          className="space-y-8 lg:space-y-10"
         >
           <motion.div variants={itemVariants}>
             <SectionHeading
               title="Featured Projects"
               subtitle="Showcasing my latest work in full-stack development, real-time applications, and modern web technologies"
-              icon={FolderOpen}
             />
           </motion.div>
 

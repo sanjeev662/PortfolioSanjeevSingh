@@ -37,7 +37,6 @@ function HomeCertificates() {
         >
           <motion.div variants={itemVariants}>
             <SectionHeading
-              icon={Award}
               title="Certificates & Achievements"
               subtitle="Professional certifications and achievements that showcase my expertise and continuous learning"
             />

@@ -279,7 +279,7 @@ function Home() {
         </section>
 
         {/* Homepage sections */}
-        <div className="space-y-20">
+        <div className="space-y-10 sm:space-y-14">
           <div id="about-section">
             <HomeAbout />
           </div>

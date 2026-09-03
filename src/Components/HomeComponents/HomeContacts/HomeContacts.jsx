@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, MessageSquare } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 // The one contact form in the app — this teaser used to keep a diverging copy.
 import Form from "../../Maincontaint/Contacts/Form";
@@ -26,13 +26,12 @@ function HomeContacts() {
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-8 lg:space-y-12"
+          className="space-y-8 lg:space-y-10"
         >
           <motion.div variants={itemVariants}>
             <SectionHeading
               title="Contact Me"
               subtitle="Let's connect and discuss how we can work together on your next project"
-              icon={MessageSquare}
             />
           </motion.div>
 

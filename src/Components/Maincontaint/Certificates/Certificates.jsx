@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Award, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import CertificateCard from "./CertificateCard";
 import SectionHeading from "../../ui/SectionHeading";
 import { Button } from "../../ui/button";
@@ -39,7 +39,6 @@ function Certificates() {
         >
           <motion.div variants={itemVariants}>
             <SectionHeading
-              icon={Award}
               title="Certificates & Achievements"
               subtitle="Professional certifications, internship completions, and competitive programming achievements demonstrating continuous learning and excellence."
             />
