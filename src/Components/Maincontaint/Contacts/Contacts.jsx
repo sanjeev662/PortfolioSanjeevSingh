@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Linkedin, Mail, MessageSquare } from "lucide-react";
+import { Check, Copy, Linkedin, Mail, MessageSquare } from "lucide-react";
 
 import Form from "./Form";
 import { makeReveal, makeStagger, useIntersectionObserver } from "../../../lib/utils";
@@ -12,9 +12,9 @@ import { CONTACT_INFO, PROFILE, SOCIAL_LINKS, getIcon } from "../../../data";
 /**
  * Contact page: the form plus the ways to reach me that aren't a form.
  *
- * Both lists come from src/data. There is deliberately no phone row: this page
- * and the form used to show two different, unverifiable numbers, one of which
- * was an obvious placeholder. Better none than a wrong one.
+ * Both lists come from src/data. Email and phone each get a copy button —
+ * on desktop a mailto:/tel: link often does nothing useful, and people
+ * generally want the value on their clipboard rather than a mail client.
  */
 
 /** Tagged `showIn: ["contact"]` in src/data/social.js — no local copy here. */
@@ -27,6 +27,29 @@ const LINKEDIN = SOCIAL_LINKS.find((link) => link.id === "linkedin");
 function Contacts() {
   const { ref, hasIntersected } = useIntersectionObserver();
   const reduced = useReducedMotion();
+
+  // Which row was just copied, so only that button shows the tick.
+  const [copiedId, setCopiedId] = useState(null);
+  const resetTimer = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+    },
+    []
+  );
+
+  const handleCopy = useCallback(async (id, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedId(id);
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+      resetTimer.current = window.setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Clipboard can be blocked (insecure origin, denied permission). The
+      // value is selectable text either way, so fail quietly.
+    }
+  }, []);
 
   const containerVariants = makeStagger(reduced);
   const itemVariants = makeReveal(reduced);
@@ -108,10 +131,29 @@ function Contacts() {
                               </p>
                             )}
                           </div>
+
+                          {info.href && (
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(info.id, info.value)}
+                              aria-label={`Copy ${info.label.toLowerCase()} to clipboard`}
+                              className="focus-ring flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+                            >
+                              {copiedId === info.id ? (
+                                <Check className="h-4 w-4 text-success" aria-hidden="true" />
+                              ) : (
+                                <Copy className="h-4 w-4" aria-hidden="true" />
+                              )}
+                            </button>
+                          )}
                         </li>
                       );
                     })}
                   </ul>
+
+                  <p aria-live="polite" className="sr-only">
+                    {copiedId ? "Copied to clipboard" : ""}
+                  </p>
 
                   <div>
                     <h3 className="sr-only">Social profiles</h3>

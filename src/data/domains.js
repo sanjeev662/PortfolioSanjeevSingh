@@ -73,6 +73,20 @@ export const DOMAINS = [
         text: "My Profile",
         icon: "BookOpen",
       },
+      {
+        id: "leetcode",
+        label: "LeetCode",
+        url: "https://leetcode.com/sanjeev662/",
+        text: "My Profile",
+        icon: "Code",
+      },
+      {
+        id: "problem-solving-repo",
+        label: "Problem Solving Repo",
+        url: "https://github.com/sanjeev662/problem-solving",
+        text: "My Codes",
+        icon: "Github",
+      },
     ],
   },
   {

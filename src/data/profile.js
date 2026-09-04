@@ -33,12 +33,12 @@ export const PROFILE = {
   shortName: "Sanjeev Singh",
   role: "Software Development Engineer (SDE)",
   tagline:
-    "Java Full Stack Developer building production backends with Spring Boot and PostgreSQL, and the React interfaces on top of them",
-  bio: "Hi! My name is Sanjeev Singh. I'm a Java Full Stack Developer at Namekart, where I own a domain-name platform end to end — from a Spring Boot domain-intelligence microservice ingesting 280K rows a day, to multi-agent AI services orchestrated with Temporal, to the React interfaces the team works in. I have a strong foundation in Data Structures and Algorithms, having solved 800+ problems in Java, and I enjoy taking products from first commit to production.",
+    "Full Stack Developer building production backends with Spring Boot and Node.js, and the React interfaces on top of them",
+  bio: "I'm a Full Stack Developer at Namekart, where I own a domain-name platform across 30+ modules — the Spring Boot services behind it, the multi-agent AI workflows that automate client reporting, and the React interfaces the team works in every day. I care about systems that hold up in production: filtered search that stays in the millisecond range over millions of rows, workflows that retry themselves when something fails, and screens that stay simple as the data grows. Away from feature work I've solved 800+ algorithmic problems in Java and qualified for the ICPC regionals.",
   /** The split heading above the bio — the second half renders as gradient text. */
   intro: {
-    lead: "I'm Sanjeev Singh and",
-    highlight: "Potential Learner (^_^)",
+    lead: "I'm Sanjeev Singh, a",
+    highlight: "Full Stack Developer",
   },
   email: "sanjeevsinghkaushik662@gmail.com",
   /** Display form and the tel: form, which must have no spaces or dashes. */
