@@ -1,9 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import {
   ArrowUpRight,
+  Check,
+  Copy,
   Award,
   Briefcase,
   Calendar,
@@ -36,9 +38,34 @@ import {
 // The full About page. Everything it renders comes from src/data/ so the
 // homepage teaser (HomeComponents/HomeAbout) can show a shorter version of the
 // same content without either copy drifting.
+const COPYABLE = new Set(["phone", "email"]);
+
 function About() {
   const { ref, hasIntersected } = useIntersectionObserver();
   const reduced = useReducedMotion();
+
+  // Phone and e-mail are the two values people actually need on a clipboard.
+  const [copiedId, setCopiedId] = useState(null);
+  const resetTimer = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+    },
+    []
+  );
+
+  const handleCopy = useCallback(async (id, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedId(id);
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+      resetTimer.current = window.setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Blocked clipboard (insecure origin / denied permission). The value is
+      // selectable text regardless, so fail quietly.
+    }
+  }, []);
 
   const containerVariants = useMemo(() => makeStagger(reduced), [reduced]);
   const itemVariants = useMemo(() => makeReveal(reduced), [reduced]);
@@ -117,10 +144,29 @@ function About() {
                             {info.value}
                           </dd>
                         </div>
+
+                        {COPYABLE.has(info.id) && (
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(info.id, info.value)}
+                            aria-label={`Copy ${info.label.toLowerCase()} to clipboard`}
+                            className="focus-ring -mr-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+                          >
+                            {copiedId === info.id ? (
+                              <Check className="h-4 w-4 text-success" aria-hidden="true" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                            )}
+                          </button>
+                        )}
                       </motion.div>
                     );
                   })}
                 </dl>
+
+                <p aria-live="polite" className="sr-only">
+                  {copiedId ? "Copied to clipboard" : ""}
+                </p>
 
                 <motion.div
                   variants={itemVariants}
