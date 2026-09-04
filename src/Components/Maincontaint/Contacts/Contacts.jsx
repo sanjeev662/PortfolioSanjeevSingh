@@ -1,124 +1,233 @@
-import React, { useMemo } from "react";
-import { motion } from "framer-motion";
-import { 
-  MessageSquare, 
-  Phone, 
-  Mail, 
-  Linkedin, 
-  Github, 
-  ExternalLink 
-} from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Check, Copy, Linkedin, Mail, MessageSquare } from "lucide-react";
+
 import Form from "./Form";
-import { useIntersectionObserver } from "../../../lib/utils";
+import { makeReveal, makeStagger, useIntersectionObserver } from "../../../lib/utils";
 import { Button } from "../../ui/button";
-import { GlassCard } from "../../ui/card";
+import { GlassCard, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import SectionHeading from "../../ui/SectionHeading";
+import { CONTACT_INFO, PROFILE, SOCIAL_LINKS, getIcon } from "../../../data";
+
+/**
+ * Contact page: the form plus the ways to reach me that aren't a form.
+ *
+ * Both lists come from src/data. Email and phone each get a copy button —
+ * on desktop a mailto:/tel: link often does nothing useful, and people
+ * generally want the value on their clipboard rather than a mail client.
+ */
+
+/** Tagged `showIn: ["contact"]` in src/data/social.js — no local copy here. */
+const CONTACT_SOCIAL_LINKS = SOCIAL_LINKS.filter((link) =>
+  link.showIn.includes("contact")
+);
+
+const LINKEDIN = SOCIAL_LINKS.find((link) => link.id === "linkedin");
 
 function Contacts() {
   const { ref, hasIntersected } = useIntersectionObserver();
+  const reduced = useReducedMotion();
 
-  const socialLinks = [
-    {
-      icon: Phone,
-      label: "Phone",
-      href: "tel:950-600-9121",
-      color: "from-green-500 to-emerald-500"
+  // Which row was just copied, so only that button shows the tick.
+  const [copiedId, setCopiedId] = useState(null);
+  const resetTimer = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
     },
-    {
-      icon: Mail,
-      label: "Email",
-      href: "mailto:sanjeevsinghkaushik662@gmail.com",
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      icon: Linkedin,
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/in/sanjeev662/",
-      color: "from-blue-600 to-blue-700"
-    },
-    {
-      icon: Github,
-      label: "GitHub",
-      href: "https://github.com/sanjeev662",
-      color: "from-gray-700 to-gray-900"
-    },
-    {
-      icon: ExternalLink,
-      label: "Stack Overflow",
-      href: "https://stackoverflow.com/users/22363267/sanjeev-kumar-singh",
-      color: "from-orange-500 to-red-500"
+    []
+  );
+
+  const handleCopy = useCallback(async (id, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedId(id);
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+      resetTimer.current = window.setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Clipboard can be blocked (insecure origin, denied permission). The
+      // value is selectable text either way, so fail quietly.
     }
-  ];
+  }, []);
 
-  // Memoize social links to prevent re-creation
-  const memoizedSocialLinks = useMemo(() => socialLinks, []);
-
-  // Memoize animation variants
-  const containerVariants = useMemo(() => ({
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
-      },
-    },
-  }), []);
-
-  const itemVariants = useMemo(() => ({
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.4, // Reduced for better performance
-        ease: "easeOut",
-      },
-    },
-  }), []);
+  const containerVariants = makeStagger(reduced);
+  const itemVariants = makeReveal(reduced);
 
   return (
-    <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-primary/5">
+    <section
+      ref={ref}
+      className="section-padding bg-gradient-to-br from-background via-background to-primary/5"
+    >
       <div className="container-custom">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-8 lg:space-y-12"
+          className="space-y-8 lg:space-y-10"
         >
-          {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-3 lg:space-y-4">
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold gradient-text">Contact Me</h2>
-            <div className="w-16 md:w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-            <p className="text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              Ready to start your next project? Let's connect and discuss how we can work together to bring your ideas to life.
-            </p>
+          <motion.div variants={itemVariants}>
+            <SectionHeading
+              title="Contact Me"
+              subtitle="Ready to start your next project? Let's connect and discuss how we can work together to bring your ideas to life."
+            />
           </motion.div>
 
-          {/* Contact Form */}
-          <motion.div variants={itemVariants}>
-            <Form />
-          </motion.div>
+          {/*
+            Source order == visual order at every width, so there are no
+            `order-*` overrides: the form is first in the DOM and first on
+            screen. Tab order and reading order can never disagree.
+          */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <motion.div variants={itemVariants} className="h-full">
+              <Form className="h-full" />
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="h-full">
+              <GlassCard className="h-full p-4 sm:p-6 lg:p-8">
+                <CardHeader className="px-0 pb-4 pt-0 sm:px-0 sm:pb-6 sm:pt-0">
+                  <CardTitle className="flex items-center">
+                    <Mail
+                      className="mr-2 h-5 w-5 text-primary lg:h-6 lg:w-6"
+                      aria-hidden="true"
+                    />
+                    Get In Touch
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground lg:text-base">
+                    I'd love to hear from you. Send me a message and I'll respond
+                    as soon as possible.
+                  </p>
+                </CardHeader>
+
+                <CardContent className="space-y-6 px-0 pb-0 sm:px-0 sm:pb-0">
+                  <ul className="space-y-3 lg:space-y-4">
+                    {CONTACT_INFO.map((info) => {
+                      const Icon = getIcon(info.icon);
+                      return (
+                        <li
+                          key={info.id}
+                          className="flex items-start gap-3 rounded-lg border border-border/50 bg-background/50 p-3 transition-colors hover:border-primary/50 lg:gap-4 lg:p-4"
+                        >
+                          <span className="flex-shrink-0 rounded-lg bg-primary/10 p-2">
+                            <Icon
+                              className="h-4 w-4 text-primary lg:h-5 lg:w-5"
+                              aria-hidden="true"
+                            />
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-muted-foreground lg:text-sm">
+                              {info.label}
+                            </p>
+                            {info.href ? (
+                              <a
+                                href={info.href}
+                                className="focus-ring tap-target break-words rounded-sm text-sm font-medium transition-colors hover:text-primary lg:text-base"
+                              >
+                                {info.value}
+                              </a>
+                            ) : (
+                              <p className="break-words text-sm font-medium lg:text-base">
+                                {info.value}
+                              </p>
+                            )}
+                          </div>
+
+                          {info.href && (
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(info.id, info.value)}
+                              aria-label={`Copy ${info.label.toLowerCase()} to clipboard`}
+                              className="focus-ring flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+                            >
+                              {copiedId === info.id ? (
+                                <Check className="h-4 w-4 text-success" aria-hidden="true" />
+                              ) : (
+                                <Copy className="h-4 w-4" aria-hidden="true" />
+                              )}
+                            </button>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  <p aria-live="polite" className="sr-only">
+                    {copiedId ? "Copied to clipboard" : ""}
+                  </p>
+
+                  <div>
+                    <h3 className="sr-only">Social profiles</h3>
+                    <ul className="flex flex-wrap gap-2">
+                      {CONTACT_SOCIAL_LINKS.map((link) => {
+                        const Icon = getIcon(link.icon);
+                        const external = link.href.startsWith("http");
+                        return (
+                          <li key={link.id}>
+                            <a
+                              href={link.href}
+                              target={external ? "_blank" : undefined}
+                              rel={external ? "noopener noreferrer" : undefined}
+                              className={`focus-ring inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/50 px-3 py-2 text-sm font-medium transition-colors hover:border-primary/50 [@media(pointer:coarse)]:min-h-[44px] hover:text-primary`}
+                            >
+                              <Icon className="h-4 w-4" aria-hidden="true" />
+                              {link.label}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          </div>
 
           {/* Call to Action */}
           <motion.div variants={itemVariants}>
-            <GlassCard className="p-6 lg:p-8 text-center">
+            <GlassCard className="p-4 text-center sm:p-6 lg:p-8">
               <div className="space-y-4 lg:space-y-6">
-                <MessageSquare className="w-10 h-10 lg:w-12 lg:h-12 text-primary mx-auto" />
-                <h3 className="text-xl lg:text-2xl font-bold">Let's Build Something Amazing Together</h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto text-sm lg:text-base px-4">
-                  Whether you have a project in mind, want to collaborate, or just want to say hello, 
-                  I'm always excited to connect with fellow developers and potential clients.
+                <MessageSquare
+                  className="mx-auto h-10 w-10 text-primary lg:h-12 lg:w-12"
+                  aria-hidden="true"
+                />
+                <h3 className="text-xl font-bold lg:text-2xl">
+                  Let's Build Something Amazing Together
+                </h3>
+                <p className="mx-auto max-w-2xl text-sm text-muted-foreground lg:text-base">
+                  Whether you have a project in mind, want to collaborate, or just
+                  want to say hello, I'm always excited to connect with fellow
+                  developers and potential clients.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center mt-4 lg:mt-6 px-4">
-                  <Button variant="gradient" size="lg" className="w-full sm:w-auto" asChild>
-                    <a href="mailto:sanjeevsinghkaushik662@gmail.com">
-                      <Mail className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
+                <div className="mt-4 flex flex-col justify-center gap-3 sm:flex-row lg:mt-6 lg:gap-4">
+                  <Button
+                    variant="gradient"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    asChild
+                  >
+                    <a href={`mailto:${PROFILE.email}`}>
+                      <Mail
+                        className="mr-2 h-4 w-4 lg:h-5 lg:w-5"
+                        aria-hidden="true"
+                      />
                       Send Email
                     </a>
                   </Button>
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-                    <a href="https://www.linkedin.com/in/sanjeev662/" target="_blank" rel="noopener noreferrer">
-                      <Linkedin className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    asChild
+                  >
+                    <a
+                      href={LINKEDIN.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Linkedin
+                        className="mr-2 h-4 w-4 lg:h-5 lg:w-5"
+                        aria-hidden="true"
+                      />
                       Connect on LinkedIn
                     </a>
                   </Button>

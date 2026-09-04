@@ -1,375 +1,367 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { 
-  User, 
-  GraduationCap, 
-  Calendar, 
-  MapPin, 
-  Mail, 
-  Briefcase,
-  Download,
-  UserCheck,
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
   ArrowRight,
-  Code,
-  Database,
-  Brain,
-  Trophy,
-  Building2,
-  ExternalLink,
+  Award,
+  Briefcase,
   Clock,
-  Award
+  Download,
+  ExternalLink,
+  MapPin,
+  UserCheck,
 } from "lucide-react";
 
 import { Button } from "../../ui/button";
-import { GlassCard, Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { useIntersectionObserver } from "../../../lib/utils";
+import { GlassCard, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import SectionHeading from "../../ui/SectionHeading";
+import {
+  cn,
+  makeReveal,
+  makeStagger,
+  useIntersectionObserver,
+} from "../../../lib/utils";
+import {
+  PERSONAL_INFO,
+  PROFILE,
+  RECENT_EXPERIENCE,
+  SKILLS,
+  getIcon,
+} from "../../../data";
 
-const personalInfo = [
-  { icon: GraduationCap, label: "Degree", value: "B-Tech Information Technology" },
-  { icon: Calendar, label: "Graduation Year", value: "2024" },
-  { icon: User, label: "Age", value: "23" },
-  { icon: MapPin, label: "City", value: "New Delhi, India" },
-  { icon: Mail, label: "E-mail", value: "sanjeevsinghkaushik662@gmail.com" },
-  { icon: Briefcase, label: "Current Role", value: "Software Development Engineer (SDE)" },
-];
-
-const education = [
-  {
-    period: "November 2020 – June 2024",
-    title: "Bachelor of Technology in Information Technology",
-    institution: "Chhatrapati Shahu Ji Maharaj University, Kanpur",
-    link: "http://csjmu.ac.in/school-of-engineering-and-technology",
-    description: "Graduated with strong foundation in Data Structures, Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems, and Computer Networks."
-  },
-  {
-    period: "2012 - 2019",
-    title: "Primary and Secondary Education",
-    institution: "Naga Ji Saraswati Vidya Mandir Senior Secondary School, Maldepur - Ballia",
-    link: "https://nagajimaldepur.in/",
-    description: "Completed higher and secondary education through CBSE Board with subjects P.C.M & Sanskrit."
-  }
-];
-
-const experience = [
-  {
-    period: "July 2024 – Present",
-    title: "Software Development Engineer (SDE)",
-    company: "Namekart Private Limited",
-    location: "Noida, India",
-    achievements: [
-      "Integrated an LLM-powered AI assistant with RAG using NLP, enabling users to ask any query in natural language and receive real-time reports and data summaries, reducing manual analysis time by 50% and enhancing decision-making across teams",
-      "Developed a Mailing system that streamlines bulk email management and automates marketing campaigns, facilitating effective tracking of email performance and achieving a 60% increase in customer engagement",
-      "Created location tracking system with 99% accuracy, monitoring 100+ daily user movements across 10+ cities",
-      "Built a data scraping system using puppeteer and cheerio for data extraction, with frontend visualization for operational analysis",
-      "Redesigned the main dashboard using microfrontend architecture, enabling seamless integration of applications developed independently by different teams, enhancing flexibility for development and testing"
-    ],
-    tech: "Java, Spring Boot, JPA, Microservices Architecture, React, Node.js, MySQL, Docker, Azure"
-  },
-  {
-    period: "November 2023 – June 2024",
-    title: "Backend Developer Intern",
-    company: "Rydeu Logistics India Pvt. Ltd.",
-    location: "Bengaluru, India (Remote)",
-    achievements: [
-      "Optimized 20+ critical APIs, reducing average response time from 2s to 1.2s, improving performance by 40%",
-      "Engineered KeyCloak authentication system, enhancing security for 100+ users, reducing unauthorized access by 95%",
-      "Designed international bank account system, managing 1000+ accounts across 10+ countries with 100% accuracy",
-      "Developed automated vendor offer feature, reducing manual effort by 70% and increasing participation by 35%",
-      "Integrated Freshwork CRM for customer interaction and email marketing, resulting in 30% increase in lead conversions"
-    ],
-    tech: "Node.js, PostgreSQL, Sequelize, GitLab, Next.js, Redux, TypeScript, Material UI, Zoho CRM"
-  }
-];
-
-const skills = [
-  { 
-    name: "Frontend Development", 
-    tech: "React.js, Next.js, TypeScript, MUI",
-    percentage: 84,
-    icon: Code,
-    color: "from-blue-500 to-cyan-500"
-  },
-  { 
-    name: "Backend Development", 
-    tech: "Node.js, Spring Boot, MySQL, MongoDB",
-    percentage: 88,
-    icon: Database,
-    color: "from-green-500 to-emerald-500"
-  },
-  { 
-    name: "Data Structures & Algorithms", 
-    tech: "Java",
-    percentage: 85,
-    icon: Brain,
-    color: "from-purple-500 to-violet-500"
-  },
-  { 
-    name: "Competitive Programming", 
-    tech: "Java",
-    percentage: 86,
-    icon: Trophy,
-    color: "from-orange-500 to-red-500"
-  },
-];
+// The homepage teaser for the About page: who I am, the skill bars, and only
+// the two most recent roles. Education and the older roles live on /about.
+const COPYABLE = new Set(["phone", "email"]);
 
 function HomeAbout() {
   const { ref, hasIntersected } = useIntersectionObserver();
+  const reduced = useReducedMotion();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
+  // Same click-to-copy affordance as the full About page.
+  const [copiedId, setCopiedId] = useState(null);
+  const resetTimer = useRef(null);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
+  useEffect(
+    () => () => {
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
     },
-  };
+    []
+  );
+
+  const handleCopy = useCallback(async (id, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedId(id);
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+      resetTimer.current = window.setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Blocked clipboard (insecure origin / denied permission) — fail quietly.
+    }
+  }, []);
+
+  const containerVariants = useMemo(() => makeStagger(reduced), [reduced]);
+  const itemVariants = useMemo(() => makeReveal(reduced), [reduced]);
 
   return (
-    <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-accent/5">
+    <section
+      ref={ref}
+      className="section-padding bg-gradient-to-br from-background via-background to-accent/5"
+    >
       <div className="container-custom">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-12"
+          className="space-y-10 sm:space-y-14 lg:space-y-16"
         >
-          {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text">About Me</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-          </motion.div>
-
-          {/* Introduction Paragraph */}
+          {/* Section heading */}
           <motion.div variants={itemVariants}>
-            <div className="p-4 space-y-8">
-              <div className="text-center space-y-6">
-                <h3 className="text-2xl md:text-3xl font-bold">
-                  I'm Sanjeev Singh and{" "}
-                  <span className="gradient-text">Potential Learner (^_^)</span>
-                </h3>
-                <p className="text-muted-foreground leading-relaxed text-base md:text-lg max-w-4xl mx-auto">
-                  Hi! My name is Sanjeev Singh. I'm a passionate Full Stack Developer with expertise in 
-                  JavaScript, Java, React.js, Node.js, and Spring Boot. I have a strong foundation in 
-                  Data Structures and Algorithms, and I'm continuously learning and enthusiastic about 
-                  Open Source development. I enjoy working on end-to-end products and collaborating with 
-                  teams to build innovative solutions.
-                </p>
-              </div>
-
-              <div className="flex flex-col lg:flex-row gap-12 min-h-[420px]">
-                {/* Left Column - Personal Information (60% width) */}
-                <div className="flex-[0.6] space-y-5 flex flex-col justify-between">
-                  <div className="space-y-5">
-                    <h3 className="text-xl font-bold text-center lg:text-left">Personal Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {personalInfo.map((info, index) => (
-                        <motion.div
-                          key={info.label}
-                          variants={itemVariants}
-                          className="flex items-center space-x-2 p-2.5 rounded-lg bg-background/50 border border-border/50 min-h-[60px]"
-                        >
-                          <info.icon className="w-4 h-4 text-primary flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm text-muted-foreground">{info.label}:</p>
-                            <p className="font-medium text-sm truncate">{info.value}</p>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
-                      <Button variant="gradient" size="default" className="group h-10" asChild>
-                        <a
-                          href="https://drive.google.com/file/d/1owTJHwvsvIn8PpVRFsKLpSqQIarMIKe9/view"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Download className="w-4 h-4 mr-2 group-hover:animate-bounce" />
-                          Download CV
-                        </a>
-                      </Button>
-                      <Button variant="outline" size="default" className="h-10" asChild>
-                        <Link to="/contacts">
-                          <UserCheck className="w-4 h-4 mr-2" />
-                          Hire Me
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column - Technical Skills (40% width) */}
-                <div className="flex-[0.4] space-y-5 flex flex-col justify-between">
-                  <div className="space-y-5">
-                    <h3 className="text-xl font-bold text-center lg:text-left">Technical Skills</h3>
-                    <div className="space-y-4">
-                      {skills.map((skill, index) => (
-                        <motion.div
-                          key={skill.name}
-                          variants={itemVariants}
-                          className="space-y-2 min-h-[60px] flex flex-col justify-center"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <skill.icon className="w-4 h-4 text-primary" />
-                              <div>
-                                <h5 className="font-semibold text-sm">{skill.name}</h5>
-                                <p className="text-sm text-muted-foreground truncate">{skill.tech}</p>
-                              </div>
-                            </div>
-                            {/* <span className="text-sm font-medium text-primary">{skill.percentage}%</span> */}
-                          </div>
-                          <div className="relative h-1.5 bg-muted rounded-full overflow-hidden">
-                            <motion.div
-                              className={`absolute top-0 left-0 h-full bg-gradient-to-r ${skill.color} rounded-full`}
-                              initial={{ width: 0 }}
-                              animate={hasIntersected ? { width: `${skill.percentage}%` } : { width: 0 }}
-                              transition={{ duration: 1, delay: index * 0.2 }}
-                            />
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid lg:grid-cols-2 gap-12">
-                {/* Education */}
-                <motion.div variants={itemVariants}>
-                  <GlassCard className="p-6 h-full">
-                    <CardHeader className="px-0 pt-0">
-                      <CardTitle className="text-xl font-bold flex items-center">
-                        <GraduationCap className="w-6 h-6 mr-2 text-primary" />
-                        Education
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-0 pb-0">
-                      <div className="space-y-6">
-                        {education.map((edu, index) => (
-                          <motion.div
-                            key={index}
-                            variants={itemVariants}
-                            className="relative pl-6 border-l-2 border-primary/20 last:border-l-0"
-                          >
-                            <div className="absolute -left-2 top-0 w-4 h-4 bg-primary rounded-full" />
-                            <div className="space-y-2">
-                              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                                <Calendar className="w-4 h-4" />
-                                <span>{edu.period}</span>
-                              </div>
-                              <h4 className="font-semibold text-lg">{edu.title}</h4>
-                              <a
-                                href={edu.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline flex items-center space-x-1"
-                              >
-                                <span>{edu.institution}</span>
-                              </a>
-                              <p className="text-muted-foreground text-sm leading-relaxed">
-                                {edu.description}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </GlassCard>
-                </motion.div>
-
-                {/* Experience */}
-                <motion.div variants={itemVariants}>
-                  <GlassCard className="p-6 h-full">
-                    <CardHeader className="px-0 pt-0">
-                      <CardTitle className="text-xl font-bold flex items-center">
-                        <Briefcase className="w-6 h-6 mr-2 text-primary" />
-                        Professional Experience
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-0 pb-0">
-                      <div className="space-y-8">
-                        {experience.map((exp, index) => (
-                          <motion.div
-                            key={index}
-                            variants={itemVariants}
-                            className="relative pl-6 border-l-2 border-primary/20 last:border-l-0"
-                          >
-                            <div className="absolute -left-2 top-0 w-4 h-4 bg-primary rounded-full" />
-                            <div className="space-y-3">
-                              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                                <Clock className="w-4 h-4" />
-                                <span>{exp.period}</span>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-lg text-primary">{exp.title}</h4>
-                                <p className="font-medium text-base">{exp.company}</p>
-                                <p className="text-sm text-muted-foreground flex items-center">
-                                  <MapPin className="w-3 h-3 mr-1" />
-                                  {exp.location}
-                                </p>
-                              </div>
-                              {exp.certificate && (
-                                <a
-                                  href={exp.certificate}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center space-x-1 text-primary hover:underline text-sm"
-                                >
-                                  <Award className="w-4 h-4" />
-                                  <span>View Certificate</span>
-                                  <ExternalLink className="w-3 h-3" />
-                                </a>
-                              )}
-                              <ul className="space-y-1 text-sm text-muted-foreground">
-                                {exp.achievements.map((achievement, achIndex) => (
-                                  <li key={achIndex} className="flex items-start space-x-2">
-                                    <span className="text-primary mt-1">•</span>
-                                    <span>{achievement}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                              <div className="flex flex-wrap gap-2">
-                                {exp.tech.split(', ').map((tech, techIndex) => (
-                                  <span
-                                    key={techIndex}
-                                    className="px-2 py-1 bg-accent/50 text-accent-foreground text-xs rounded-md font-medium"
-                                  >
-                                    {tech}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </GlassCard>
-                </motion.div>
-              </div>
-            </div>
+            <SectionHeading title="About Me" />
           </motion.div>
 
-          {/* View More Button */}
+          {/* Introduction */}
+          <motion.div variants={itemVariants} className="space-y-6 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold">
+              {PROFILE.intro.lead}{" "}
+              <span className="gradient-text">{PROFILE.intro.highlight}</span>
+            </h3>
+            <p className="mx-auto max-w-4xl text-base sm:text-lg leading-relaxed text-muted-foreground">
+              {PROFILE.bio}
+            </p>
+          </motion.div>
+
+          {/* Personal info and skills side by side on large screens, stacked below. */}
+          <div className="grid gap-8 lg:grid-cols-5">
+            {/* Personal information */}
+            <div className="space-y-5 lg:col-span-3">
+              <h3 className="text-lg sm:text-xl font-bold">
+                Personal Information
+              </h3>
+
+              <dl className="grid grid-cols-1 xs:grid-cols-2 gap-3">
+                {PERSONAL_INFO.map((info) => {
+                  const Icon = getIcon(info.icon);
+
+                  return (
+                    <motion.div
+                      key={info.id}
+                      variants={itemVariants}
+                      className="flex items-start gap-2 rounded-lg border border-border/50 bg-background/50 p-2.5"
+                    >
+                      <Icon
+                        className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <dt className="text-sm text-muted-foreground">
+                          {info.label}:
+                        </dt>
+                        {/* break-words, not truncate — the email has to stay readable. */}
+                        <dd className="text-sm font-medium break-words">
+                          {info.value}
+                        </dd>
+                      </div>
+
+                      {COPYABLE.has(info.id) && (
+                        <button
+                          type="button"
+                          onClick={() => handleCopy(info.id, info.value)}
+                          aria-label={`Copy ${info.label.toLowerCase()} to clipboard`}
+                          className="focus-ring -mr-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+                        >
+                          {copiedId === info.id ? (
+                            <Check className="h-4 w-4 text-success" aria-hidden="true" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                          )}
+                        </button>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </dl>
+
+              <p aria-live="polite" className="sr-only">
+                {copiedId ? "Copied to clipboard" : ""}
+              </p>
+
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-col gap-3 pt-2 sm:flex-row"
+              >
+                <Button variant="gradient" className="group" asChild>
+                  <a
+                    href={PROFILE.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download
+                      aria-hidden="true"
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        !reduced && "group-hover:animate-bounce"
+                      )}
+                    />
+                    Download CV
+                  </a>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/contacts">
+                    <UserCheck className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Hire Me
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+
+            {/* Technical skills */}
+            <div className="space-y-5 lg:col-span-2">
+              <h3 className="text-lg sm:text-xl font-bold">
+                <Link
+                  to="/domain#technical-skills"
+                  className="focus-ring inline-flex items-center gap-1.5 rounded-sm hover:text-primary"
+                >
+                  Technical Skills
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="sr-only">— see the full skills breakdown</span>
+                </Link>
+              </h3>
+
+              <ul className="space-y-4">
+                {SKILLS.map((skill, index) => {
+                  const Icon = getIcon(skill.icon);
+
+                  return (
+                    <motion.li
+                      key={skill.id}
+                      variants={itemVariants}
+                      className="space-y-2"
+                    >
+                      <div className="flex items-start gap-2">
+                        <Icon
+                          className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                          aria-hidden="true"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-baseline justify-between gap-3">
+                            <h4 className="text-sm font-semibold">{skill.name}</h4>
+                            <span className="shrink-0 text-xs font-semibold tabular-nums text-primary">
+                              {skill.percentage}%
+                            </span>
+                          </div>
+                          {/* line-clamp, not truncate — the stack stays legible. */}
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {skill.tech}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        role="progressbar"
+                        aria-valuenow={skill.percentage}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`${skill.name} proficiency`}
+                        className="relative h-2 overflow-hidden rounded-full border border-border/70 bg-muted"
+                      >
+                        {/* Under reduced motion the bar starts full, so nothing sweeps. */}
+                        <motion.div
+                          className="absolute inset-y-0 left-0 rounded-full bg-primary"
+                          initial={{ width: reduced ? `${skill.percentage}%` : 0 }}
+                          animate={{
+                            width:
+                              hasIntersected || reduced
+                                ? `${skill.percentage}%`
+                                : 0,
+                          }}
+                          transition={{
+                            duration: reduced ? 0 : 1,
+                            delay: reduced ? 0 : index * 0.2,
+                          }}
+                        />
+                      </div>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+
+          {/* Recent experience — the two latest roles only. */}
+          <motion.div variants={itemVariants}>
+            <GlassCard className="p-5 sm:p-6">
+              <CardHeader className="p-0 pb-4 sm:p-0 sm:pb-4">
+                <CardTitle className="flex items-center text-lg sm:text-xl font-bold">
+                  <Briefcase
+                    className="mr-2 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  Professional Experience
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 sm:p-0">
+                <ol className="space-y-8">
+                  {RECENT_EXPERIENCE.map((exp, index) => (
+                    <motion.li
+                      key={exp.id}
+                      variants={itemVariants}
+                      className="relative pl-8"
+                    >
+                      {/* Dot per role, connector down to the next one, none on the last. */}
+                      <span
+                        aria-hidden="true"
+                        className="absolute left-0 top-0 h-3.5 w-3.5 rounded-full bg-primary"
+                      />
+                      {index < RECENT_EXPERIENCE.length - 1 && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-1.5 top-4 -bottom-8 w-0.5 bg-primary/20"
+                        />
+                      )}
+
+                      <div className="space-y-3">
+                        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Clock
+                            className="h-4 w-4 flex-shrink-0"
+                            aria-hidden="true"
+                          />
+                          <span>{exp.period}</span>
+                        </p>
+
+                        <div>
+                          <h4 className="text-base sm:text-lg font-semibold text-primary">
+                            {exp.title}
+                          </h4>
+                          <p className="font-medium">{exp.company}</p>
+                          <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <MapPin
+                              className="h-3 w-3 flex-shrink-0"
+                              aria-hidden="true"
+                            />
+                            <span>{exp.location}</span>
+                          </p>
+                        </div>
+
+                        {exp.certificate && (
+                          <a
+                            href={exp.certificate}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`View certificate for ${exp.title} at ${exp.company}`}
+                            className="focus-ring tap-target inline-flex items-center gap-1 rounded-sm text-sm text-primary hover:underline"
+                          >
+                            <Award
+                              className="h-4 w-4 flex-shrink-0"
+                              aria-hidden="true"
+                            />
+                            <span>View Certificate</span>
+                            <ExternalLink
+                              className="h-3 w-3 flex-shrink-0"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        )}
+
+                        {/* Real bullets instead of a "•" span faking them. */}
+                        <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
+                          {exp.achievements.map((achievement) => (
+                            <li key={achievement}>{achievement}</li>
+                          ))}
+                        </ul>
+
+                        {/* exp.tech is already an array in src/data — no .split() needed. */}
+                        <ul className="flex flex-wrap gap-2">
+                          {exp.tech.map((tech) => (
+                            <li
+                              key={tech}
+                              className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
+                            >
+                              {tech}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </motion.li>
+                  ))}
+                </ol>
+              </CardContent>
+            </GlassCard>
+          </motion.div>
+
           <motion.div variants={itemVariants} className="text-center">
             <Button variant="gradient" size="lg" className="group" asChild>
               <Link to="/about">
-                View Complete Profile
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                Read more about me
+                <ArrowRight
+                  aria-hidden="true"
+                  className={cn(
+                    "ml-2 h-5 w-5",
+                    !reduced && "transition-transform group-hover:translate-x-1"
+                  )}
+                />
               </Link>
             </Button>
           </motion.div>
@@ -379,4 +371,4 @@ function HomeAbout() {
   );
 }
 
-export default HomeAbout;
+export default React.memo(HomeAbout);

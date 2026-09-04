@@ -1,185 +1,199 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { 
-  Code, 
-  Database, 
-  Brain, 
-  Trophy, 
-  ExternalLink, 
-  ArrowRight,
-  Github,
-  Award
-} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Award, ExternalLink, Github } from "lucide-react";
 
 import { Button } from "../../ui/button";
-import { GlassCard, Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { useIntersectionObserver } from "../../../lib/utils";
-import icpcc from "../../Assets/Certificates/icpc.jpg";
+import { GlassCard, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import SectionHeading from "../../ui/SectionHeading";
+import {
+  cn,
+  makeReveal,
+  makeStagger,
+  useIntersectionObserver,
+} from "../../../lib/utils";
+import { DOMAINS, getIcon } from "../../../data";
 
-const domains = [
-  {
-    icon: Code,
-    title: "Full Stack Development",
-    color: "from-blue-500 to-cyan-500",
-    sections: [
-      {
-        title: "Frontend Development",
-        tech: "React.js, Next.js, TypeScript, Bootstrap, Tailwind CSS, Material UI"
-      },
-      {
-        title: "Backend Development", 
-        tech: "Node.js, Express.js, Spring Boot"
-      },
-      {
-        title: "Databases",
-        tech: "SQL, MySQL, PostgreSQL, MongoDB"
-      }
-    ]
-  },
-  {
-    icon: Brain,
-    title: "Data Structure and Algorithms",
-    color: "from-purple-500 to-violet-500",
-    links: [
-      { label: "College-DSA Repo", url: "https://github.com/sanjeev662/DS-JAVA", text: "My Codes" },
-      { label: "College-OOPS Repo", url: "https://github.com/sanjeev662/OOPS-JAVA", text: "My Codes" },
-      { label: "GeeksforGeeks DSA", url: "https://auth.geeksforgeeks.org/user/sanjeev662", text: "My Profile" }
-    ]
-  },
-  {
-    icon: Trophy,
-    title: "Competitive Programming",
-    color: "from-orange-500 to-red-500",
-    links: [
-      { label: "CodeChef", url: "https://www.codechef.com/users/sanjeev662", text: "sanjeev662" },
-      { label: "CodeForces", url: "https://codeforces.com/profile/sanjeev662", text: "sanjeev662" },
-      { label: "HackerRank", url: "https://www.hackerrank.com/sanjeev662", text: "sanjeev662" }
-    ],
-    achievement: {
-      text: "ICPC Regionalist'2022 (Top 10%)",
-      image: icpcc
-    }
-  }
-];
-
+// The homepage teaser for the Technical Domains page: the same three cards
+// from DOMAINS, plus a link through to the full page.
 function HomeDomain() {
   const { ref, hasIntersected } = useIntersectionObserver();
+  const reduced = useReducedMotion();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
+  const containerVariants = useMemo(() => makeStagger(reduced), [reduced]);
+  const itemVariants = useMemo(() => makeReveal(reduced), [reduced]);
 
   return (
-    <section ref={ref} className="section-padding bg-gradient-to-br from-background via-background to-primary/5" id="Domain">
+    <section
+      ref={ref}
+      id="Domain"
+      className="section-padding bg-gradient-to-br from-background via-background to-primary/5"
+    >
       <div className="container-custom">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
-          className="space-y-12"
+          className="space-y-8 sm:space-y-10"
         >
-          {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Technical Domains</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Explore my expertise across different technical domains and specializations
-            </p>
+          {/* Section heading */}
+          <motion.div variants={itemVariants}>
+            <SectionHeading
+              title="Technical Domains"
+              subtitle="Explore my expertise across different technical domains and specializations"
+            />
           </motion.div>
 
-          {/* Domains Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-2">
-            {domains.map((domain, index) => (
-              <motion.div key={domain.title} variants={itemVariants}>
-                <GlassCard className="h-full p-6 group hover:scale-105 transition-all duration-300">
-                  <CardHeader className="px-0 pt-0 pb-4">
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className={`p-3 rounded-lg bg-gradient-to-r ${domain.color} shadow-lg`}>
-                        <domain.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <CardTitle className="text-lg font-bold group-hover:gradient-text transition-all duration-300">
-                        {domain.title}
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="px-0 pb-0 space-y-4">
-                    {/* Sections for Full Stack Development */}
-                    {domain.sections && domain.sections.map((section, idx) => (
-                      <div key={idx} className="space-y-2">
-                        <h5 className="font-semibold text-primary">{section.title}</h5>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{section.tech}</p>
-                      </div>
-                    ))}
+          {/* Domain cards. Equal height per row, one column at 360px. */}
+          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
+            {DOMAINS.map((domain) => {
+              const DomainIcon = getIcon(domain.icon);
 
-                    {/* Links for other domains */}
-                    {domain.links && (
-                      <div className="space-y-3">
-                        {domain.links.map((link, idx) => (
-                          <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50 hover:border-primary/50 transition-colors">
-                            <span className="text-sm font-medium">{link.label}:</span>
-                            <a 
-                              href={link.url} 
-                              target="_blank" 
+              return (
+                <motion.div key={domain.id} variants={itemVariants}>
+                  {/* One hover effect only: GlassCard's `interactive` lift. */}
+                  <GlassCard interactive className="flex h-full flex-col p-5 sm:p-6">
+                    <CardHeader className="p-0 pb-4 sm:p-0 sm:pb-4">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <span className="flex-shrink-0 rounded-lg bg-primary p-3 shadow-sm">
+                          <DomainIcon
+                            className="h-6 w-6 text-primary-foreground"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        <CardTitle className="text-base sm:text-lg font-bold">
+                          {domain.title}
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="flex flex-1 flex-col gap-4 p-0 sm:p-0">
+                      {/* Full Stack Development lists its stack as sections. */}
+                      {domain.sections && (
+                        <div className="space-y-4">
+                          {domain.sections.map((section) => (
+                            <div key={section.id} className="space-y-1.5">
+                              <h4 className="flex items-center font-semibold text-primary">
+                                <span
+                                  aria-hidden="true"
+                                  className="mr-2 h-2 w-2 flex-shrink-0 rounded-full bg-primary"
+                                />
+                                {section.title}
+                              </h4>
+                              <p className="pl-4 text-sm leading-relaxed text-muted-foreground">
+                                {section.tech}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* The other two domains list profile links instead. */}
+                      {domain.links && (
+                        <ul className="space-y-3">
+                          {domain.links.map((link) => {
+                            const LinkIcon = getIcon(link.icon);
+
+                            return (
+                              <li
+                                key={link.id}
+                                // Stacks below 475px so the label and the link
+                                // stop colliding on a 360px screen.
+                                className="flex flex-col gap-1 rounded-lg border border-border/50 bg-background/50 p-2 transition-colors hover:border-primary/50 xs:flex-row xs:items-center xs:justify-between xs:gap-3"
+                              >
+                                <span className="flex min-w-0 items-center gap-2">
+                                  <LinkIcon
+                                    className="h-4 w-4 flex-shrink-0 text-muted-foreground"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="text-sm font-medium break-words">
+                                    {link.label}:
+                                  </span>
+                                </span>
+                                <a
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  aria-label={`${link.label}: ${link.text}`}
+                                  className="focus-ring tap-target inline-flex items-center gap-1 rounded-sm text-sm text-primary transition-colors hover:text-primary/80"
+                                >
+                                  <span className="break-words">{link.text}</span>
+                                  <ExternalLink
+                                    className="h-3 w-3 flex-shrink-0"
+                                    aria-hidden="true"
+                                  />
+                                </a>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+
+                      {/* Amber tint built from a translucent accent so it reads
+                          correctly on all six themes, not just light and dark. */}
+                      {domain.achievement && (
+                        <div className="mt-auto rounded-lg border border-warning/40 bg-warning/10 p-3">
+                          <div className="flex items-start gap-2">
+                            <Award
+                              className="mt-0.5 h-4 w-4 flex-shrink-0 text-warning"
+                              aria-hidden="true"
+                            />
+                            <a
+                              href={domain.achievement.image}
+                              target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center space-x-1 text-primary hover:text-primary/80 transition-colors"
+                              className="focus-ring tap-target rounded-sm text-sm font-medium text-foreground break-words hover:underline"
                             >
-                              <span className="text-sm">{link.text}</span>
-                              <ExternalLink className="w-3 h-3" />
+                              {domain.achievement.text}
                             </a>
                           </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Achievement for Competitive Programming */}
-                    {domain.achievement && (
-                      <div className="mt-4 p-3 rounded-lg bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border border-yellow-200 dark:border-yellow-800">
-                        <div className="flex items-center space-x-2">
-                          <Award className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-                          <a 
-                            href={domain.achievement.image} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-yellow-700 dark:text-yellow-300 hover:underline"
-                          >
-                            {domain.achievement.text}
-                          </a>
                         </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </GlassCard>
-              </motion.div>
-            ))}
+                      )}
+
+                      {domain.projectLink && (
+                        <div className="mt-auto pt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full"
+                            asChild
+                          >
+                            <a
+                              href={domain.projectLink.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Github
+                                className="mr-2 h-4 w-4"
+                                aria-hidden="true"
+                              />
+                              {domain.projectLink.text}
+                              <ExternalLink
+                                className="ml-2 h-4 w-4"
+                                aria-hidden="true"
+                              />
+                            </a>
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </GlassCard>
+                </motion.div>
+              );
+            })}
           </div>
 
-          {/* View More Button */}
           <motion.div variants={itemVariants} className="text-center">
             <Button variant="gradient" size="lg" className="group" asChild>
               <Link to="/domain">
                 View More Domains
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  aria-hidden="true"
+                  className={cn(
+                    "ml-2 h-5 w-5",
+                    !reduced && "transition-transform group-hover:translate-x-1"
+                  )}
+                />
               </Link>
             </Button>
           </motion.div>
@@ -189,4 +203,4 @@ function HomeDomain() {
   );
 }
 
-export default HomeDomain;
+export default React.memo(HomeDomain);

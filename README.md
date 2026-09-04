@@ -1,7 +1,7 @@
 # 🚀 Portfolio - Sanjeev Kumar Singh
 
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.2-purple.svg)](https://getbootstrap.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-06b6d4.svg)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 📋 Overview
@@ -50,7 +50,7 @@ This portfolio follows a **strategic two-tier information structure**:
 
 ## 🛠️ Tech Stack
 
-**Frontend:** React.js (18.3.1) • React Router DOM • Bootstrap • React Bootstrap • Framer Motion • React Icons • React Type Animation
+**Frontend:** React.js (18.3.1) • React Router DOM • Tailwind CSS • Framer Motion • Lucide React • React Type Animation
 
 **Development:** Create React App • Web Vitals • Testing Library
 

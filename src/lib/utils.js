@@ -6,41 +6,94 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs))
 }
 
-// Optimized Intersection Observer hook for animations
-export const useIntersectionObserver = (options = {}) => {
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+
+const supportsMatchMedia = () =>
+  typeof window !== "undefined" && typeof window.matchMedia === "function"
+
+/**
+ * Generic, SSR-safe media query hook.
+ * Returns false on the server / before hydration, then syncs on mount.
+ */
+export const useMediaQuery = (query) => {
+  const [matches, setMatches] = React.useState(() => {
+    if (!supportsMatchMedia()) return false
+    return window.matchMedia(query).matches
+  })
+
+  React.useEffect(() => {
+    if (!supportsMatchMedia()) return undefined
+
+    const mediaQueryList = window.matchMedia(query)
+    const handleChange = (event) => setMatches(event.matches)
+
+    // Re-sync in case the query changed between render and effect.
+    setMatches(mediaQueryList.matches)
+
+    // Safari < 14 only has the deprecated add/removeListener API.
+    if (typeof mediaQueryList.addEventListener === "function") {
+      mediaQueryList.addEventListener("change", handleChange)
+      return () => mediaQueryList.removeEventListener("change", handleChange)
+    }
+
+    mediaQueryList.addListener(handleChange)
+    return () => mediaQueryList.removeListener(handleChange)
+  }, [query])
+
+  return matches
+}
+
+/**
+ * True when the user asked the OS to reduce motion.
+ * framer-motion exports its own hook for motion components — use this one for
+ * plain CSS / logic decisions (skipping typewriter effects, autoplay, etc).
+ */
+export const useReducedMotion = () => useMediaQuery(REDUCED_MOTION_QUERY)
+
+/**
+ * Intersection Observer hook for scroll-triggered reveals.
+ *
+ * Takes primitives (not an options object) on purpose: an object literal
+ * default would be a new reference on every render, which used to re-run the
+ * effect and rebuild the observer on every single render.
+ */
+export const useIntersectionObserver = ({
+  threshold = 0.1,
+  rootMargin = "120px",
+  once = true,
+} = {}) => {
   const [isIntersecting, setIsIntersecting] = React.useState(false)
   const [hasIntersected, setHasIntersected] = React.useState(false)
   const ref = React.useRef(null)
-  const observerRef = React.useRef(null)
-
-  const defaultOptions = React.useMemo(() => ({
-    threshold: 0.1,
-    rootMargin: '50px',
-    ...options
-  }), [options])
 
   React.useEffect(() => {
     const element = ref.current
-    if (!element) return
+    if (!element) return undefined
 
-    // Create observer only once
-    if (!observerRef.current) {
-      observerRef.current = new IntersectionObserver(([entry]) => {
+    // No IntersectionObserver (very old browsers, jsdom): reveal immediately so
+    // content is never stranded in its hidden state.
+    if (typeof IntersectionObserver === "undefined") {
+      setIsIntersecting(true)
+      setHasIntersected(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
         setIsIntersecting(entry.isIntersecting)
-        if (entry.isIntersecting && !hasIntersected) {
+        if (entry.isIntersecting) {
+          // Idempotent, so `hasIntersected` never needs to be a dependency.
           setHasIntersected(true)
-          // Disconnect after first intersection for performance
-          observerRef.current?.disconnect()
+          if (once) observer.disconnect()
         }
-      }, defaultOptions)
-    }
+      },
+      { threshold, rootMargin }
+    )
 
-    observerRef.current.observe(element)
+    observer.observe(element)
 
-    return () => {
-      observerRef.current?.disconnect()
-    }
-  }, [defaultOptions, hasIntersected])
+    return () => observer.disconnect()
+  }, [threshold, rootMargin, once])
 
   return { ref, isIntersecting, hasIntersected }
 }
@@ -70,14 +123,29 @@ export const throttle = (func, limit) => {
   }
 }
 
-// Image lazy loading with intersection observer
-export const useLazyImage = (src, options = {}) => {
+/**
+ * Image lazy loading with intersection observer.
+ * Same primitive-args treatment as useIntersectionObserver.
+ */
+export const useLazyImage = (src, { threshold = 0.1, rootMargin = "120px" } = {}) => {
   const [imageSrc, setImageSrc] = React.useState(null)
   const [isLoaded, setIsLoaded] = React.useState(false)
   const [isError, setIsError] = React.useState(false)
-  const imgRef = React.useRef()
+  const imgRef = React.useRef(null)
 
   React.useEffect(() => {
+    setImageSrc(null)
+    setIsLoaded(false)
+    setIsError(false)
+
+    const element = imgRef.current
+    if (!element || !src) return undefined
+
+    if (typeof IntersectionObserver === "undefined") {
+      setImageSrc(src)
+      return undefined
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -85,22 +153,29 @@ export const useLazyImage = (src, options = {}) => {
           observer.disconnect()
         }
       },
-      { threshold: 0.1, rootMargin: '50px', ...options }
+      { threshold, rootMargin }
     )
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current)
-    }
+    observer.observe(element)
 
     return () => observer.disconnect()
-  }, [src, options])
+  }, [src, threshold, rootMargin])
 
   React.useEffect(() => {
-    if (imageSrc) {
-      const img = new Image()
-      img.onload = () => setIsLoaded(true)
-      img.onerror = () => setIsError(true)
-      img.src = imageSrc
+    if (!imageSrc) return undefined
+
+    let cancelled = false
+    const img = new Image()
+    img.onload = () => {
+      if (!cancelled) setIsLoaded(true)
+    }
+    img.onerror = () => {
+      if (!cancelled) setIsError(true)
+    }
+    img.src = imageSrc
+
+    return () => {
+      cancelled = true
     }
   }, [imageSrc])
 
@@ -112,9 +187,44 @@ export const smoothScrollTo = (elementId, offset = 80) => {
   const element = document.getElementById(elementId)
   if (element) {
     const elementPosition = element.offsetTop - offset
+    const prefersReduced = supportsMatchMedia() && window.matchMedia(REDUCED_MOTION_QUERY).matches
     window.scrollTo({
       top: elementPosition,
-      behavior: 'smooth'
+      behavior: prefersReduced ? 'auto' : 'smooth'
     })
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Shared framer-motion variants
+ * Import these instead of redefining reveal/stagger objects per page.
+ * ------------------------------------------------------------------ */
+
+/** Reveal variants factory — collapses distance/duration under reduced motion. */
+export const makeReveal = (prefersReduced = false) => ({
+  hidden: { opacity: 0, y: prefersReduced ? 0 : 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: prefersReduced ? 0.01 : 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+})
+
+/** Stagger container factory — no stagger delay under reduced motion. */
+export const makeStagger = (prefersReduced = false) => ({
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: prefersReduced ? 0 : 0.08,
+      delayChildren: prefersReduced ? 0 : 0.05,
+    },
+  },
+})
+
+/** Ready-made defaults for the full-motion case. */
+export const revealVariants = makeReveal(false)
+export const staggerContainer = makeStagger(false)

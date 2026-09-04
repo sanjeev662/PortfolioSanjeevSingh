@@ -1,20 +1,31 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "name": "Sanjeev Kumar Singh \u2014 Software Development Engineer",
+  "short_name": "Sanjeev Singh",
+  "description": "Portfolio of Sanjeev Kumar Singh, a Software Development Engineer specializing in Java, Spring Boot, React.js and Node.js.",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "sizes": "16x16 32x32 48x48"
     },
     {
-      "src": "logo.png",
+      "src": "icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#f9fafb"
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "theme_color": "#0b1120",
+  "background_color": "#0b1120"
 }

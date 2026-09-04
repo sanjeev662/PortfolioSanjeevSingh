@@ -1,104 +1,74 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Award, ArrowRight } from "lucide-react";
-import CertificateCard from "./HomeCertificateCard";
+import CertificateCard from "../../Maincontaint/Certificates/CertificateCard";
+import SectionHeading from "../../ui/SectionHeading";
 import { Button } from "../../ui/button";
-import { useIntersectionObserver } from "../../../lib/utils";
+import {
+  useIntersectionObserver,
+  makeReveal,
+  makeStagger,
+} from "../../../lib/utils";
+import { FEATURED_CERTIFICATES } from "../../../data";
 
-import icpcc from "../../Assets/Certificates/icpc.jpg";
-import namekart_Internc from "../../Assets/Certificates/namekart_intern.png";
-import rydeu_internc from "../../Assets/Certificates/rydeu_intern.png";
-
-function Certificates() {
+/**
+ * Homepage teaser. Renders the SAME CertificateCard as the /certificates page
+ * from the SAME data — only the heading copy, the item count and the CTA differ.
+ */
+function HomeCertificates() {
   const { ref, hasIntersected } = useIntersectionObserver();
+  const prefersReducedMotion = useReducedMotion();
 
-  const certificatelist = [
-    {
-      title: "Namekart Pvt. Ltd",
-      imgUrl: namekart_Internc,
-      siteUrl: "https://www.namekart.com/",
-      tagline: "SDE Intern"
-    },
-    {
-      title: "Rydeu Logistics India Pvt. Ltd",
-      imgUrl: rydeu_internc,
-      siteUrl: "https://www.rydeu.com/",
-      tagline: "Backend Development Intern"
-    },
-    {
-      title: "ACM-ICPC",
-      imgUrl: icpcc,
-      siteUrl: "https://icpc.global/",
-      tagline: "ICPC 2022 Regionalist"
-    }
-  ];
-
-  // Memoize certificate list to prevent re-creation on every render
-  const memoizedCertificates = useMemo(() => certificatelist, []);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
+  const containerVariants = makeStagger(prefersReducedMotion);
+  const itemVariants = makeReveal(prefersReducedMotion);
 
   return (
-    <section ref={ref} className="py-12 md:py-16 bg-gradient-to-br from-background via-background to-accent/5">
-      <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+    <section
+      ref={ref}
+      className="section-padding bg-gradient-to-br from-background via-background to-accent/5"
+    >
+      <div className="container-custom max-w-6xl">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
           className="space-y-8"
         >
-          {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-3">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text">Certificates & Achievements</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full" />
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Professional certifications and achievements that showcase my expertise and continuous learning
-            </p>
+          <motion.div variants={itemVariants}>
+            <SectionHeading
+              title="Certificates & Achievements"
+              subtitle="Professional certifications and achievements that showcase my expertise and continuous learning"
+            />
           </motion.div>
 
-          {/* Certificates Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {memoizedCertificates.map((certificate, index) => (
-              <motion.div key={certificate.title} variants={itemVariants}>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURED_CERTIFICATES.map((certificate) => (
+              <motion.div
+                key={certificate.id}
+                variants={itemVariants}
+                className="h-full"
+              >
                 <CertificateCard
                   title={certificate.title}
                   tagline={certificate.tagline}
-                  imgUrl={certificate.imgUrl}
+                  image={certificate.image}
                   siteUrl={certificate.siteUrl}
+                  year={certificate.year}
                 />
               </motion.div>
             ))}
           </div>
 
-          {/* View More Button */}
-          <motion.div variants={itemVariants} className="text-center mt-8">
+          <motion.div variants={itemVariants} className="flex justify-center">
             <Button variant="gradient" size="lg" className="group" asChild>
               <Link to="/certificates">
-                <Award className="w-5 h-5 mr-2" />
-                View More Certificates
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Award className="mr-2 h-5 w-5 shrink-0" aria-hidden="true" />
+                View All Certificates
+                <ArrowRight
+                  className="ml-2 h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
           </motion.div>
@@ -108,4 +78,4 @@ function Certificates() {
   );
 }
 
-export default React.memo(Certificates);
+export default React.memo(HomeCertificates);
