@@ -9,7 +9,7 @@ import {
   makeReveal,
   makeStagger,
 } from "../../../lib/utils";
-import { CERTIFICATES } from "../../../data";
+import { CERTIFICATES, getImage } from "../../../data";
 
 // Fifteen cards at once is a wall, so start with nine and let people ask for the rest.
 const INITIAL_COUNT = 9;
@@ -67,7 +67,7 @@ function Certificates() {
                 <CertificateCard
                   title={certificate.title}
                   tagline={certificate.tagline}
-                  image={certificate.image}
+                  image={getImage(certificate.image)}
                   siteUrl={certificate.siteUrl}
                   year={certificate.year}
                 />
