@@ -8,6 +8,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";
 import LoadingSpinner from './Components/ui/LoadingSpinner';
 import ScrollToTop from './Components/ui/ScrollToTop';
+import Chatbot from './Components/Chatbot/Chatbot';
 
 // Lazy load components for better performance
 const Home = lazy(() => import("./Components/Maincontaint/Home/Home"));
@@ -261,6 +262,7 @@ function App() {
             </main>
             <Footer />
             <ScrollToTop />
+            <Chatbot />
           </BrowserRouter>
         </div>
       </ThemeProvider>
