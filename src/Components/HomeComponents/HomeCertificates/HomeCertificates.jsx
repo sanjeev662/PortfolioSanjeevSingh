@@ -10,7 +10,7 @@ import {
   makeReveal,
   makeStagger,
 } from "../../../lib/utils";
-import { FEATURED_CERTIFICATES } from "../../../data";
+import { FEATURED_CERTIFICATES, getImage } from "../../../data";
 
 /**
  * Homepage teaser. Renders the SAME CertificateCard as the /certificates page
@@ -52,7 +52,7 @@ function HomeCertificates() {
                 <CertificateCard
                   title={certificate.title}
                   tagline={certificate.tagline}
-                  image={certificate.image}
+                  image={getImage(certificate.image)}
                   siteUrl={certificate.siteUrl}
                   year={certificate.year}
                 />

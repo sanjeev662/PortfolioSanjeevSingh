@@ -8,26 +8,16 @@
  *
  * Content is the union of Projects.jsx (source of truth) and HomeProjects.jsx
  * (which only contributed the `uTubeUrl` demo videos).
+ *
+ * `image` is a STRING key; resolve it with `getImage()` from ./images. Keep
+ * this file free of asset imports: the chatbot's server function imports it.
  */
-
-import toletImg from "../Components/Assets/Projects/to-let-mern-app.webp";
-import routefinderImg from "../Components/Assets/Projects/routefinder-app.webp";
-import amazonImg from "../Components/Assets/Projects/amazon-app.webp";
-import chatImg from "../Components/Assets/Projects/chat-app.webp";
-import blogImg from "../Components/Assets/Projects/blog-app.webp";
-import todoImg from "../Components/Assets/Projects/todo-app.webp";
-import newsImg from "../Components/Assets/Projects/news-app.webp";
-import weatherImg from "../Components/Assets/Projects/weather-app.webp";
-import feedbackImg from "../Components/Assets/Projects/feedback-app.webp";
-import heritageImg from "../Components/Assets/Projects/heritage-app.webp";
-import shoppingImg from "../Components/Assets/Projects/shopping-app.webp";
-import thankuImg from "../Components/Assets/Projects/thanku-app.webp";
 
 export const PROJECTS = [
   {
     id: "to-let-room-on-rent",
     title: "To-Let (RoomOnRent)",
-    image: toletImg,
+    image: "Projects/to-let-mern-app",
     demoUrl: "https://to-let-room-on-rent.vercel.app/",
     codeUrl: "https://github.com/sanjeev662/ToLet-RoomOnRent",
     uTubeUrl: "https://www.youtube.com/embed/0Esg-oJse-c",
@@ -41,7 +31,7 @@ export const PROJECTS = [
   {
     id: "route-finder",
     title: "Route-Finder Application",
-    image: routefinderImg,
+    image: "Projects/routefinder-app",
     demoUrl: "https://route-finder-app.vercel.app/",
     codeUrl: "https://github.com/sanjeev662/Route-Finder-Application",
     description:
@@ -54,7 +44,7 @@ export const PROJECTS = [
   {
     id: "amazon-clone",
     title: "Amazon Clone App",
-    image: amazonImg,
+    image: "Projects/amazon-app",
     demoUrl: "https://amazon-clone-app-ytbo.onrender.com/",
     codeUrl: "https://github.com/sanjeev662/Amazon-Clone-App",
     uTubeUrl: "https://www.youtube.com/embed/35JEg51Fkuw",
@@ -68,7 +58,7 @@ export const PROJECTS = [
   {
     id: "realtime-chat-app",
     title: "Real-time Chat App",
-    image: chatImg,
+    image: "Projects/chat-app",
     demoUrl: "https://clone-chat-app-5h0j.onrender.com",
     codeUrl: "https://github.com/sanjeev662/Clone-Chat-App",
     uTubeUrl: "https://www.youtube.com/embed/L-XgmT3mwc8",
@@ -82,7 +72,7 @@ export const PROJECTS = [
   {
     id: "blog-app",
     title: "Blog Application",
-    image: blogImg,
+    image: "Projects/blog-app",
     demoUrl: "https://blogapp-gilt-three.vercel.app/",
     codeUrl: "https://github.com/sanjeev662/blog_app",
     description:
@@ -95,7 +85,7 @@ export const PROJECTS = [
   {
     id: "todo-list-manager",
     title: "ToDo List Manager",
-    image: todoImg,
+    image: "Projects/todo-app",
     demoUrl: "https://to-do-list-valf.onrender.com/",
     codeUrl: "https://github.com/sanjeev662/ToDoList",
     description:
@@ -108,7 +98,7 @@ export const PROJECTS = [
   {
     id: "news-app",
     title: "News Application",
-    image: newsImg,
+    image: "Projects/news-app",
     demoUrl: "https://github.com/sanjeev662/newsapp",
     codeUrl: "https://github.com/sanjeev662/newsapp",
     description:
@@ -121,7 +111,7 @@ export const PROJECTS = [
   {
     id: "weather-forecast-app",
     title: "Weather Forecast App",
-    image: weatherImg,
+    image: "Projects/weather-app",
     demoUrl: "https://weather-app-sanjeev662.vercel.app/",
     codeUrl: "https://github.com/sanjeev662/weather-app",
     description:
@@ -134,7 +124,7 @@ export const PROJECTS = [
   {
     id: "student-feedback-system",
     title: "Student Feedback System",
-    image: feedbackImg,
+    image: "Projects/feedback-app",
     demoUrl: "https://github.com/sanjeev662/StudentFeedbackManagementSystem",
     codeUrl: "https://github.com/sanjeev662/StudentFeedbackManagementSystem",
     description:
@@ -147,7 +137,7 @@ export const PROJECTS = [
   {
     id: "indian-culture-heritage",
     title: "Indian Culture Heritage",
-    image: heritageImg,
+    image: "Projects/heritage-app",
     demoUrl: "https://sanjeev662.github.io/IndianCulture/",
     codeUrl: "https://github.com/sanjeev662/IndianCulture",
     description:
@@ -160,7 +150,7 @@ export const PROJECTS = [
   {
     id: "online-shopping-site",
     title: "Online Shopping Site",
-    image: shoppingImg,
+    image: "Projects/shopping-app",
     demoUrl: "https://sanjeev662.github.io/onlineshop.github.io/",
     codeUrl: "https://github.com/sanjeev662/onlineshop.github.io",
     description:
@@ -173,7 +163,7 @@ export const PROJECTS = [
   {
     id: "thank-you-greeting-card",
     title: "Thank You Greeting Card",
-    image: thankuImg,
+    image: "Projects/thanku-app",
     demoUrl: "https://sanjeev662.github.io/thankugreetingcard/",
     codeUrl: "https://github.com/sanjeev662/thankugreetingcard",
     description:

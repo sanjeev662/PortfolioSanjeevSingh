@@ -10,10 +10,10 @@ import {
   makeStagger,
   useIntersectionObserver,
 } from "../../../lib/utils";
-import { DOMAINS, SKILL_GROUPS, getIcon } from "../../../data";
+import { DOMAINS, SKILL_GROUPS, getIcon, getImage } from "../../../data";
 
 // The full "Technical Domains" page. The cards read from DOMAINS in src/data,
-// which is also where the ICPC certificate image import now lives.
+// The ICPC certificate image is stored there as a key; getImage resolves it.
 function Domain() {
   const { ref, hasIntersected } = useIntersectionObserver();
   const reduced = useReducedMotion();
@@ -163,7 +163,7 @@ function Domain() {
                               aria-hidden="true"
                             />
                             <a
-                              href={domain.achievement.image}
+                              href={getImage(domain.achievement.image)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="focus-ring tap-target rounded-sm text-sm font-medium text-foreground break-words hover:underline"

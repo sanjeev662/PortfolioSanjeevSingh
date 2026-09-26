@@ -46,9 +46,10 @@ const ScrollToTop = () => {
         <motion.div
           {...reveal}
           // Sits clear of the home indicator on iOS and clear of the footer CTA
-          // on small screens.
+          // on small screens. Stacked above the 56px chat launcher (Chatbot.jsx)
+          // and centred on it, so the two floating buttons never overlap.
           style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50"
+          className="fixed bottom-20 right-6 sm:bottom-24 sm:right-10 z-50"
         >
           <Button
             onClick={scrollToTop}
