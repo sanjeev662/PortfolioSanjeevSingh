@@ -45,6 +45,7 @@ This portfolio follows a **strategic two-tier information structure**:
 - **🏆 Certificates**: Professional certifications and competitive programming achievements
 - **🎯 Domain Expertise**: Technical skills and areas of specialization
 - **📞 Contact**: Professional contact form and social media links
+- **🤖 AI Assistant**: A chat that answers visitors' questions about Sanjeev from the portfolio's own data (Google Gemini)
 - **📱 Responsive Design**: Optimized for all device sizes
 - **🎨 Modern UI/UX**: Clean design with smooth animations
 
@@ -52,12 +53,17 @@ This portfolio follows a **strategic two-tier information structure**:
 
 **Frontend:** React.js (18.3.1) • React Router DOM • Tailwind CSS • Framer Motion • Lucide React • React Type Animation
 
+**AI Assistant:** Google Gemini API • Vercel Serverless Function (`api/chat.js`)
+
 **Development:** Create React App • Web Vitals • Testing Library
 
 ## 📁 Project Structure
 
 ```
 PortfolioSanjeevSingh/
+├── api/chat.js             # Serverless function behind the AI assistant
+├── docs/                   # Design docs
+├── src/data/               # All page content (also feeds the AI assistant)
 ├── src/Components/
 │   ├── HomeComponents/     # Home page overview components
 │   │   ├── HomeAbout/      # Professional introduction preview
@@ -68,6 +74,7 @@ PortfolioSanjeevSingh/
 │   │   ├── Projects/       # Detailed project showcases
 │   │   ├── Certificates/   # Full achievements gallery
 │   │   └── Contacts/       # Professional contact form
+│   ├── Chatbot/            # The floating "Ask about Sanjeev" chat
 │   └── Assets/             # Project screenshots, certificates
 ```
 
@@ -85,6 +92,21 @@ npm start
 ```
 
 Navigate to `http://localhost:3000` to view the portfolio.
+
+### AI Assistant (optional)
+The chat calls `/api/chat`, a Vercel serverless function that holds the Gemini API key. `npm start` serves only the React app, so the chat shows a connection error there. To run the site and the function together:
+
+1. Get a key from [Google AI Studio](https://aistudio.google.com/) (a project without billing keeps abuse from ever costing money).
+2. In Vercel → Project → Settings → Environment Variables, add `GEMINI_API_KEY` for Development, Preview and Production. `GEMINI_MODEL` is optional (default `gemini-3.5-flash-lite`).
+3. Run it locally with the Vercel CLI, which uses the Development variables:
+
+```bash
+npm i -g vercel
+vercel link   # once, to connect this folder to the Vercel project
+vercel dev
+```
+
+Never prefix the key with `REACT_APP_`: Create React App copies those variables into the public bundle. Design, API contract and test plan: [docs/ai-chatbot-design.md](docs/ai-chatbot-design.md).
 
 ### Available Scripts
 - `npm start` - Development mode
