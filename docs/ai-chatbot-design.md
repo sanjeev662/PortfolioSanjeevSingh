@@ -227,8 +227,8 @@ This is one component written in plain JSX, in the style of the rest of the site
 - **Screen readers:** the message list is `aria-live="polite"` so replies are announced.
 - **Touch and focus:** touch targets are at least 44px, with a visible focus ring (the `focus-ring` class).
 - **Motion:** the open and close animation respects `useReducedMotion()`.
-- **Type:** messages are 15px with a 1.625 line height, 16px between messages and 12px between blocks inside a reply.
-- **Sizes:** on desktop the panel floats at 420px wide and up to 640px tall. On mobile (below `sm`) it is a full-width sheet with safe-area padding.
+- **Type:** compact on purpose, since the chat floats over the page and is skimmed: messages are 14px with a 1.625 line height, 12px between messages and 8px between blocks inside a reply, with 15px headings.
+- **Sizes:** on desktop the panel floats at 380px wide and up to 600px tall. On mobile (below `sm`) it is a full-width sheet with safe-area padding.
 
 **Bundle size:** there are no new dependencies, and the main bundle grew by about 2.4 kB gzipped (127.66 kB to 130.1 kB), so the chat ships in the main bundle rather than a lazy-loaded chunk.
 

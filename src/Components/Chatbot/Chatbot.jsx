@@ -35,7 +35,7 @@ const CONNECTION_ERROR =
 // links and list markers are in the primary colour, which is at least 4.9:1
 // on `background` in all six themes but only 4.0:1 on `muted` in dark.
 const REPLY_BUBBLE =
-  "w-fit max-w-full space-y-3 rounded-2xl rounded-bl-md border border-border bg-background px-4 py-3 text-foreground";
+  "w-fit max-w-full space-y-2 rounded-2xl rounded-bl-md border border-border bg-background px-3.5 py-2.5 text-foreground";
 
 /*
  * Reply formatting
@@ -174,7 +174,7 @@ function renderReply(text) {
   return blocks.map((block, index) => {
     if (block.type === "heading") {
       return (
-        <h3 key={index} className="pt-1 text-base font-semibold leading-snug first:pt-0">
+        <h3 key={index} className="pt-1 text-[15px] font-semibold leading-snug first:pt-0">
           {renderInline(block.text)}
         </h3>
       );
@@ -201,7 +201,7 @@ function renderReply(text) {
       <ListTag
         key={index}
         start={block.ordered && block.start !== 1 ? block.start : undefined}
-        className={`space-y-1.5 pl-5 marker:text-primary ${
+        className={`space-y-1 pl-5 marker:text-primary ${
           block.ordered ? "list-decimal marker:font-semibold" : "list-disc"
         }`}
       >
@@ -209,7 +209,7 @@ function renderReply(text) {
           <li key={itemIndex} className="pl-1">
             {renderInline(listItem.text)}
             {listItem.children.length > 0 && (
-              <ul className="mt-1.5 list-[circle] space-y-1 pl-5">
+              <ul className="mt-1 list-[circle] space-y-1 pl-5">
                 {listItem.children.map((child, childIndex) => (
                   <li key={childIndex}>{renderInline(child)}</li>
                 ))}
@@ -270,7 +270,7 @@ function Chatbot() {
 
     const latestReply = latestReplyRef.current;
     if (latestReply && !isSending && !error) {
-      list.scrollTop = latestReply.offsetTop - 16;
+      list.scrollTop = latestReply.offsetTop - 12;
     } else {
       list.scrollTop = list.scrollHeight;
     }
@@ -378,13 +378,13 @@ function Chatbot() {
             // Full screen on phones; a floating panel from `sm` up. Above the
             // navbar (z-50) so it isn't cut off on small screens.
             style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-            className="fixed inset-0 z-[60] flex flex-col bg-card text-card-foreground sm:inset-auto sm:bottom-8 sm:right-8 sm:h-[min(640px,calc(100dvh_-_4rem))] sm:w-[420px] sm:rounded-2xl sm:border sm:border-border sm:shadow-2xl"
+            className="fixed inset-0 z-[60] flex flex-col bg-card text-card-foreground sm:inset-auto sm:bottom-8 sm:right-8 sm:h-[min(600px,calc(100dvh_-_4rem))] sm:w-[380px] sm:rounded-2xl sm:border sm:border-border sm:shadow-2xl"
           >
             <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
                 >
                   <Sparkles className="h-4 w-4" />
                 </span>
@@ -413,7 +413,7 @@ function Chatbot() {
             <div
               ref={messageListRef}
               aria-live="polite"
-              className="relative flex-1 space-y-4 overflow-y-auto px-4 py-5 text-[15px] leading-relaxed"
+              className="relative flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm leading-relaxed"
             >
               {/* The greeting is display-only; it isn't sent to the API. */}
               <div className={REPLY_BUBBLE}>
@@ -427,7 +427,7 @@ function Chatbot() {
                 message.role === "user" ? (
                   <p
                     key={index}
-                    className="ml-auto w-fit max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-primary-foreground"
+                    className="ml-auto w-fit max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-primary px-3.5 py-2 text-primary-foreground"
                   >
                     {message.text}
                   </p>
@@ -447,9 +447,9 @@ function Chatbot() {
                   {/* Three dots that bounce in turn, and stay still with
                       reduced motion. The text is for screen readers. */}
                   <span aria-hidden="true" className="flex h-[1.625em] items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-muted-foreground motion-safe:animate-bounce" />
-                    <span className="h-2 w-2 rounded-full bg-muted-foreground motion-safe:animate-bounce [animation-delay:150ms]" />
-                    <span className="h-2 w-2 rounded-full bg-muted-foreground motion-safe:animate-bounce [animation-delay:300ms]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground motion-safe:animate-bounce" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground motion-safe:animate-bounce [animation-delay:150ms]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground motion-safe:animate-bounce [animation-delay:300ms]" />
                   </span>
                   <span className="sr-only">Thinking…</span>
                 </div>
@@ -484,7 +484,7 @@ function Chatbot() {
                         onClick={() => ask(question)}
                         variant="outline"
                         size="sm"
-                        className="h-auto whitespace-normal rounded-full px-3.5 py-1.5 text-left leading-snug"
+                        className="h-auto whitespace-normal rounded-full px-3 py-1.5 text-left text-[13px] leading-snug"
                       >
                         {question}
                       </Button>
@@ -510,7 +510,7 @@ function Chatbot() {
                 maxLength={MAX_MESSAGE_LENGTH}
                 placeholder={`Ask about ${FIRST_NAME}…`}
                 autoComplete="off"
-                className="min-h-[44px] w-full flex-1 rounded-xl border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-[15px]"
+                className="min-h-[44px] w-full flex-1 rounded-xl border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-sm"
               />
               <Button
                 type="submit"
@@ -523,7 +523,7 @@ function Chatbot() {
                 <Send className="h-4 w-4" aria-hidden="true" />
               </Button>
             </form>
-            <p className="px-4 pb-3 pt-2 text-xs leading-snug text-muted-foreground">
+            <p className="px-4 pb-3 pt-2 text-[11px] leading-snug text-muted-foreground">
               AI answers can be wrong. Messages are sent to Google Gemini.
             </p>
           </motion.div>
