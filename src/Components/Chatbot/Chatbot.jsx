@@ -174,7 +174,7 @@ function renderReply(text) {
   return blocks.map((block, index) => {
     if (block.type === "heading") {
       return (
-        <h3 key={index} className="pt-1 text-[15px] font-semibold leading-snug first:pt-0">
+        <h3 key={index} className="pt-1 text-[15px] font-semibold leading-snug first:pt-0 sm:text-[14px]">
           {renderInline(block.text)}
         </h3>
       );
@@ -413,7 +413,7 @@ function Chatbot() {
             <div
               ref={messageListRef}
               aria-live="polite"
-              className="relative flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm leading-relaxed"
+              className="relative flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm leading-relaxed sm:text-[13px]"
             >
               {/* The greeting is display-only; it isn't sent to the API. */}
               <div className={REPLY_BUBBLE}>
@@ -484,7 +484,7 @@ function Chatbot() {
                         onClick={() => ask(question)}
                         variant="outline"
                         size="sm"
-                        className="h-auto whitespace-normal rounded-full px-3 py-1.5 text-left text-[13px] leading-snug"
+                        className="h-auto whitespace-normal rounded-full px-3 py-1.5 text-left text-[13px] leading-snug sm:text-[12px]"
                       >
                         {question}
                       </Button>
@@ -510,7 +510,7 @@ function Chatbot() {
                 maxLength={MAX_MESSAGE_LENGTH}
                 placeholder={`Ask about ${FIRST_NAME}…`}
                 autoComplete="off"
-                className="min-h-[44px] w-full flex-1 rounded-xl border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-sm"
+                className="min-h-[44px] w-full flex-1 rounded-xl border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-[13px]"
               />
               <Button
                 type="submit"
