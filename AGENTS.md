@@ -107,7 +107,7 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
   - the last 10 messages of history
   - 5,000 characters per earlier reply
   - `maxOutputTokens` 1024 (Gemini 3's thinking counts against it)
-  - a 9-second timeout
+  - each Gemini attempt times out after 6 s. An attempt that stalls, or gets a Google 5xx, is retried, up to 3 attempts (18 s at worst). `maxDuration` 25 in `vercel.json` makes room for that: keep the two in step. Gemini stalls on roughly 1 request in 4 while healthy replies take 1–2 s, so don't remove the retry. Don't retry 4xx errors (bad request, quota).
   - 20 messages per 10 minutes per IP (kept in memory, so best effort only)
 
 ### Prompt and reply formatting
