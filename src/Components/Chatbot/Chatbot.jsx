@@ -27,6 +27,43 @@ const SUGGESTED_QUESTIONS = [
   "Has he done competitive programming?",
 ];
 
+// Offered under a reply when the model suggested fewer than two follow-up
+// questions of its own (api/chat.js asks it for 2-3). Each one leads to a
+// strength the portfolio covers well.
+const FALLBACK_FOLLOW_UPS = [
+  ...SUGGESTED_QUESTIONS,
+  "What are his top achievements?",
+  "Where did he intern before Namekart?",
+  "Which certifications does he have?",
+];
+
+/**
+ * The 2-3 follow-up questions shown under a reply: the model's suggestions,
+ * topped up from FALLBACK_FOLLOW_UPS when it gave fewer than two, and never
+ * a question the visitor has already asked.
+ */
+function pickFollowUps(suggested, conversation) {
+  // Compare loosely, so "Show me his projects?" matches "show me his projects".
+  const normalise = (question) => question.toLowerCase().replace(/[\s?.!]+$/, "");
+  const seen = new Set(
+    conversation
+      .filter((message) => message.role === "user")
+      .map((message) => normalise(message.text))
+  );
+
+  const picked = [];
+  function offer(question) {
+    if (picked.length < 3 && !seen.has(normalise(question))) {
+      seen.add(normalise(question));
+      picked.push(question);
+    }
+  }
+
+  suggested.forEach(offer);
+  if (picked.length < 2) FALLBACK_FOLLOW_UPS.forEach(offer);
+  return picked;
+}
+
 const CONNECTION_ERROR =
   "Couldn't reach the assistant. Check your connection and try again.";
 
@@ -229,6 +266,8 @@ function Chatbot() {
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState(null);
+  // Questions offered under the latest reply; cleared when the next one is sent.
+  const [followUps, setFollowUps] = useState([]);
 
   const prefersReducedMotion = useReducedMotion();
   const inputRef = useRef(null);
@@ -279,6 +318,7 @@ function Chatbot() {
   async function sendConversation(conversation) {
     setIsSending(true);
     setError(null);
+    setFollowUps([]);
 
     let ok = false;
     let data = {};
@@ -297,6 +337,10 @@ function Chatbot() {
 
     if (ok && data.reply) {
       setMessages([...conversation, { role: "model", text: data.reply }]);
+      const suggested = Array.isArray(data.followUps)
+        ? data.followUps.filter((question) => typeof question === "string")
+        : [];
+      setFollowUps(pickFollowUps(suggested, conversation));
     } else {
       setError(data.error || CONNECTION_ERROR);
     }
@@ -441,6 +485,26 @@ function Chatbot() {
                     {renderReply(message.text)}
                   </div>
                 )
+              )}
+
+              {followUps.length > 0 && (
+                <div
+                  role="group"
+                  aria-label="Suggested follow-up questions"
+                  className="flex flex-wrap gap-2"
+                >
+                  {followUps.map((question) => (
+                    <Button
+                      key={question}
+                      onClick={() => ask(question)}
+                      variant="outline"
+                      size="sm"
+                      className="h-auto whitespace-normal rounded-full px-3 py-1.5 text-left text-[13px] leading-snug sm-tall:text-[12px]"
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
               )}
 
               {isSending && (

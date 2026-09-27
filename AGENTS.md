@@ -83,7 +83,7 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
 
 ### Keep the function loading (it breaks silently)
 
-`api/chat.js` imports `profile`, `experience`, `skills`, `projects`, `certificates`, `domains` and `social` from `src/data`, and runs in plain Node on Vercel. Tests and the site build never load it, so a mistake only shows up as every chat message failing in production.
+`api/chat.js` imports `profile`, `experience`, `skills`, `projects`, `certificates`, `domains` and `social` from `src/data`, and runs in plain Node on Vercel. The site build never loads it, and its Jest tests (which stub asset imports) can't catch this, so a mistake only shows up as every chat message failing in production.
 
 - Never import assets (`.webp`, `.png`, `.svg`, `.css`), React, JSX or icon packages in those data files.
 - In `api/chat.js`, import data files one by one, never the `src/data/index.js` barrel.
@@ -95,7 +95,7 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
 - `GEMINI_API_KEY` lives only in Vercel's environment variables (Development, Preview, Production). Never prefix it with `REACT_APP_`: Create React App puts those in the public JavaScript.
 - Send the key in the `x-goog-api-key` header, never in the URL. Never log visitor messages.
 - The SPA rewrite in `vercel.json` must keep excluding `/api/`.
-- Request: `{ "messages": [{ "role": "user" | "model", "text": "..." }] }`, with the last message from `user`. Response: `{ "reply" }` or `{ "error" }`.
+- Request: `{ "messages": [{ "role": "user" | "model", "text": "..." }] }`, with the last message from `user`. Response: `{ "reply", "followUps" }` or `{ "error" }`.
 - Limits:
   - 500 characters per visitor message (`MAX_MESSAGE_LENGTH`, the same in `api/chat.js` and `Chatbot.jsx`)
   - the last 10 messages of history
@@ -109,6 +109,13 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
 - Answers come only from `src/data`. Keep the skill-bar percentages in `skills.js` (not from the CV) and Sanjeev's age out of the prompt.
 - The prompt asks for a Markdown subset: paragraphs, `- ` bullets starting with a **bold** name, `###` headings only for multi-part answers, and `[label](url)` links. No bare URLs, tables, code blocks, HTML or emoji.
 - `Chatbot.jsx` renders that subset plus `*italic*`, `` `code` ``, numbered lists, one level of nested bullets, and bare URLs and emails as links. Change the prompt and the renderer together; anything unsupported shows as raw symbols.
+
+### Follow-up questions
+
+- The prompt tells Gemini to end every reply with a `FOLLOW_UPS:` line and 2–3 `- ` questions. `splitFollowUps()` in `api/chat.js` cuts that section off (`FOLLOW_UPS_LINE` also accepts `**FOLLOW_UPS:**` and `Follow-ups:`). It returns the rest as `reply`, plus up to 3 questions that end in `?` and are at most 100 characters, as `followUps`. Change the prompt and `FOLLOW_UPS_LINE` together.
+- A missing section must never lose the answer: the whole text becomes `reply`, with `followUps: []`.
+- `Chatbot.jsx` shows the questions as buttons under the latest reply only (`pickFollowUps()`). It drops any the visitor already asked, and when fewer than 2 are left it tops up from `FALLBACK_FOLLOW_UPS`, so there are always 2–3.
+- Suggestions must steer toward Sanjeev's strengths (experience, projects, skills, achievements) and be answerable from `src/data`. Never suggest questions about weaknesses, gaps or missing information. Every entry in `FALLBACK_FOLLOW_UPS` must meet the same bar.
 - Never render replies as HTML: no `dangerouslySetInnerHTML`, and no Markdown library that outputs HTML. Links go only to `http(s)` and `mailto:` addresses. A test guards this.
 
 ### Chat UI
@@ -123,11 +130,13 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
   - Escape closes the chat from anywhere, and focus returns to the launcher.
   - Focus stays in the input after a suggested question is clicked.
   - A new reply scrolls into view from its first line.
+  - Follow-up questions disappear when the next question is sent, skip questions already asked, and top up from the fallback list.
 
 ## Testing and verification
 
 - Before calling a change done, run the tests and `CI=true npm run build`. Then check it in a real browser at phone (320–414px), phone-on-its-side (about 740×360), tablet and desktop sizes, in a light and a dark theme (all six when colours change).
 - Use `fireEvent`, not `@testing-library/user-event`. user-event ships its own copy of `@testing-library/dom`, which causes `act()` warnings.
+- `api/chat.js` is tested in `src/Components/Chatbot/chat-api.test.js`, because Create React App only runs tests under `src/`. It uses `@jest-environment node` with a fake `fetch` for Gemini. Keep the browser-only stubs in `src/setupTests.js` behind its `isBrowser` check, or Node-environment tests fail.
 - To check the chat UI without a key, serve `build/` with a small local server that answers `/api/chat` with sample Markdown replies. Real replies need `vercel dev`, and one IP can send only 20 messages per 10 minutes.
 - Playwright MCP saves screenshots to `.playwright-mcp/`, which isn't git-ignored. Don't commit that folder.
 
