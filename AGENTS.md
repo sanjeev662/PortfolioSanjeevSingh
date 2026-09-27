@@ -1,29 +1,162 @@
 # AGENTS.md
 
-Rules for AI coding agents (and people) working in this repo. Most of it covers
-the AI chat assistant, the "Ask about Sanjeev" chat. Its code is spread across
-several files, and some of it breaks without any failing test or build, so read
-this before changing anything it touches. The full design is in
-[docs/ai-chatbot-design.md](docs/ai-chatbot-design.md).
+Rules for AI coding agents (and people) working on Sanjeev Kumar Singh's
+portfolio site. Read it before changing anything. It covers:
 
-## Working in this repo
+1. [The stack](#the-stack) and [where things live](#where-things-live)
+2. [Development rules](#development-rules): the conventions this project follows
+3. [The AI chat assistant](#the-ai-chat-assistant): its rules, some of which
+   break the live chat without failing a test or the build
+4. [Open items](#open-items)
 
-- **Branches:** `stage` deploys to https://stage.portfolio.saarvana.online/ and
-  `main` is production. Work on a branch and merge into `stage` through a pull
-  request.
+## The stack
+
+| Area | What we use |
+|---|---|
+| UI | React 18.3 (function components and hooks), plain JSX (no TypeScript) |
+| Build and dev server | Create React App (`react-scripts` 5, webpack) |
+| Routing | React Router 6. Every page is lazy-loaded (`React.lazy`) behind a `Suspense` and an error boundary that resets when the route changes |
+| Styling | Tailwind CSS **3.4** (`tailwind.config.js`), with the `typography` and `forms` plugins. Six colour themes are CSS variables in `src/index.css` |
+| Class helpers | `cn()` in `src/lib/utils.js` (`clsx` and `tailwind-merge`); `class-variance-authority` for the `Button` variants; `@radix-ui/react-slot` for `asChild` |
+| Animation | Framer Motion, plus `react-type-animation` for the typed "Hi, I'm …" greeting on Home (static when reduced motion is on) |
+| Icons | `lucide-react` |
+| Page titles and meta | `react-helmet-async` (`HelmetProvider` in `App.js`; `<Helmet>` on Home, About and Projects) |
+| Themes | `ThemeContext` (`src/contexts/ThemeContext.js`) puts the theme's class on `<html>` and saves it under the `portfolio-theme` key. Default: `dark` |
+| AI chat | A Vercel serverless function, `api/chat.js`, calling Google Gemini with plain `fetch` (no SDK). See [the AI chat assistant](#the-ai-chat-assistant) |
+| Tests | Jest (through `react-scripts`), React Testing Library and `jest-dom` |
+| Hosting | Vercel. `vercel.json` has the SPA rewrite (not for `/api/`) and cache headers |
+| Other | `web-vitals`. No Node version is pinned; local checks used Node 22 |
+
+**Tailwind version trap:** Create React App ignores `postcss.config.js` and
+runs its own Tailwind, which is v3.4. The `@tailwindcss/postcss` (v4) entry in
+`package.json` isn't used, and isn't even installed. Write Tailwind v3 syntax
+and config only.
+
+## Where things live
+
+```
+api/chat.js                  Chat server function (Vercel)
+docs/ai-chatbot-design.md    Chat design, API contract, test plan
+public/                      index.html, favicon.ico, icons, og-image.png, manifest, sitemap.xml, robots.txt
+src/App.js                   Providers, routes, Navbar, Footer, ScrollToTop, Chatbot
+src/index.css                Theme variables and shared classes (focus-ring, tap-target, skip-link…)
+src/data/                    ALL site content, plus the icon and image registries
+src/contexts/ThemeContext.js Themes
+src/lib/utils.js             cn(), useReducedMotion, useIntersectionObserver, makeReveal/makeStagger…
+src/Components/
+  Maincontaint/              Full pages: Home, About, Domain, Projects, Certificates, Contacts
+  HomeComponents/            Homepage teasers for each section
+  Navbar/, Footer/, Chatbot/
+  ui/                        Shared pieces: Button, GlassCard, LazyImage, SectionHeading, Skeleton, ScrollToTop…
+  utils/helpers.js           Contact form checks and the mailto: builder
+  Assets/                    Images (.webp)
+```
+
+Routes: `/`, `/about`, `/domain`, `/projects`, `/certificates`, `/contacts`,
+and a 404 page for anything else.
+
+`.agents/` and `skills-lock.json` are local agent tooling and are git-ignored.
+
+## Development rules
+
+### Workflow
+
+- **Branches:** `main` is production (https://portfolio-sanjeev-singh.vercel.app).
+  `stage` deploys to https://stage.portfolio.saarvana.online/. Work on a
+  branch, open a pull request into `stage`, and move `stage` into `main` with
+  another pull request.
 - **Don't push** unless the user asks for it in the current conversation.
   Commit locally and say what's ready.
+- **Commit messages** explain what changed, why, and how it was checked.
 - **Before calling a change done,** run:
   ```sh
   CI=true npx react-scripts test --watchAll=false   # all tests
   CI=true npm run build                              # warnings fail Vercel builds
   ```
-  and check it in a real browser, not only with tests.
-- **Content** lives in `src/data/*.js`, never hard-coded in JSX.
-- **Code style:** plain, readable JSX with short comments that explain *why*.
-  Don't split components or add abstraction layers just for tidiness.
+  Then check it in a real browser, at phone and desktop widths and in both a
+  light and a dark theme. Tests alone aren't enough.
+- **Match the case of file names in imports exactly** (`Components`, not
+  `components`). macOS doesn't care, but Vercel builds on Linux, which does.
 
-## How the chat works
+### Code style
+
+- **Plain, readable JSX** that reads top to bottom, with short comments that
+  explain *why*. Don't split a page into many small components, add generic
+  `variant`-prop components, or add config-driven rendering just for tidiness.
+  Some repeated JSX is fine.
+- **Reuse what exists** before writing something new: `Button` and its
+  variants, `GlassCard`, `LazyImage` (for every content image; it falls back
+  to a labelled panel if the image fails), `SectionHeading`, `cn()`, and the
+  motion helpers in `src/lib/utils.js`.
+
+### Content and data
+
+- **All content lives in `src/data/*.js`:** profile, experience, education,
+  skills, projects, certificates, domains, social links and navigation. Never
+  put a title, URL, email or achievement in JSX. The full pages and their
+  homepage teasers read the same data, so they can't drift apart.
+- **Content follows Sanjeev's CV.** There are three role-tailored versions
+  (Java-, Node- and JavaScript-leaning); their skills are identical.
+- **Icons are stored as string names** and resolved with `getIcon()`.
+  **Images are stored as string keys** and resolved with `getImage()`.
+  Data files must never import files (see the chat rules below for why).
+- **Keep the hero line** "… specializing in Java & JavaScript". A stronger
+  repositioning was tried and deliberately reverted.
+
+### Colours and themes
+
+- **Six themes:** light, dark, midnight, obsidian (dark ones) and dawn, arctic
+  (light ones). Each is a set of HSL variables in `src/index.css`: `--primary`,
+  `--muted`, `--border`, `--success`, `--warning`, `--primary-hover` and so on.
+- **Use theme tokens only** (`bg-card`, `text-foreground`, `text-primary`,
+  `border-border`…). Never Tailwind palette colours like `blue-500` or
+  `green-500`: they ignore the theme and failed contrast.
+- **Never use `dark:` variants.** They only fire on the `dark` theme, not on
+  midnight or obsidian.
+- **Text on a coloured fill uses the solid token,** e.g. `bg-primary` with
+  `text-primary-foreground`. A see-through fill like `bg-primary/75` let the
+  page show through and dropped text to about 3.2:1. Faint status tints
+  (`bg-warning/10` behind `text-foreground`) are fine, but measure any new one.
+- **Text contrast must be at least 4.5:1 in all six themes.** Check it in the
+  browser whenever colours change.
+
+### Accessibility and motion
+
+- **Focus:** use the `focus-ring` class for a visible keyboard focus ring. The
+  skip link in the Navbar jumps to `#main-content`.
+- **Touch:** targets are at least 44px on touch screens (`tap-target`, and the
+  `Button` does it for coarse pointers).
+- **Motion:** respect reduced motion with `useReducedMotion()`, and pass it to
+  `makeReveal()` / `makeStagger()`.
+- **Long text:** the body has `overflow-wrap: anywhere`, so long emails and URLs
+  wrap instead of widening the page. Nothing may make a page scroll sideways at
+  any width.
+
+### Things not to change
+
+- **Favicon:** keep `public/favicon.ico` exactly as it is on `main`, with a
+  single `<link rel="icon">` in `public/index.html`. Extra PNG icon links
+  override it.
+- **Don't register `@tailwindcss/aspect-ratio`.** It replaced Tailwind's
+  native `aspect-video` / `aspect-[3/2]` with no-ops and collapsed image boxes
+  to 0px.
+- **The contact form stays mailto: only** until a real sending service exists.
+  It must never claim a message was sent (see the comment in `Form.jsx`).
+
+### Tests
+
+- **Jest runs through `react-scripts`,** with React Testing Library.
+  `src/App.test.js` is a smoke test; the chat has its own tests.
+- **Use `fireEvent`,** not `@testing-library/user-event`. user-event ships its
+  own copy of `@testing-library/dom`, so its events cause `act()` warnings.
+
+## The AI chat assistant
+
+The "Ask about Sanjeev" chat. Its code is spread across several files, and
+some of it breaks without any failing test or build. The full design is in
+[docs/ai-chatbot-design.md](docs/ai-chatbot-design.md).
+
+### How the chat works
 
 | Part | File |
 |---|---|
@@ -42,9 +175,9 @@ portfolio data as the system instruction and calls Google Gemini
 environment variable can override). The chat keeps no memory: every request
 sends the recent conversation.
 
-## Rules that keep the chat working
+### Rules that keep the chat working
 
-### The data files must load in plain Node
+#### The data files must load in plain Node
 
 `api/chat.js` imports `profile.js`, `experience.js`, `skills.js`,
 `projects.js`, `certificates.js`, `domains.js` and `social.js` from
@@ -71,7 +204,7 @@ JSX.
   *key* and resolves it itself. `CertificateCard` takes a resolved *URL*, so
   its callers must call `getImage()` first.
 
-### Secrets and the endpoint
+#### Secrets and the endpoint
 
 - **Keep `GEMINI_API_KEY` only in Vercel's environment variables**
   (Development, Preview and Production). **Never** give it a `REACT_APP_`
@@ -93,7 +226,7 @@ JSX.
   - 20 messages per 10 minutes per IP address. This count lives in memory, so
     it's best effort only.
 
-### The prompt and the reply formatting must match
+#### The prompt and the reply formatting must match
 
 - **Answers come only from `src/data`.** Don't add outside facts. Keep the
   skill-bar percentages in `skills.js` out of the prompt: they're illustrative,
@@ -111,12 +244,8 @@ JSX.
   `mailto:` addresses. The test "never renders HTML or javascript: links from a
   reply" guards this; keep it passing.
 
-### Look and layout
+#### Look and layout
 
-- **Colours come from theme tokens only.** No Tailwind palette colours (like
-  `blue-500`), no `dark:` variants, and no see-through fill behind text. When
-  you change a colour, check text contrast is at least 4.5:1 in all six themes
-  (light, dark, midnight, obsidian, dawn, arctic).
 - **Reply bubbles are `bg-background` with `border-border`,** not `bg-muted`.
   Links and list markers use `text-primary`, which is only 4.0:1 on `muted` in
   the dark theme, but at least 4.9:1 on `background` in every theme.
@@ -133,7 +262,7 @@ JSX.
   `max-*` variants (`max-sm:`, `min-[600px]:` and so on). Nothing uses them
   today. If you need them, replace `sm-tall` rather than dropping this rule.
 
-### Behaviour that has regression tests
+#### Behaviour that has regression tests
 
 Don't undo these; each one fixed a real bug:
 
@@ -143,10 +272,8 @@ Don't undo these; each one fixed a real bug:
 - After clicking a suggested question, focus stays in the input.
 - A new reply scrolls into view from its first line, not its last.
 
-### Testing the chat
+#### Testing the chat
 
-- **Use `fireEvent`, not `@testing-library/user-event`.** user-event ships its
-  own copy of `@testing-library/dom`, and its events cause `act()` warnings.
 - **`npm start` doesn't run `api/`.** To test the real function locally, use
   `vercel dev`. To check only the UI, serve `build/` with a small local server
   that answers `/api/chat` with sample Markdown replies.
@@ -158,7 +285,7 @@ Don't undo these; each one fixed a real bug:
 - **Playwright MCP saves screenshots into `.playwright-mcp/`** in this repo,
   which isn't git-ignored. Don't commit that folder.
 
-## Chat change history
+### Chat change history
 
 | Commit | Change |
 |---|---|
@@ -174,6 +301,21 @@ Don't undo these; each one fixed a real bug:
 Add a row when you make a chat change that matters.
 
 ## Open items
+
+Nobody has decided on these yet. Don't start them without asking.
+
+### Site
+
+- **Invented numbers:** the skill-bar percentages in `src/data/skills.js`
+  (88/84/85/86) aren't from the CV.
+- **Duplicated code:** the copy-to-clipboard handler is repeated in
+  `Contacts.jsx`, `About.jsx` and `HomeAbout.jsx`.
+- **Contact form:** it only opens the visitor's mail app (mailto:). Real sending
+  needs a service such as Formspree or EmailJS.
+- **Security alerts and build tool:** about 116 Dependabot alerts on `main` come
+  from `react-scripts`. The fix is a move from Create React App to Vite.
+
+### Chat
 
 - **Not verified yet:** whether real Gemini follows the formatting rules. Check
   on stage with "Show me his best projects". You should see bold project names
