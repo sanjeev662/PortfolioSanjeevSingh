@@ -227,8 +227,8 @@ This is one component written in plain JSX, in the style of the rest of the site
 - **Screen readers:** the message list is `aria-live="polite"` so replies are announced.
 - **Touch and focus:** touch targets are at least 44px, with a visible focus ring (the `focus-ring` class).
 - **Motion:** the open and close animation respects `useReducedMotion()`.
-- **Type:** compact on purpose, since the chat floats over the page and is skimmed: messages are 13px on desktop and 14px on phones (where the chat fills the screen), with a 1.625 line height, 12px between messages and 8px between blocks inside a reply. Reply headings are 1px larger than the text.
-- **Sizes:** on desktop the panel floats at 380px wide and up to 600px tall. On mobile (below `sm`) it is a full-width sheet with safe-area padding.
+- **Type:** compact on purpose, since the chat floats over the page and is skimmed: messages are 13px in the floating panel and 14px in the full-screen sheet, with a 1.625 line height, 12px between messages and 8px between blocks inside a reply. Reply headings are 1px larger than the text.
+- **Sizes:** where there's room (`sm-tall`: at least 640px wide and 500px tall, defined in `tailwind.config.js`) the panel floats at 380px wide and up to 600px tall. Everywhere else, including phones on their side, it is a full-screen sheet with safe-area padding and a 16px input, so iOS doesn't zoom in when the input is focused.
 
 **Bundle size:** there are no new dependencies, and the main bundle grew by about 2.4 kB gzipped (127.66 kB to 130.1 kB), so the chat ships in the main bundle rather than a lazy-loaded chunk.
 
@@ -371,6 +371,8 @@ Built on branch `feature/ai-chatbot`, with one commit per step.
 - Jest: 13 tests pass. There are new tests for Markdown formatting, bare URLs and emails, and a reply containing HTML and a `javascript:` link.
 - `CI=true npm run build` passes.
 - **Browser:** the production build, with sample Markdown replies, at 1280px and 375px in the light, dark, dawn and midnight themes. Real replies from the live stage function (still on the old plain-text prompt) also render cleanly: their `*` bullets become lists and their bare URLs become short links.
+- **End to end:** the chat at 13 screen sizes, from 320×568 to 1920×1080, including three phones on their side. Checked at each: the panel stays on screen, focus goes to the input and back to the launcher, Escape closes, the launcher clears ScrollToTop, replies don't overflow and open at their first line, and phones get a 16px input. Chat text colours measure at least 4.76:1 in all six themes (links at least 4.91:1). All 7 routes at 6 sizes load with no horizontal scroll, console errors or broken images.
+- **Fixed in that pass:** a phone on its side (for example 740×360) got the floating panel, with 137px left for messages and a 13px input that iOS zooms in on. It now gets the full-screen sheet.
 - **Not yet run:** the new formatting rules against real Gemini. That needs a deploy.
 
 ## 10. Rollout and rollback
