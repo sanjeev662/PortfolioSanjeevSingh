@@ -35,6 +35,7 @@ public/                          index.html, favicon.ico, icons, og-image.png, m
 src/App.js                       Providers, routes, Navbar, Footer, ScrollToTop, Chatbot
 src/index.css                    Theme variables; shared classes (focus-ring, tap-target, skip-link…)
 src/data/                        All site content, plus the icon (icons.js) and image (images.js) registries
+src/data/chatContext.js          Extra facts for the AI chat only (CHAT_CONTEXT); the site doesn't show them
 src/contexts/ThemeContext.js     Theme class on <html>, saved as `portfolio-theme`, default `dark`
 src/lib/utils.js                 cn(), useReducedMotion, useIntersectionObserver, makeReveal, makeStagger
 src/Components/Maincontaint/     Full pages: Home, About, Domain, Projects, Certificates, Contacts
@@ -61,6 +62,11 @@ Routes: `/`, `/about`, `/domain`, `/projects`, `/certificates`, `/contacts`, and
 - Icons are string names, resolved with `getIcon()`.
 - Images are string keys like `"Projects/to-let-mern-app"`, resolved with `getImage()`. To add an image, import it in `src/data/images.js` and add it to `IMAGE_MAP`. A missing key returns `undefined` with no warning.
 - Keep the hero line "… specializing in Java & JavaScript". A stronger version was deliberately reverted.
+- Facts the chat should know but the site doesn't show (availability, notice period, preferences, FAQ answers) go in `src/data/chatContext.js`, as plain sentences or `- ` bullets inside the `CHAT_CONTEXT` template string. It starts empty. The rules:
+  - true, public facts only: the chat states them as fact to any visitor
+  - keep it short: it's sent with every question
+  - no backticks or `${` inside the text
+  - never add an import to that file
 
 ## Styling and themes
 
@@ -83,7 +89,7 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
 
 ### Keep the function loading (it breaks silently)
 
-`api/chat.js` imports `profile`, `experience`, `skills`, `projects`, `certificates`, `domains` and `social` from `src/data`, and runs in plain Node on Vercel. The site build never loads it, and its Jest tests (which stub asset imports) can't catch this, so a mistake only shows up as every chat message failing in production.
+`api/chat.js` imports `profile`, `experience`, `skills`, `projects`, `certificates`, `domains`, `social` and `chatContext` from `src/data`, and runs in plain Node on Vercel. The site build never loads it, and its Jest tests (which stub asset imports) can't catch this, so a mistake only shows up as every chat message failing in production.
 
 - Never import assets (`.webp`, `.png`, `.svg`, `.css`), React, JSX or icon packages in those data files.
 - In `api/chat.js`, import data files one by one, never the `src/data/index.js` barrel.
@@ -106,7 +112,7 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
 
 ### Prompt and reply formatting
 
-- Answers come only from `src/data`. Keep the skill-bar percentages in `skills.js` (not from the CV) and Sanjeev's age out of the prompt.
+- Answers come only from `src/data`, including `chatContext.js`, which is added under "## More about Sanjeev" when it isn't empty. Keep the skill-bar percentages in `skills.js` (not from the CV) and Sanjeev's age out of the prompt.
 - The prompt asks for a Markdown subset: paragraphs, `- ` bullets starting with a **bold** name, `###` headings only for multi-part answers, and `[label](url)` links. No bare URLs, tables, code blocks, HTML or emoji.
 - `Chatbot.jsx` renders that subset plus `*italic*`, `` `code` ``, numbered lists, one level of nested bullets, and bare URLs and emails as links. Change the prompt and the renderer together; anything unsupported shows as raw symbols.
 
@@ -122,6 +128,8 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
 
 - Reply bubbles are `bg-background` with `border-border`, not `bg-muted`. The `text-primary` links and list markers are only 4.0:1 on `muted` in the dark theme, but at least 4.9:1 on `background` in every theme.
 - Keep it compact: 13px text in the floating panel, 14px in the full-screen chat. Don't make text or the panel bigger without asking.
+- The header has a "New chat" button (`SquarePen` icon) next to Close. It's always rendered so the header never changes height, and disabled while the chat is empty or a reply is loading (a late reply would bring the old conversation back). It clears the messages, follow-ups and error, and moves focus to the input.
+- The header subtitle ("AI answers from this portfolio") is kept short so it fits on one line beside both buttons, down to 375px wide.
 - On phones the input stays at 16px (`text-base`). iPhones zoom the page in on smaller inputs.
 - The floating 380 × 600 panel appears only at `sm-tall` (at least 640px wide **and** 500px tall; defined in `tailwind.config.js`). Anything smaller, including a phone on its side, gets the full-screen chat. The launcher uses `sm` so it stays lined up with `ScrollToTop`.
 - `sm-tall` is a "raw" screen, which switches off Tailwind's `min-*` and `max-*` variants. Don't use them; if you need them, replace `sm-tall` first.
@@ -131,6 +139,7 @@ The browser calls `POST /api/chat` (`api/chat.js`), which builds Gemini's system
   - Focus stays in the input after a suggested question is clicked.
   - A new reply scrolls into view from its first line.
   - Follow-up questions disappear when the next question is sent, skip questions already asked, and top up from the fallback list.
+  - "New chat" is disabled when there's nothing to clear or a reply is loading; it clears the conversation, and the next question is sent with no history.
 
 ## Testing and verification
 

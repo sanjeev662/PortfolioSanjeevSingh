@@ -22,6 +22,7 @@ import { PROJECTS } from "../src/data/projects.js";
 import { CERTIFICATES } from "../src/data/certificates.js";
 import { DOMAINS } from "../src/data/domains.js";
 import { SOCIAL_LINKS } from "../src/data/social.js";
+import { CHAT_CONTEXT } from "../src/data/chatContext.js";
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 
@@ -126,6 +127,12 @@ function buildPortfolioText() {
   lines.push("", "## Profiles and links");
   for (const link of SOCIAL_LINKS) {
     lines.push(`- ${link.label}: ${link.href.replace(/^mailto:/, "")}`);
+  }
+
+  // Extra facts added by hand in src/data/chatContext.js, if there are any.
+  if (CHAT_CONTEXT.trim()) {
+    lines.push("", "## More about Sanjeev");
+    lines.push(CHAT_CONTEXT.trim());
   }
 
   return lines.join("\n");

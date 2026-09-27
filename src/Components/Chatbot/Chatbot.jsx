@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { MessageCircle, RotateCcw, Send, Sparkles, X } from "lucide-react";
+import { MessageCircle, RotateCcw, Send, Sparkles, SquarePen, X } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { PROFILE } from "../../data";
@@ -365,6 +365,18 @@ function Chatbot() {
     ask(input);
   }
 
+  // Back to an empty chat: the greeting and the starter questions. The button
+  // is disabled while a reply is on its way, because that reply would land
+  // afterwards and bring the old conversation back.
+  function handleNewChat() {
+    setMessages([]);
+    setFollowUps([]);
+    setError(null);
+    // The button is disabled once the chat is empty, which would drop focus
+    // to <body>; move it to the input, ready for the next question.
+    inputRef.current?.focus();
+  }
+
   // Retry resends the conversation as it stands: it still ends with the
   // question that failed.
   function handleRetry() {
@@ -438,19 +450,34 @@ function Chatbot() {
                     Ask about {FIRST_NAME}
                   </h2>
                   <p className="text-xs text-muted-foreground">
-                    AI assistant that answers from this portfolio
+                    AI answers from this portfolio
                   </p>
                 </div>
               </div>
-              <Button
-                onClick={() => setIsOpen(false)}
-                variant="ghost"
-                size="icon"
-                aria-label="Close chat"
-                className="shrink-0 rounded-full"
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </Button>
+              <div className="flex shrink-0 items-center gap-1">
+                {/* Always there, so the header never shifts; usable once
+                    there's a conversation to clear. */}
+                <Button
+                  onClick={handleNewChat}
+                  disabled={messages.length === 0 || isSending}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="New chat"
+                  title="New chat"
+                  className="rounded-full"
+                >
+                  <SquarePen className="h-[18px] w-[18px]" aria-hidden="true" />
+                </Button>
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Close chat"
+                  className="rounded-full"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </div>
             </div>
 
             {/* `relative` makes this the element reply positions are measured

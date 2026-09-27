@@ -137,6 +137,7 @@ The system instruction contains the whole portfolio as labelled plain text, buil
 | Certificates and internships | `CERTIFICATES` |
 | DSA and competitive-programming profiles, ICPC result | `DOMAINS` |
 | Public profile links | `SOCIAL_LINKS` |
+| Extra facts added by hand that the site doesn't show (availability, preferences, FAQ answers). Added under "## More about Sanjeev", and only when not empty | `CHAT_CONTEXT` (`src/data/chatContext.js`) |
 
 Deliberately left out:
 
@@ -209,7 +210,7 @@ This is one component written in plain JSX, in the style of the rest of the site
 **Behaviour**
 
 - **Launcher:** a floating button in the bottom-right corner labelled "Ask about Sanjeev". `ScrollToTop` moves up and stacks above it. The launcher stays mounted and is only hidden while the panel is open: unmounting it with an exit animation lost it for good when the chat was closed within 0.2 seconds of opening.
-- **Panel layout:** a header with an icon, the title and a close button, the message list, the input with a send button, and a one-line notice.
+- **Panel layout:** a header with an icon, the title, a "New chat" button and a close button, the message list, the input with a send button, and a one-line notice.
 - **Suggested questions** show when the conversation is empty:
   - "What's his tech stack?"
   - "What does he do at Namekart?"
@@ -221,6 +222,7 @@ This is one component written in plain JSX, in the style of the rest of the site
   - `Chatbot.jsx` (`pickFollowUps`) drops questions already asked. When fewer than 2 remain, it tops up from `FALLBACK_FOLLOW_UPS`: the starter questions plus "What are his top achievements?", "Where did he intern before Namekart?" and "Which certifications does he have?".
   - The buttons disappear as soon as the next question is sent.
   - Why a text marker rather than Gemini's JSON output mode: a model that skips the section still produces a normal answer, and the request itself doesn't change.
+- **New chat:** the button in the header clears the conversation, its follow-up questions and any error, and brings back the greeting and starter questions. The next question is sent with no history. It's always rendered, so the header keeps its height, and disabled while the chat is empty or a reply is loading. A reply arriving after a reset would otherwise bring the old conversation back.
 - **Errors:** the function's message appears inline with a Retry button.
 - **Replies:** a small Markdown renderer in `Chatbot.jsx` turns the subset from §5.4 into elements: `###` headings (as `<h3>`), paragraphs that keep single line breaks, `-`/`*` bullets with one nested level, numbered lists that keep their start number, `**bold**`, `*italic*`, `` `code` ``, `[label](url)` links, and bare URLs (shown without `https://`) and emails (as `mailto:` links). Anything else shows as plain text. It builds React elements and never uses `dangerouslySetInnerHTML`; links only go to `http(s)` and `mailto:` addresses. It is hand-written rather than a library because the chat is in the main bundle and needs so little. Visitor messages stay plain text (`whitespace-pre-wrap`).
 - **Scrolling:** a new reply is scrolled into view from its first line, so long answers read top to bottom. Questions, the typing dots and errors scroll to the bottom.

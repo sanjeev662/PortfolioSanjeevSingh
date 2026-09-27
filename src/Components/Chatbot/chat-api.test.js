@@ -7,6 +7,12 @@ import handler from "../../../api/chat";
 // Create React App only runs tests under src/. Gemini is replaced with a fake
 // fetch that returns the given reply text.
 
+// A sample note, as it might be added to src/data/chatContext.js (which
+// starts out empty).
+jest.mock("../../data/chatContext", () => ({
+  CHAT_CONTEXT: "\n- Open to backend SDE roles.\n",
+}));
+
 function geminiReplies(text) {
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
@@ -50,6 +56,17 @@ describe("api/chat", () => {
     const instruction = sent.systemInstruction.parts[0].text;
     expect(instruction).toContain("FOLLOW_UPS:");
     expect(instruction).toContain("Steer toward Sanjeev's strengths");
+  });
+
+  it("adds the notes from src/data/chatContext.js to what Gemini is told", async () => {
+    geminiReplies("An answer.");
+
+    await askChat("Is he open to new roles?");
+
+    const sent = JSON.parse(global.fetch.mock.calls[0][1].body);
+    expect(sent.systemInstruction.parts[0].text).toContain(
+      "## More about Sanjeev\n- Open to backend SDE roles."
+    );
   });
 
   it("splits the follow-up questions off the reply", async () => {
