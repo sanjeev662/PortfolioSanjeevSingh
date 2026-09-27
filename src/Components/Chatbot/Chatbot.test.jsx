@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import Chatbot from "./Chatbot";
 
 // The chat only ever talks to our own /api/chat function, so these tests stub
@@ -57,8 +57,103 @@ describe("Chatbot", () => {
     );
     const sentBody = JSON.parse(global.fetch.mock.calls[0][1].body);
     expect(sentBody).toEqual({ messages: [{ role: "user", text: "What does he use?" }] });
-    // The suggestions only show on an empty conversation.
-    expect(screen.queryByRole("button", { name: "What's his tech stack?" })).not.toBeInTheDocument();
+    // The starter suggestions only show on an empty conversation.
+    expect(screen.queryByText("Try asking")).not.toBeInTheDocument();
+  });
+
+  it("offers the reply's follow-up questions, minus any already asked, and asks one when clicked", async () => {
+    global.fetch
+      .mockResolvedValueOnce(
+        replyWith(200, {
+          reply: "He builds backend services at Namekart.",
+          followUps: [
+            "What did he build at Rydeu?",
+            "What does he do at Namekart?", // the question just asked
+            "Which databases does he use?",
+          ],
+        })
+      )
+      .mockResolvedValueOnce(replyWith(200, { reply: "At Rydeu he built booking APIs." }));
+    render(<Chatbot />);
+
+    await openChat();
+    fireEvent.click(screen.getByRole("button", { name: "What does he do at Namekart?" }));
+
+    const followUps = await screen.findByRole("group", { name: "Suggested follow-up questions" });
+    expect(within(followUps).getAllByRole("button").map((button) => button.textContent)).toEqual([
+      "What did he build at Rydeu?",
+      "Which databases does he use?",
+    ]);
+
+    fireEvent.click(within(followUps).getByRole("button", { name: "What did he build at Rydeu?" }));
+    // They go as soon as the next question is sent.
+    expect(screen.queryByRole("group", { name: "Suggested follow-up questions" })).not.toBeInTheDocument();
+
+    expect(await screen.findByText("At Rydeu he built booking APIs.")).toBeInTheDocument();
+    const sentBody = JSON.parse(global.fetch.mock.calls[1][1].body);
+    expect(sentBody.messages).toEqual([
+      { role: "user", text: "What does he do at Namekart?" },
+      { role: "model", text: "He builds backend services at Namekart." },
+      { role: "user", text: "What did he build at Rydeu?" },
+    ]);
+  });
+
+  it("starts a new chat: clears the conversation and brings back the starter questions", async () => {
+    global.fetch
+      .mockResolvedValueOnce(replyWith(200, { reply: "Java, Spring Boot and React." }))
+      .mockResolvedValueOnce(replyWith(200, { reply: "He's an SDE at Namekart." }));
+    render(<Chatbot />);
+
+    await openChat();
+    // Nothing to clear yet.
+    expect(screen.getByRole("button", { name: "New chat" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "What's his tech stack?" }));
+    expect(await screen.findByText("Java, Spring Boot and React.")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "New chat" }));
+
+    expect(screen.queryByText("Java, Spring Boot and React.")).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Suggested follow-up questions" })).not.toBeInTheDocument();
+    expect(screen.getByText("Try asking")).toBeInTheDocument();
+    expect(screen.getByLabelText("Your question")).toHaveFocus();
+
+    // The next question starts with no history.
+    fireEvent.click(screen.getByRole("button", { name: "What does he do at Namekart?" }));
+    expect(await screen.findByText("He's an SDE at Namekart.")).toBeInTheDocument();
+    expect(JSON.parse(global.fetch.mock.calls[1][1].body).messages).toEqual([
+      { role: "user", text: "What does he do at Namekart?" },
+    ]);
+  });
+
+  it("disables New chat while a reply is on its way", async () => {
+    let sendReply;
+    global.fetch.mockReturnValueOnce(new Promise((resolve) => (sendReply = resolve)));
+    render(<Chatbot />);
+
+    await openChat();
+    fireEvent.click(screen.getByRole("button", { name: "What's his tech stack?" }));
+    expect(screen.getByRole("button", { name: "New chat" })).toBeDisabled();
+
+    sendReply(replyWith(200, { reply: "Java, Spring Boot and React." }));
+    expect(await screen.findByText("Java, Spring Boot and React.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "New chat" })).toBeEnabled();
+  });
+
+  it("tops up with its own questions when a reply brings fewer than two", async () => {
+    // No followUps at all, as from an older server or a model that skipped them.
+    global.fetch.mockResolvedValueOnce(replyWith(200, { reply: "Java, Spring Boot and React." }));
+    render(<Chatbot />);
+
+    await openChat();
+    fireEvent.click(screen.getByRole("button", { name: "What's his tech stack?" }));
+
+    const followUps = await screen.findByRole("group", { name: "Suggested follow-up questions" });
+    // Three from the fallback list, skipping the question already asked.
+    expect(within(followUps).getAllByRole("button").map((button) => button.textContent)).toEqual([
+      "What does he do at Namekart?",
+      "Show me his best projects",
+      "Has he done competitive programming?",
+    ]);
   });
 
   it("shows the server's error and retries the same question", async () => {

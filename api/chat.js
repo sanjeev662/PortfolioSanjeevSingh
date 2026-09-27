@@ -22,6 +22,7 @@ import { PROJECTS } from "../src/data/projects.js";
 import { CERTIFICATES } from "../src/data/certificates.js";
 import { DOMAINS } from "../src/data/domains.js";
 import { SOCIAL_LINKS } from "../src/data/social.js";
+import { CHAT_CONTEXT } from "../src/data/chatContext.js";
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 
@@ -30,13 +31,20 @@ const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 const MAX_MESSAGE_LENGTH = 500;
 const MAX_REPLY_LENGTH = 5000;
 const MAX_HISTORY = 10;
+// Suggested follow-up questions longer than this are dropped.
+const MAX_FOLLOW_UP_LENGTH = 100;
 
 // Gemini 3 models count their internal "thinking" against this limit as well
 // as the answer, so it has headroom. The rules below keep answers short.
 const MAX_OUTPUT_TOKENS = 1024;
 
-// Give up before Vercel's own function time limit would cut us off.
-const GEMINI_TIMEOUT_MS = 9000;
+// Most replies take 1-2 s, but now and then Gemini stalls on a request for
+// 10 s or more (about 1 request in 4 on 2026-09-27), and asking again usually
+// gets a quick answer. So each attempt gets a short timeout, and an attempt
+// that stalls, or that Google answers with a server error, is tried again: up
+// to 3 attempts, 18 s at worst. vercel.json gives this function 25 s.
+const GEMINI_ATTEMPTS = 3;
+const GEMINI_ATTEMPT_TIMEOUT_MS = 6000;
 
 // Per-IP limit: 20 messages per 10 minutes. The counters live in this
 // instance's memory, so they reset when Vercel recycles the instance and aren't
@@ -126,6 +134,12 @@ function buildPortfolioText() {
     lines.push(`- ${link.label}: ${link.href.replace(/^mailto:/, "")}`);
   }
 
+  // Extra facts added by hand in src/data/chatContext.js, if there are any.
+  if (CHAT_CONTEXT.trim()) {
+    lines.push("", "## More about Sanjeev");
+    lines.push(CHAT_CONTEXT.trim());
+  }
+
   return lines.join("\n");
 }
 
@@ -152,6 +166,17 @@ Formatting: the chat window shows only this small part of Markdown, so use nothi
 - Use **bold** for key names and numbers, sparingly.
 - Write links as Markdown links with a short label, e.g. [Live demo](https://…) · [Source code](https://…). Never paste a bare URL. Write email addresses as plain text.
 - No tables, code blocks, images, HTML or emoji.
+
+Follow-up questions: end every reply, including a polite refusal, with this section, and write nothing after it:
+
+FOLLOW_UPS:
+- <question>
+- <question>
+- <question>
+
+- Give 2 or 3 short questions (under 60 characters each) that a recruiter might ask next, e.g. "What did he build at Rydeu?".
+- Make them follow naturally from your answer, and don't repeat a question already asked in this conversation.
+- Steer toward Sanjeev's strengths: his experience, projects, technical skills and achievements. Only suggest questions the PORTFOLIO answers well; never ones about weaknesses, gaps or information it doesn't have.
 
 PORTFOLIO
 ${PORTFOLIO_TEXT}`;
@@ -193,6 +218,33 @@ function isRateLimited(ip) {
   recentRequestsByIp.set(ip, recent);
 
   return recent.length > RATE_LIMIT;
+}
+
+// The line that starts the follow-up section. The model may dress it up in
+// Markdown ("**FOLLOW_UPS:**") or write "Follow-ups:", so allow for both.
+const FOLLOW_UPS_LINE = /^[ \t#>*_]*follow[ _-]?ups\b[ \t*_:]*/gim;
+
+/**
+ * Splits the follow-up questions off the end of a reply. If the model left
+ * the section out, the whole text is the answer and there are no questions
+ * (the chat then offers its own), so a missing section never loses an answer.
+ */
+function splitFollowUps(text) {
+  const markers = [...text.matchAll(FOLLOW_UPS_LINE)];
+  if (markers.length === 0) return { reply: text, followUps: [] };
+
+  const marker = markers[markers.length - 1];
+  const followUps = text
+    .slice(marker.index + marker[0].length)
+    .split("\n")
+    // "- **What did he build?**" becomes "What did he build?"
+    .map((line) => line.replace(/^\s*(?:[-*•]|\d+[.)])\s+/, "").replace(/\*\*/g, "").trim())
+    .filter((line) => line.endsWith("?") && line.length <= MAX_FOLLOW_UP_LENGTH)
+    .slice(0, 3);
+
+  // Also drop a "---" divider the model may put before the section.
+  const reply = text.slice(0, marker.index).trim().replace(/\n\s*(?:[-*_]\s*){3,}$/, "");
+  return { reply, followUps };
 }
 
 /** The answer text, skipping any "thought" parts a thinking model returns. */
@@ -254,34 +306,49 @@ export default async function handler(req, res) {
     });
   }
 
-  let response;
-  try {
-    response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // In a header, not the URL, so the key can't end up in request logs.
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: buildSystemInstruction() }] },
-          contents: messages.map((message) => ({
-            role: message.role,
-            parts: [{ text: message.text }],
-          })),
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: MAX_OUTPUT_TOKENS,
+  const geminiRequest = JSON.stringify({
+    systemInstruction: { parts: [{ text: buildSystemInstruction() }] },
+    contents: messages.map((message) => ({
+      role: message.role,
+      parts: [{ text: message.text }],
+    })),
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: MAX_OUTPUT_TOKENS,
+    },
+  });
+
+  // Ask Gemini, trying again if an attempt stalls or hits a Google server
+  // error (see GEMINI_ATTEMPTS). Log only the kind of failure, never messages.
+  let response = null;
+  for (let attempt = 1; attempt <= GEMINI_ATTEMPTS; attempt++) {
+    try {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // In a header, not the URL, so the key can't end up in request logs.
+            "x-goog-api-key": apiKey,
           },
-        }),
-        signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
-      }
-    );
-  } catch (error) {
-    // A timeout or network failure. Log the kind of failure, never the messages.
-    console.error("Gemini request failed:", error.name);
+          body: geminiRequest,
+          signal: AbortSignal.timeout(GEMINI_ATTEMPT_TIMEOUT_MS),
+        }
+      );
+    } catch (error) {
+      // A timeout or a network failure.
+      console.error(`Gemini attempt ${attempt} of ${GEMINI_ATTEMPTS} failed:`, error.name);
+      response = null;
+      continue;
+    }
+    // Success, or an error that asking again won't fix (a bad request, the
+    // quota): stop here. Only Google's own server errors are worth a retry.
+    if (response.status < 500) break;
+    console.error(`Gemini attempt ${attempt} of ${GEMINI_ATTEMPTS} returned`, response.status);
+  }
+
+  if (!response) {
     return res.status(502).json({ error: BUSY_MESSAGE });
   }
 
@@ -293,15 +360,15 @@ export default async function handler(req, res) {
   }
 
   const data = await response.json();
-  const reply = readReplyText(data);
+  const { reply, followUps } = splitFollowUps(readReplyText(data));
   if (!reply) {
     // Blocked by a safety filter, or the token limit ran out mid-thought.
     console.error(
       "Gemini returned no text:",
       data?.promptFeedback?.blockReason || data?.candidates?.[0]?.finishReason
     );
-    return res.status(200).json({ reply: FALLBACK_REPLY });
+    return res.status(200).json({ reply: FALLBACK_REPLY, followUps: [] });
   }
 
-  return res.status(200).json({ reply });
+  return res.status(200).json({ reply, followUps });
 }

@@ -70,7 +70,7 @@ The function does the following, in order:
 2. Validate the body against the contract below. Failure gets `400`.
 3. Apply the per-IP rate limit. Over the limit gets `429`.
 4. Build the system instruction from the fixed rules (§5.4) and the portfolio text (§5.3).
-5. Call Gemini with plain `fetch` and a 9-second timeout, under Vercel's shortest function time limit. There is no SDK and no new npm dependency.
+5. Call Gemini with plain `fetch`. There is no SDK and no new npm dependency. Each attempt times out after 6 seconds. An attempt that stalls, or that Google answers with a 5xx, is retried, up to 3 attempts. `vercel.json` gives the function a `maxDuration` of 25 seconds to fit them. (This started as a single 9-second timeout. On 2026-09-27 about 1 request in 4 stalled past it, on both stage and production, while healthy replies took 1–2 seconds and an immediate retry usually answered fast.)
 6. Return the reply text, turning upstream failures into a friendly error.
 7. Log errors by status only, never message content.
 
@@ -101,7 +101,7 @@ Responses:
 
 | Status | Body | When |
 |---|---|---|
-| `200` | `{ "reply": "..." }` | Success |
+| `200` | `{ "reply": "...", "followUps": ["...?"] }` | Success. `followUps` holds 0–3 suggested next questions (see §5.5) |
 | `400` | `{ "error": "..." }` | Malformed body, or an empty or over-long message |
 | `405` | none | Method other than POST |
 | `429` | `{ "error": "..." }` | Our rate limit or Gemini's quota was hit |
@@ -137,6 +137,7 @@ The system instruction contains the whole portfolio as labelled plain text, buil
 | Certificates and internships | `CERTIFICATES` |
 | DSA and competitive-programming profiles, ICPC result | `DOMAINS` |
 | Public profile links | `SOCIAL_LINKS` |
+| Extra facts added by hand that the site doesn't show (availability, preferences, FAQ answers). Added under "## More about Sanjeev", and only when not empty | `CHAT_CONTEXT` (`src/data/chatContext.js`) |
 
 Deliberately left out:
 
@@ -190,6 +191,14 @@ nothing else.
   bare URL. Email addresses as plain text.
 - No tables, code blocks, images, HTML or emoji.
 
+Follow-up questions: end every reply, including a polite refusal, with a
+"FOLLOW_UPS:" line and 2 or 3 "- " questions, and nothing after them.
+- Short (under 60 characters), what a recruiter might ask next, following
+  from the answer, and not already asked.
+- Steer toward Sanjeev's strengths (experience, projects, skills,
+  achievements). Only questions the PORTFOLIO answers well; never about
+  weaknesses, gaps or missing information.
+
 PORTFOLIO
 {text generated from src/data}
 ```
@@ -201,13 +210,19 @@ This is one component written in plain JSX, in the style of the rest of the site
 **Behaviour**
 
 - **Launcher:** a floating button in the bottom-right corner labelled "Ask about Sanjeev". `ScrollToTop` moves up and stacks above it. The launcher stays mounted and is only hidden while the panel is open: unmounting it with an exit animation lost it for good when the chat was closed within 0.2 seconds of opening.
-- **Panel layout:** a header with an icon, the title and a close button, the message list, the input with a send button, and a one-line notice.
+- **Panel layout:** a header with an icon, the title, a "New chat" button and a close button, the message list, the input with a send button, and a one-line notice.
 - **Suggested questions** show when the conversation is empty:
   - "What's his tech stack?"
   - "What does he do at Namekart?"
   - "Show me his best projects"
   - "Has he done competitive programming?"
 - **While waiting:** three typing dots show (still under reduced motion, with "Thinking…" for screen readers), the send button is disabled, and only one request runs at a time. After a question is sent, focus stays in the input for the follow-up.
+- **Follow-up questions:** after every reply, 2–3 questions show as buttons under it, and clicking one asks it.
+  - `api/chat.js` cuts the `FOLLOW_UPS:` section off the reply (`splitFollowUps`). It keeps up to 3 lines that end in `?` and are at most 100 characters. A missing section leaves the answer whole, with no questions.
+  - `Chatbot.jsx` (`pickFollowUps`) drops questions already asked. When fewer than 2 remain, it tops up from `FALLBACK_FOLLOW_UPS`: the starter questions plus "What are his top achievements?", "Where did he intern before Namekart?" and "Which certifications does he have?".
+  - The buttons disappear as soon as the next question is sent.
+  - Why a text marker rather than Gemini's JSON output mode: a model that skips the section still produces a normal answer, and the request itself doesn't change.
+- **New chat:** the button in the header clears the conversation, its follow-up questions and any error, and brings back the greeting and starter questions. The next question is sent with no history. It's always rendered, so the header keeps its height, and disabled while the chat is empty or a reply is loading. A reply arriving after a reset would otherwise bring the old conversation back.
 - **Errors:** the function's message appears inline with a Retry button.
 - **Replies:** a small Markdown renderer in `Chatbot.jsx` turns the subset from §5.4 into elements: `###` headings (as `<h3>`), paragraphs that keep single line breaks, `-`/`*` bullets with one nested level, numbered lists that keep their start number, `**bold**`, `*italic*`, `` `code` ``, `[label](url)` links, and bare URLs (shown without `https://`) and emails (as `mailto:` links). Anything else shows as plain text. It builds React elements and never uses `dangerouslySetInnerHTML`; links only go to `http(s)` and `mailto:` addresses. It is hand-written rather than a library because the chat is in the main bundle and needs so little. Visitor messages stay plain text (`whitespace-pre-wrap`).
 - **Scrolling:** a new reply is scrolled into view from its first line, so long answers read top to bottom. Questions, the typing dots and errors scroll to the bottom.

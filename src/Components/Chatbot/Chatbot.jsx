@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { MessageCircle, RotateCcw, Send, Sparkles, X } from "lucide-react";
+import { MessageCircle, RotateCcw, Send, Sparkles, SquarePen, X } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { PROFILE } from "../../data";
@@ -26,6 +26,43 @@ const SUGGESTED_QUESTIONS = [
   "Show me his best projects",
   "Has he done competitive programming?",
 ];
+
+// Offered under a reply when the model suggested fewer than two follow-up
+// questions of its own (api/chat.js asks it for 2-3). Each one leads to a
+// strength the portfolio covers well.
+const FALLBACK_FOLLOW_UPS = [
+  ...SUGGESTED_QUESTIONS,
+  "What are his top achievements?",
+  "Where did he intern before Namekart?",
+  "Which certifications does he have?",
+];
+
+/**
+ * The 2-3 follow-up questions shown under a reply: the model's suggestions,
+ * topped up from FALLBACK_FOLLOW_UPS when it gave fewer than two, and never
+ * a question the visitor has already asked.
+ */
+function pickFollowUps(suggested, conversation) {
+  // Compare loosely, so "Show me his projects?" matches "show me his projects".
+  const normalise = (question) => question.toLowerCase().replace(/[\s?.!]+$/, "");
+  const seen = new Set(
+    conversation
+      .filter((message) => message.role === "user")
+      .map((message) => normalise(message.text))
+  );
+
+  const picked = [];
+  function offer(question) {
+    if (picked.length < 3 && !seen.has(normalise(question))) {
+      seen.add(normalise(question));
+      picked.push(question);
+    }
+  }
+
+  suggested.forEach(offer);
+  if (picked.length < 2) FALLBACK_FOLLOW_UPS.forEach(offer);
+  return picked;
+}
 
 const CONNECTION_ERROR =
   "Couldn't reach the assistant. Check your connection and try again.";
@@ -229,6 +266,8 @@ function Chatbot() {
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState(null);
+  // Questions offered under the latest reply; cleared when the next one is sent.
+  const [followUps, setFollowUps] = useState([]);
 
   const prefersReducedMotion = useReducedMotion();
   const inputRef = useRef(null);
@@ -279,6 +318,7 @@ function Chatbot() {
   async function sendConversation(conversation) {
     setIsSending(true);
     setError(null);
+    setFollowUps([]);
 
     let ok = false;
     let data = {};
@@ -297,6 +337,10 @@ function Chatbot() {
 
     if (ok && data.reply) {
       setMessages([...conversation, { role: "model", text: data.reply }]);
+      const suggested = Array.isArray(data.followUps)
+        ? data.followUps.filter((question) => typeof question === "string")
+        : [];
+      setFollowUps(pickFollowUps(suggested, conversation));
     } else {
       setError(data.error || CONNECTION_ERROR);
     }
@@ -319,6 +363,18 @@ function Chatbot() {
   function handleSubmit(event) {
     event.preventDefault();
     ask(input);
+  }
+
+  // Back to an empty chat: the greeting and the starter questions. The button
+  // is disabled while a reply is on its way, because that reply would land
+  // afterwards and bring the old conversation back.
+  function handleNewChat() {
+    setMessages([]);
+    setFollowUps([]);
+    setError(null);
+    // The button is disabled once the chat is empty, which would drop focus
+    // to <body>; move it to the input, ready for the next question.
+    inputRef.current?.focus();
   }
 
   // Retry resends the conversation as it stands: it still ends with the
@@ -394,19 +450,34 @@ function Chatbot() {
                     Ask about {FIRST_NAME}
                   </h2>
                   <p className="text-xs text-muted-foreground">
-                    AI assistant that answers from this portfolio
+                    AI answers from this portfolio
                   </p>
                 </div>
               </div>
-              <Button
-                onClick={() => setIsOpen(false)}
-                variant="ghost"
-                size="icon"
-                aria-label="Close chat"
-                className="shrink-0 rounded-full"
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </Button>
+              <div className="flex shrink-0 items-center gap-1">
+                {/* Always there, so the header never shifts; usable once
+                    there's a conversation to clear. */}
+                <Button
+                  onClick={handleNewChat}
+                  disabled={messages.length === 0 || isSending}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="New chat"
+                  title="New chat"
+                  className="rounded-full"
+                >
+                  <SquarePen className="h-[18px] w-[18px]" aria-hidden="true" />
+                </Button>
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Close chat"
+                  className="rounded-full"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </div>
             </div>
 
             {/* `relative` makes this the element reply positions are measured
@@ -441,6 +512,26 @@ function Chatbot() {
                     {renderReply(message.text)}
                   </div>
                 )
+              )}
+
+              {followUps.length > 0 && (
+                <div
+                  role="group"
+                  aria-label="Suggested follow-up questions"
+                  className="flex flex-wrap gap-2"
+                >
+                  {followUps.map((question) => (
+                    <Button
+                      key={question}
+                      onClick={() => ask(question)}
+                      variant="outline"
+                      size="sm"
+                      className="h-auto whitespace-normal rounded-full px-3 py-1.5 text-left text-[13px] leading-snug sm-tall:text-[12px]"
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
               )}
 
               {isSending && (
