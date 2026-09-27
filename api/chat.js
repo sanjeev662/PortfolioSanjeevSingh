@@ -30,6 +30,8 @@ const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 const MAX_MESSAGE_LENGTH = 500;
 const MAX_REPLY_LENGTH = 5000;
 const MAX_HISTORY = 10;
+// Suggested follow-up questions longer than this are dropped.
+const MAX_FOLLOW_UP_LENGTH = 100;
 
 // Gemini 3 models count their internal "thinking" against this limit as well
 // as the answer, so it has headroom. The rules below keep answers short.
@@ -153,6 +155,17 @@ Formatting: the chat window shows only this small part of Markdown, so use nothi
 - Write links as Markdown links with a short label, e.g. [Live demo](https://…) · [Source code](https://…). Never paste a bare URL. Write email addresses as plain text.
 - No tables, code blocks, images, HTML or emoji.
 
+Follow-up questions: end every reply, including a polite refusal, with this section, and write nothing after it:
+
+FOLLOW_UPS:
+- <question>
+- <question>
+- <question>
+
+- Give 2 or 3 short questions (under 60 characters each) that a recruiter might ask next, e.g. "What did he build at Rydeu?".
+- Make them follow naturally from your answer, and don't repeat a question already asked in this conversation.
+- Steer toward Sanjeev's strengths: his experience, projects, technical skills and achievements. Only suggest questions the PORTFOLIO answers well; never ones about weaknesses, gaps or information it doesn't have.
+
 PORTFOLIO
 ${PORTFOLIO_TEXT}`;
 }
@@ -193,6 +206,33 @@ function isRateLimited(ip) {
   recentRequestsByIp.set(ip, recent);
 
   return recent.length > RATE_LIMIT;
+}
+
+// The line that starts the follow-up section. The model may dress it up in
+// Markdown ("**FOLLOW_UPS:**") or write "Follow-ups:", so allow for both.
+const FOLLOW_UPS_LINE = /^[ \t#>*_]*follow[ _-]?ups\b[ \t*_:]*/gim;
+
+/**
+ * Splits the follow-up questions off the end of a reply. If the model left
+ * the section out, the whole text is the answer and there are no questions
+ * (the chat then offers its own), so a missing section never loses an answer.
+ */
+function splitFollowUps(text) {
+  const markers = [...text.matchAll(FOLLOW_UPS_LINE)];
+  if (markers.length === 0) return { reply: text, followUps: [] };
+
+  const marker = markers[markers.length - 1];
+  const followUps = text
+    .slice(marker.index + marker[0].length)
+    .split("\n")
+    // "- **What did he build?**" becomes "What did he build?"
+    .map((line) => line.replace(/^\s*(?:[-*•]|\d+[.)])\s+/, "").replace(/\*\*/g, "").trim())
+    .filter((line) => line.endsWith("?") && line.length <= MAX_FOLLOW_UP_LENGTH)
+    .slice(0, 3);
+
+  // Also drop a "---" divider the model may put before the section.
+  const reply = text.slice(0, marker.index).trim().replace(/\n\s*(?:[-*_]\s*){3,}$/, "");
+  return { reply, followUps };
 }
 
 /** The answer text, skipping any "thought" parts a thinking model returns. */
@@ -293,15 +333,15 @@ export default async function handler(req, res) {
   }
 
   const data = await response.json();
-  const reply = readReplyText(data);
+  const { reply, followUps } = splitFollowUps(readReplyText(data));
   if (!reply) {
     // Blocked by a safety filter, or the token limit ran out mid-thought.
     console.error(
       "Gemini returned no text:",
       data?.promptFeedback?.blockReason || data?.candidates?.[0]?.finishReason
     );
-    return res.status(200).json({ reply: FALLBACK_REPLY });
+    return res.status(200).json({ reply: FALLBACK_REPLY, followUps: [] });
   }
 
-  return res.status(200).json({ reply });
+  return res.status(200).json({ reply, followUps });
 }

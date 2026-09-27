@@ -8,8 +8,11 @@ import "@testing-library/jest-dom";
 // theme context reach for them during the very first render — without stubs,
 // every test dies before it can assert anything. The app's own hooks already
 // guard for a missing IntersectionObserver; framer-motion's internals do not.
+// Tests that run in Node (`@jest-environment node`, like the api/chat.js
+// tests) have no window and need none of this, hence the window checks.
+const isBrowser = typeof window !== "undefined";
 
-if (typeof window.IntersectionObserver === "undefined") {
+if (isBrowser && typeof window.IntersectionObserver === "undefined") {
   class IntersectionObserverStub {
     constructor(callback) {
       this.callback = callback;
@@ -29,7 +32,7 @@ if (typeof window.IntersectionObserver === "undefined") {
   global.IntersectionObserver = IntersectionObserverStub;
 }
 
-if (typeof window.matchMedia === "undefined") {
+if (isBrowser && typeof window.matchMedia === "undefined") {
   window.matchMedia = (query) => ({
     matches: false,
     media: query,
@@ -43,4 +46,4 @@ if (typeof window.matchMedia === "undefined") {
 }
 
 // jsdom logs "Not implemented: window.scrollTo" on every route change.
-window.scrollTo = () => {};
+if (isBrowser) window.scrollTo = () => {};

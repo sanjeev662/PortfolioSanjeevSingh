@@ -101,7 +101,7 @@ Responses:
 
 | Status | Body | When |
 |---|---|---|
-| `200` | `{ "reply": "..." }` | Success |
+| `200` | `{ "reply": "...", "followUps": ["...?"] }` | Success. `followUps` holds 0–3 suggested next questions (see §5.5) |
 | `400` | `{ "error": "..." }` | Malformed body, or an empty or over-long message |
 | `405` | none | Method other than POST |
 | `429` | `{ "error": "..." }` | Our rate limit or Gemini's quota was hit |
@@ -190,6 +190,14 @@ nothing else.
   bare URL. Email addresses as plain text.
 - No tables, code blocks, images, HTML or emoji.
 
+Follow-up questions: end every reply, including a polite refusal, with a
+"FOLLOW_UPS:" line and 2 or 3 "- " questions, and nothing after them.
+- Short (under 60 characters), what a recruiter might ask next, following
+  from the answer, and not already asked.
+- Steer toward Sanjeev's strengths (experience, projects, skills,
+  achievements). Only questions the PORTFOLIO answers well; never about
+  weaknesses, gaps or missing information.
+
 PORTFOLIO
 {text generated from src/data}
 ```
@@ -208,6 +216,11 @@ This is one component written in plain JSX, in the style of the rest of the site
   - "Show me his best projects"
   - "Has he done competitive programming?"
 - **While waiting:** three typing dots show (still under reduced motion, with "Thinking…" for screen readers), the send button is disabled, and only one request runs at a time. After a question is sent, focus stays in the input for the follow-up.
+- **Follow-up questions:** after every reply, 2–3 questions show as buttons under it, and clicking one asks it.
+  - `api/chat.js` cuts the `FOLLOW_UPS:` section off the reply (`splitFollowUps`). It keeps up to 3 lines that end in `?` and are at most 100 characters. A missing section leaves the answer whole, with no questions.
+  - `Chatbot.jsx` (`pickFollowUps`) drops questions already asked. When fewer than 2 remain, it tops up from `FALLBACK_FOLLOW_UPS`: the starter questions plus "What are his top achievements?", "Where did he intern before Namekart?" and "Which certifications does he have?".
+  - The buttons disappear as soon as the next question is sent.
+  - Why a text marker rather than Gemini's JSON output mode: a model that skips the section still produces a normal answer, and the request itself doesn't change.
 - **Errors:** the function's message appears inline with a Retry button.
 - **Replies:** a small Markdown renderer in `Chatbot.jsx` turns the subset from §5.4 into elements: `###` headings (as `<h3>`), paragraphs that keep single line breaks, `-`/`*` bullets with one nested level, numbered lists that keep their start number, `**bold**`, `*italic*`, `` `code` ``, `[label](url)` links, and bare URLs (shown without `https://`) and emails (as `mailto:` links). Anything else shows as plain text. It builds React elements and never uses `dangerouslySetInnerHTML`; links only go to `http(s)` and `mailto:` addresses. It is hand-written rather than a library because the chat is in the main bundle and needs so little. Visitor messages stay plain text (`whitespace-pre-wrap`).
 - **Scrolling:** a new reply is scrolled into view from its first line, so long answers read top to bottom. Questions, the typing dots and errors scroll to the bottom.
