@@ -13,6 +13,9 @@ module.exports = {
     screens: {
       xs: "475px",
       ...defaultTheme.screens,
+      // Wide AND tall enough for the floating chat panel. A phone on its side
+      // is wider than `sm` but too short, so the chat stays full screen there.
+      "sm-tall": { raw: "(min-width: 640px) and (min-height: 500px)" },
     },
     container: {
       center: true,

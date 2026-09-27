@@ -11,29 +11,16 @@
  * `issuer` and `year` are intentionally absent on most rows: the source files
  * never stated them and inventing them would put false claims on the site.
  * Populate them only from a verifiable certificate.
+ *
+ * `image` is a STRING key; resolve it with `getImage()` from ./images. Keep
+ * this file free of asset imports: the chatbot's server function imports it.
  */
-
-import namekartImg from "../Components/Assets/Certificates/namekart_intern.webp";
-import rydeuImg from "../Components/Assets/Certificates/rydeu_intern.webp";
-import icpcImg from "../Components/Assets/Certificates/icpc.webp";
-import iitkMlImg from "../Components/Assets/Certificates/iitk_ml.webp";
-import udemyImg from "../Components/Assets/Certificates/udemy.webp";
-import isroImg from "../Components/Assets/Certificates/isro.webp";
-import riseImg from "../Components/Assets/Certificates/rise.webp";
-import sparkImg from "../Components/Assets/Certificates/spark.webp";
-import multigradImg from "../Components/Assets/Certificates/multigrad.webp";
-import unicompilerImg from "../Components/Assets/Certificates/unicompiler.webp";
-import tcsImg from "../Components/Assets/Certificates/tcs.webp";
-import nitMijoramImg from "../Components/Assets/Certificates/nit_mijoram.webp";
-import codechefImg from "../Components/Assets/Certificates/codechef.webp";
-import hackerrankImg from "../Components/Assets/Certificates/hackerrank_java.webp";
-import uietImg from "../Components/Assets/Certificates/uiet.webp";
 
 export const CERTIFICATES = [
   {
     id: "namekart-intern",
     title: "Namekart Pvt. Ltd",
-    image: namekartImg,
+    image: "Certificates/namekart_intern",
     tagline: "SDE Intern",
     siteUrl: "https://www.namekart.com/",
     featured: true,
@@ -41,7 +28,7 @@ export const CERTIFICATES = [
   {
     id: "rydeu-intern",
     title: "Rydeu Logistics India Pvt. Ltd",
-    image: rydeuImg,
+    image: "Certificates/rydeu_intern",
     tagline: "Backend Development Intern",
     siteUrl: "https://www.rydeu.com/",
     featured: true,
@@ -49,7 +36,7 @@ export const CERTIFICATES = [
   {
     id: "acm-icpc",
     title: "ACM-ICPC",
-    image: icpcImg,
+    image: "Certificates/icpc",
     tagline: "ICPC 2022 Regionalist",
     siteUrl: "https://icpc.global/",
     year: "2022",
@@ -58,7 +45,7 @@ export const CERTIFICATES = [
   {
     id: "iit-kanpur-ml",
     title: "IIT Kanpur",
-    image: iitkMlImg,
+    image: "Certificates/iitk_ml",
     tagline: "Machine Learning Course",
     siteUrl: "https://www.iitk.ac.in/",
     featured: false,
@@ -66,7 +53,7 @@ export const CERTIFICATES = [
   {
     id: "udemy-web-dev-bootcamp",
     title: "Udemy",
-    image: udemyImg,
+    image: "Certificates/udemy",
     tagline: "Web Development Bootcamp",
     siteUrl: "https://www.udemy.com/",
     featured: false,
@@ -74,7 +61,7 @@ export const CERTIFICATES = [
   {
     id: "isro-ml",
     title: "ISRO",
-    image: isroImg,
+    image: "Certificates/isro",
     tagline: "Machine Learning",
     siteUrl: "https://www.isro.gov.in/",
     featured: false,
@@ -82,7 +69,7 @@ export const CERTIFICATES = [
   {
     id: "rise-higher-education",
     title: "Rise Higher Education Inc",
-    image: riseImg,
+    image: "Certificates/rise",
     tagline: "Full Stack Development Intern",
     siteUrl: "https://www.risehighereducation.com/",
     featured: false,
@@ -90,7 +77,7 @@ export const CERTIFICATES = [
   {
     id: "sparks-foundation",
     title: "The Sparks Foundation",
-    image: sparkImg,
+    image: "Certificates/spark",
     tagline: "Web Development & Designing Intern",
     siteUrl: "https://www.thesparksfoundationsingapore.org/",
     featured: false,
@@ -98,7 +85,7 @@ export const CERTIFICATES = [
   {
     id: "multigrad-fightage",
     title: "Fightage Pvt Ltd (Multigrad)",
-    image: multigradImg,
+    image: "Certificates/multigrad",
     tagline: "Full Stack Development Intern",
     siteUrl: "https://multigrad.in/",
     featured: false,
@@ -106,7 +93,7 @@ export const CERTIFICATES = [
   {
     id: "unicompiler",
     title: "UNICompiler",
-    image: unicompilerImg,
+    image: "Certificates/unicompiler",
     tagline: "Web Dev Intern",
     siteUrl: "https://unicompiler.com/",
     featured: false,
@@ -114,7 +101,7 @@ export const CERTIFICATES = [
   {
     id: "tcs-soft-skills",
     title: "Tata Consultancy Services",
-    image: tcsImg,
+    image: "Certificates/tcs",
     tagline: "TCS Soft Skills Certificate",
     siteUrl: "https://www.tcs.com/",
     featured: false,
@@ -122,7 +109,7 @@ export const CERTIFICATES = [
   {
     id: "nit-mijoram",
     title: "NIT Mijoram",
-    image: nitMijoramImg,
+    image: "Certificates/nit_mijoram",
     tagline: "Web Dev Contest",
     siteUrl: "https://www.nitmz.ac.in/",
     featured: false,
@@ -130,7 +117,7 @@ export const CERTIFICATES = [
   {
     id: "codechef-snackdown",
     title: "Codechef",
-    image: codechefImg,
+    image: "Certificates/codechef",
     tagline: "SnackDown Certificate",
     siteUrl: "https://www.codechef.com/",
     featured: false,
@@ -138,7 +125,7 @@ export const CERTIFICATES = [
   {
     id: "hackerrank-java",
     title: "Hackerrank",
-    image: hackerrankImg,
+    image: "Certificates/hackerrank_java",
     tagline: "Java Certification",
     siteUrl: "https://www.hackerrank.com/",
     featured: false,
@@ -146,7 +133,7 @@ export const CERTIFICATES = [
   {
     id: "uiet-csjmu-iot",
     title: "UIET CSJMU",
-    image: uietImg,
+    image: "Certificates/uiet",
     tagline: "Internet of Things (IOT)",
     siteUrl: "http://csjmu.ac.in/",
     featured: false,

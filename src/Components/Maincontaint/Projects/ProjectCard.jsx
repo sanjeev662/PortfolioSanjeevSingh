@@ -5,11 +5,13 @@ import { ExternalLink, Github, Play, Star, Tag, X } from "lucide-react";
 import { Button } from "../../ui/button";
 import { GlassCard } from "../../ui/card";
 import LazyImage from "../../ui/LazyImage";
+import { getImage } from "../../../data";
 
 /**
  * The one project card. Both /projects and the homepage teaser render this, and
  * its props match the shape in src/data/projects.js exactly (the field is
  * `image`, not `imgUrl`) so a call site can just spread a project onto it.
+ * `image` arrives as a key from src/data and is resolved with getImage().
  *
  * The card's only hover effect is the lift from `GlassCard interactive`. Don't
  * add a framer-motion whileHover here or at the call site — stacking two was
@@ -102,7 +104,7 @@ function ProjectCard({
                 className="absolute inset-0"
               >
                 <LazyImage
-                  src={image}
+                  src={getImage(image)}
                   alt={`${title} screenshot`}
                   aspectRatio="16/9"
                   className="h-full w-full"

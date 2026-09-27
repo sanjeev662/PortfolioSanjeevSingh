@@ -12,7 +12,7 @@ import {
   makeStagger,
   useIntersectionObserver,
 } from "../../../lib/utils";
-import { DOMAINS, getIcon } from "../../../data";
+import { DOMAINS, getIcon, getImage } from "../../../data";
 
 // The homepage teaser for the Technical Domains page: the same three cards
 // from DOMAINS, plus a link through to the full page.
@@ -139,7 +139,7 @@ function HomeDomain() {
                               aria-hidden="true"
                             />
                             <a
-                              href={domain.achievement.image}
+                              href={getImage(domain.achievement.image)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="focus-ring tap-target rounded-sm text-sm font-medium text-foreground break-words hover:underline"

@@ -9,11 +9,12 @@
  * that the homepage version had dropped).
  *
  * Icons are STRING names; resolve them with `getIcon()` from ./icons.
+ * `achievement.image` is a STRING key; resolve it with `getImage()` from
+ * ./images. Keep this file free of asset imports: the chatbot's server
+ * function imports it.
  * `sections[].tech` stays a display string on purpose — it renders as one
  * paragraph. The tokenised version lives in ./skills.js as SKILL_GROUPS.
  */
-
-import icpcImg from "../Components/Assets/Certificates/icpc.webp";
 
 export const DOMAINS = [
   {
@@ -118,7 +119,7 @@ export const DOMAINS = [
     ],
     achievement: {
       text: "ICPC Mathura–Kanpur Regionals 2022 Qualifier — Top 10% of 5000+ participants",
-      image: icpcImg,
+      image: "Certificates/icpc",
     },
   },
 ];

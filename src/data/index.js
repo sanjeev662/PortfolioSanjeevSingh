@@ -10,9 +10,12 @@
  *  - Never paste a title, URL, email or achievement bullet back into JSX; edit
  *    it here so both the full page and its homepage teaser stay in sync.
  *  - Icons travel as string names. Resolve them with getIcon(name).
+ *  - Images travel as string keys. Resolve them with getImage(key).
  */
 
 export { ICON_MAP, getIcon } from "./icons";
+
+export { IMAGE_MAP, getImage } from "./images";
 
 export {
   PROJECTS,
