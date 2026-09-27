@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { MessageCircle, RotateCcw, Send, X } from "lucide-react";
+import { MessageCircle, RotateCcw, Send, Sparkles, X } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { PROFILE } from "../../data";
@@ -30,27 +30,196 @@ const SUGGESTED_QUESTIONS = [
 const CONNECTION_ERROR =
   "Couldn't reach the assistant. Check your connection and try again.";
 
-// A URL ends at whitespace, and trailing punctuation belongs to the sentence.
-// The capturing group makes split() keep the URLs at the odd indexes.
-const URL_PATTERN = /(https?:\/\/\S*[^\s.,;:!?)\]'"])/;
+// The assistant's messages: the greeting, replies and the typing dots.
+// A bordered bubble on the page background rather than a grey `muted` fill:
+// links and list markers are in the primary colour, which is at least 4.9:1
+// on `background` in all six themes but only 4.0:1 on `muted` in dark.
+const REPLY_BUBBLE =
+  "w-fit max-w-full space-y-3 rounded-2xl rounded-bl-md border border-border bg-background px-4 py-3 text-foreground";
 
-/** Plain text with bare URLs turned into links. Never renders HTML. */
-function renderWithLinks(text) {
-  return text.split(URL_PATTERN).map((part, index) =>
-    index % 2 === 1 ? (
-      <a
-        key={index}
-        href={part}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="focus-ring rounded-sm font-medium underline underline-offset-2"
-      >
-        {part}
-      </a>
-    ) : (
-      part
-    )
+/*
+ * Reply formatting
+ *
+ * api/chat.js asks the model for a small part of Markdown, and this is all
+ * the chat understands:
+ *
+ *   ### Heading     - bullet (or * bullet)     1. numbered item
+ *   **bold**   *italic*   `code`   [label](https://…)   bare URLs and emails
+ *
+ * Anything else shows as the plain text it is. Replies become React elements,
+ * never HTML (no dangerouslySetInnerHTML), and links only go to http(s) and
+ * mailto: addresses, so a reply can't inject markup or a javascript: link.
+ * Hand-written rather than a Markdown library because the chat loads on every
+ * page and needs so little.
+ */
+
+const HEADING_LINE = /^#{1,6}\s+(.+)$/;
+const RULE_LINE = /^\s*(?:-\s*){3,}$|^\s*(?:\*\s*){3,}$/;
+// Groups: 1 the indent, 2 the number (numbered items only), 3 the item text.
+const LIST_ITEM_LINE = /^(\s*)(?:[-*•]|(\d+)[.)])\s+(.*)$/;
+
+// One alternative per inline style. At each position they're tried left to
+// right, so a [label](url) link wins over the bare URL inside it. A bare URL
+// ends at whitespace, and trailing punctuation belongs to the sentence.
+// Groups: 1-2 link label and URL, 3 bold, 4 code, 5 bare URL, 6 email, 7 italic.
+const INLINE_PATTERN =
+  /\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)|\*\*(.+?)\*\*|`([^`]+)`|(https?:\/\/\S*[^\s.,;:!?)\]'"*])|([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|\*([^*\s](?:[^*]*[^*\s])?)\*/g;
+
+function renderLink(href, label, key) {
+  const isEmail = href.startsWith("mailto:");
+  return (
+    <a
+      key={key}
+      href={href}
+      // Web links open in a new tab so the chat stays where it is.
+      target={isEmail ? undefined : "_blank"}
+      rel={isEmail ? undefined : "noopener noreferrer"}
+      className="focus-ring rounded-sm text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
+    >
+      {label}
+    </a>
   );
+}
+
+/** One line of text with bold, italic, code and links turned into elements. */
+function renderInline(text) {
+  const parts = [];
+  let end = 0; // where the previous match ended
+
+  for (const match of text.matchAll(INLINE_PATTERN)) {
+    const [whole, linkLabel, linkUrl, bold, code, url, email, italic] = match;
+    const key = match.index;
+    parts.push(text.slice(end, match.index));
+
+    if (linkUrl) {
+      parts.push(renderLink(linkUrl, linkLabel, key));
+    } else if (bold) {
+      parts.push(
+        <strong key={key} className="font-semibold">
+          {renderInline(bold)}
+        </strong>
+      );
+    } else if (code) {
+      parts.push(
+        <code key={key} className="rounded bg-muted px-1 py-0.5 font-mono text-[0.875em]">
+          {code}
+        </code>
+      );
+    } else if (url) {
+      // "https://www.github.com/sanjeev662/" reads as "github.com/sanjeev662".
+      const shortUrl = url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+      parts.push(renderLink(url, shortUrl, key));
+    } else if (email) {
+      parts.push(renderLink(`mailto:${email}`, email, key));
+    } else {
+      parts.push(<em key={key}>{renderInline(italic)}</em>);
+    }
+    end = match.index + whole.length;
+  }
+
+  parts.push(text.slice(end));
+  return parts;
+}
+
+/** A reply as headings, paragraphs and lists. */
+function renderReply(text) {
+  // First group the lines into blocks...
+  const blocks = [];
+  let paragraph = null; // the paragraph still being read, if any
+  let list = null; // the list still being read, if any
+  let previousLineBlank = false;
+
+  for (const line of text.split(/\r?\n/)) {
+    const isBlank = line.trim() === "";
+    const heading = line.match(HEADING_LINE);
+    const item = line.match(LIST_ITEM_LINE);
+
+    if (isBlank) {
+      // Ends a paragraph. A list carries on if another item follows.
+      paragraph = null;
+    } else if (RULE_LINE.test(line)) {
+      blocks.push({ type: "rule" });
+      paragraph = list = null;
+    } else if (heading) {
+      blocks.push({ type: "heading", text: heading[1] });
+      paragraph = list = null;
+    } else if (item) {
+      const [, indent, number, itemText] = item;
+      const ordered = number !== undefined;
+      if (list && indent.length >= 2) {
+        // An indented item goes under the item before it.
+        list.items[list.items.length - 1].children.push(itemText);
+      } else {
+        if (!list || list.ordered !== ordered) {
+          list = { type: "list", ordered, start: Number(number) || 1, items: [] };
+          blocks.push(list);
+        }
+        list.items.push({ text: itemText, children: [] });
+      }
+      paragraph = null;
+    } else if (list && !previousLineBlank && /^\s/.test(line)) {
+      // An indented line straight after an item is more of that item.
+      list.items[list.items.length - 1].text += ` ${line.trim()}`;
+    } else if (paragraph) {
+      paragraph.lines.push(line.trim());
+    } else {
+      paragraph = { type: "paragraph", lines: [line.trim()] };
+      blocks.push(paragraph);
+      list = null;
+    }
+    previousLineBlank = isBlank;
+  }
+
+  // ...then turn the blocks into elements.
+  return blocks.map((block, index) => {
+    if (block.type === "heading") {
+      return (
+        <h3 key={index} className="pt-1 text-base font-semibold leading-snug first:pt-0">
+          {renderInline(block.text)}
+        </h3>
+      );
+    }
+    if (block.type === "rule") {
+      return <hr key={index} className="border-border" />;
+    }
+    if (block.type === "paragraph") {
+      // Single line breaks are kept, e.g. "Email: …" and "Phone: …" lines.
+      return (
+        <p key={index}>
+          {block.lines.map((line, lineIndex) => (
+            <React.Fragment key={lineIndex}>
+              {lineIndex > 0 && <br />}
+              {renderInline(line)}
+            </React.Fragment>
+          ))}
+        </p>
+      );
+    }
+
+    const ListTag = block.ordered ? "ol" : "ul";
+    return (
+      <ListTag
+        key={index}
+        start={block.ordered && block.start !== 1 ? block.start : undefined}
+        className={`space-y-1.5 pl-5 marker:text-primary ${
+          block.ordered ? "list-decimal marker:font-semibold" : "list-disc"
+        }`}
+      >
+        {block.items.map((listItem, itemIndex) => (
+          <li key={itemIndex} className="pl-1">
+            {renderInline(listItem.text)}
+            {listItem.children.length > 0 && (
+              <ul className="mt-1.5 list-[circle] space-y-1 pl-5">
+                {listItem.children.map((child, childIndex) => (
+                  <li key={childIndex}>{renderInline(child)}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ListTag>
+    );
+  });
 }
 
 function Chatbot() {
@@ -65,6 +234,8 @@ function Chatbot() {
   const inputRef = useRef(null);
   const launcherRef = useRef(null);
   const messageListRef = useRef(null);
+  // Set only while the newest message is a reply.
+  const latestReplyRef = useRef(null);
   const hasOpenedRef = useRef(false);
 
   // Opening moves focus into the panel; closing hands it back to the launcher
@@ -90,11 +261,20 @@ function Chatbot() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
-  // Keep the newest message in view.
+  // Keep the newest message in view. A new reply is shown from its first
+  // line, so a long answer reads top to bottom instead of opening at its end.
+  // Anything else (a question, the typing dots, an error) scrolls to the bottom.
   useEffect(() => {
     const list = messageListRef.current;
-    if (list) list.scrollTop = list.scrollHeight;
-  }, [messages, isSending, error]);
+    if (!list) return;
+
+    const latestReply = latestReplyRef.current;
+    if (latestReply && !isSending && !error) {
+      list.scrollTop = latestReply.offsetTop - 16;
+    } else {
+      list.scrollTop = list.scrollHeight;
+    }
+  }, [messages, isSending, error, isOpen]);
 
   async function sendConversation(conversation) {
     setIsSending(true);
@@ -198,16 +378,24 @@ function Chatbot() {
             // Full screen on phones; a floating panel from `sm` up. Above the
             // navbar (z-50) so it isn't cut off on small screens.
             style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-            className="fixed inset-0 z-[60] flex flex-col bg-card text-card-foreground sm:inset-auto sm:bottom-8 sm:right-8 sm:h-[min(600px,calc(100dvh_-_4rem))] sm:w-[380px] sm:rounded-xl sm:border sm:border-border sm:shadow-2xl"
+            className="fixed inset-0 z-[60] flex flex-col bg-card text-card-foreground sm:inset-auto sm:bottom-8 sm:right-8 sm:h-[min(640px,calc(100dvh_-_4rem))] sm:w-[420px] sm:rounded-2xl sm:border sm:border-border sm:shadow-2xl"
           >
-            <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
-              <div>
-                <h2 id="chatbot-title" className="text-base font-semibold">
-                  Ask about {FIRST_NAME}
-                </h2>
-                <p className="text-xs text-muted-foreground">
-                  AI assistant that answers from this portfolio
-                </p>
+            <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                >
+                  <Sparkles className="h-4 w-4" />
+                </span>
+                <div>
+                  <h2 id="chatbot-title" className="text-base font-semibold leading-tight">
+                    Ask about {FIRST_NAME}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    AI assistant that answers from this portfolio
+                  </p>
+                </div>
               </div>
               <Button
                 onClick={() => setIsOpen(false)}
@@ -220,43 +408,55 @@ function Chatbot() {
               </Button>
             </div>
 
+            {/* `relative` makes this the element reply positions are measured
+                from when scrolling a new reply into view. */}
             <div
               ref={messageListRef}
               aria-live="polite"
-              className="flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm"
+              className="relative flex-1 space-y-4 overflow-y-auto px-4 py-5 text-[15px] leading-relaxed"
             >
               {/* The greeting is display-only; it isn't sent to the API. */}
-              <p className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-foreground">
-                Hi! I can answer questions about {FIRST_NAME}'s skills,
-                experience, projects and education.
-              </p>
+              <div className={REPLY_BUBBLE}>
+                <p>
+                  Hi! I can answer questions about {FIRST_NAME}'s skills,
+                  experience, projects and education.
+                </p>
+              </div>
 
               {messages.map((message, index) =>
                 message.role === "user" ? (
                   <p
                     key={index}
-                    className="ml-auto max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-primary-foreground"
+                    className="ml-auto w-fit max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-primary-foreground"
                   >
                     {message.text}
                   </p>
                 ) : (
-                  <p
+                  <div
                     key={index}
-                    className="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-foreground"
+                    ref={index === messages.length - 1 ? latestReplyRef : null}
+                    className={REPLY_BUBBLE}
                   >
-                    {renderWithLinks(message.text)}
-                  </p>
+                    {renderReply(message.text)}
+                  </div>
                 )
               )}
 
               {isSending && (
-                <p className="w-fit rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-muted-foreground">
-                  <span className="animate-pulse">Thinking…</span>
-                </p>
+                <div className={REPLY_BUBBLE}>
+                  {/* Three dots that bounce in turn, and stay still with
+                      reduced motion. The text is for screen readers. */}
+                  <span aria-hidden="true" className="flex h-[1.625em] items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-muted-foreground motion-safe:animate-bounce" />
+                    <span className="h-2 w-2 rounded-full bg-muted-foreground motion-safe:animate-bounce [animation-delay:150ms]" />
+                    <span className="h-2 w-2 rounded-full bg-muted-foreground motion-safe:animate-bounce [animation-delay:300ms]" />
+                  </span>
+                  <span className="sr-only">Thinking…</span>
+                </div>
               )}
 
               {error && (
-                <div className="rounded-lg border border-destructive px-3 py-2 text-foreground">
+                <div className="rounded-2xl border border-destructive bg-background px-4 py-3 text-foreground">
                   <p>{error}</p>
                   {canRetry && (
                     <Button
@@ -273,18 +473,23 @@ function Chatbot() {
               )}
 
               {messages.length === 0 && !isSending && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {SUGGESTED_QUESTIONS.map((question) => (
-                    <Button
-                      key={question}
-                      onClick={() => ask(question)}
-                      variant="outline"
-                      size="sm"
-                      className="h-auto whitespace-normal rounded-full py-1.5 text-left text-xs"
-                    >
-                      {question}
-                    </Button>
-                  ))}
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Try asking
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {SUGGESTED_QUESTIONS.map((question) => (
+                      <Button
+                        key={question}
+                        onClick={() => ask(question)}
+                        variant="outline"
+                        size="sm"
+                        className="h-auto whitespace-normal rounded-full px-3.5 py-1.5 text-left leading-snug"
+                      >
+                        {question}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -305,7 +510,7 @@ function Chatbot() {
                 maxLength={MAX_MESSAGE_LENGTH}
                 placeholder={`Ask about ${FIRST_NAME}…`}
                 autoComplete="off"
-                className="min-h-[44px] w-full flex-1 rounded-lg border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-sm"
+                className="min-h-[44px] w-full flex-1 rounded-xl border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-[15px]"
               />
               <Button
                 type="submit"
@@ -313,12 +518,12 @@ function Chatbot() {
                 aria-label="Send"
                 loading={isSending}
                 disabled={!input.trim()}
-                className="h-11 w-11 shrink-0"
+                className="h-11 w-11 shrink-0 rounded-xl"
               >
                 <Send className="h-4 w-4" aria-hidden="true" />
               </Button>
             </form>
-            <p className="px-4 pb-3 pt-2 text-[11px] leading-snug text-muted-foreground">
+            <p className="px-4 pb-3 pt-2 text-xs leading-snug text-muted-foreground">
               AI answers can be wrong. Messages are sent to Google Gemini.
             </p>
           </motion.div>

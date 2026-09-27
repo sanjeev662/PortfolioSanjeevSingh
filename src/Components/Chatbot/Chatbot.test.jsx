@@ -115,20 +115,87 @@ describe("Chatbot", () => {
     expect(await screen.findByText(/couldn't reach the assistant/i)).toBeInTheDocument();
   });
 
-  it("turns URLs in replies into links", async () => {
+  it("turns bare URLs and emails in replies into links", async () => {
     global.fetch.mockResolvedValueOnce(
-      replyWith(200, { reply: "The code is at https://github.com/sanjeev662/ToLet-RoomOnRent." })
+      replyWith(200, {
+        reply:
+          "The code is at https://github.com/sanjeev662/ToLet-RoomOnRent. Email sanjeev@example.com.",
+      })
     );
     render(<Chatbot />);
 
     await openChat();
     fireEvent.click(screen.getByRole("button", { name: "Show me his best projects" }));
 
+    // Shown without "https://"; the sentence's full stop is not part of the link.
     const link = await screen.findByRole("link", {
-      name: "https://github.com/sanjeev662/ToLet-RoomOnRent",
+      name: "github.com/sanjeev662/ToLet-RoomOnRent",
     });
-    // The sentence's full stop is not part of the link.
     expect(link).toHaveAttribute("href", "https://github.com/sanjeev662/ToLet-RoomOnRent");
+    expect(screen.getByRole("link", { name: "sanjeev@example.com" })).toHaveAttribute(
+      "href",
+      "mailto:sanjeev@example.com"
+    );
+  });
+
+  it("formats Markdown in replies as headings, lists, bold text and links", async () => {
+    const reply = [
+      "Sanjeev has built several **full-stack** apps.",
+      "",
+      "### Projects",
+      "",
+      "* **To-Let**: a room-rental platform. [Live demo](https://to-let-room-on-rent.vercel.app/)",
+      "",
+      "* **Route-Finder**: walking routes with `Google Maps`.",
+      "  - Built in 2023",
+      "",
+      "3. Third",
+      "4. Fourth",
+    ].join("\n");
+    global.fetch.mockResolvedValueOnce(replyWith(200, { reply }));
+    render(<Chatbot />);
+
+    await openChat();
+    fireEvent.click(screen.getByRole("button", { name: "Show me his best projects" }));
+
+    expect(await screen.findByRole("heading", { level: 3, name: "Projects" })).toBeInTheDocument();
+    expect(screen.getByText("full-stack").tagName).toBe("STRONG");
+    expect(screen.getByText("Google Maps").tagName).toBe("CODE");
+    expect(screen.getByRole("link", { name: "Live demo" })).toHaveAttribute(
+      "href",
+      "https://to-let-room-on-rent.vercel.app/"
+    );
+
+    // The blank line between the two bullets doesn't split them into two
+    // lists, the indented item nests under Route-Finder, and the numbered
+    // list keeps its numbering.
+    const [bullets, nested, numbered] = screen.getAllByRole("list");
+    expect(bullets.tagName).toBe("UL");
+    expect(bullets.children).toHaveLength(2);
+    expect(bullets.children[1]).toContainElement(nested);
+    expect(nested).toHaveTextContent("Built in 2023");
+    expect(numbered.tagName).toBe("OL");
+    expect(numbered).toHaveAttribute("start", "3");
+
+    // No Markdown syntax is left showing.
+    expect(screen.getByRole("dialog")).not.toHaveTextContent(/\*\*|###|`/);
+  });
+
+  it("never renders HTML or javascript: links from a reply", async () => {
+    global.fetch.mockResolvedValueOnce(
+      replyWith(200, {
+        reply: '<img src="x" onerror="alert(1)"> [click me](javascript:alert(1))',
+      })
+    );
+    render(<Chatbot />);
+
+    await openChat();
+    fireEvent.click(screen.getByRole("button", { name: "What's his tech stack?" }));
+
+    const dialog = await screen.findByRole("dialog");
+    expect(await screen.findByText(/<img src="x"/)).toBeInTheDocument();
+    expect(dialog.querySelector("img")).toBeNull();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
   // Straight after opening, on purpose: the launcher used to unmount with an
