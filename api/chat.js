@@ -38,8 +38,13 @@ const MAX_FOLLOW_UP_LENGTH = 100;
 // as the answer, so it has headroom. The rules below keep answers short.
 const MAX_OUTPUT_TOKENS = 1024;
 
-// Give up before Vercel's own function time limit would cut us off.
-const GEMINI_TIMEOUT_MS = 9000;
+// Most replies take 1-2 s, but now and then Gemini stalls on a request for
+// 10 s or more (about 1 request in 4 on 2026-09-27), and asking again usually
+// gets a quick answer. So each attempt gets a short timeout, and an attempt
+// that stalls, or that Google answers with a server error, is tried again: up
+// to 3 attempts, 18 s at worst. vercel.json gives this function 25 s.
+const GEMINI_ATTEMPTS = 3;
+const GEMINI_ATTEMPT_TIMEOUT_MS = 6000;
 
 // Per-IP limit: 20 messages per 10 minutes. The counters live in this
 // instance's memory, so they reset when Vercel recycles the instance and aren't
@@ -301,34 +306,49 @@ export default async function handler(req, res) {
     });
   }
 
-  let response;
-  try {
-    response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // In a header, not the URL, so the key can't end up in request logs.
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: buildSystemInstruction() }] },
-          contents: messages.map((message) => ({
-            role: message.role,
-            parts: [{ text: message.text }],
-          })),
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: MAX_OUTPUT_TOKENS,
+  const geminiRequest = JSON.stringify({
+    systemInstruction: { parts: [{ text: buildSystemInstruction() }] },
+    contents: messages.map((message) => ({
+      role: message.role,
+      parts: [{ text: message.text }],
+    })),
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: MAX_OUTPUT_TOKENS,
+    },
+  });
+
+  // Ask Gemini, trying again if an attempt stalls or hits a Google server
+  // error (see GEMINI_ATTEMPTS). Log only the kind of failure, never messages.
+  let response = null;
+  for (let attempt = 1; attempt <= GEMINI_ATTEMPTS; attempt++) {
+    try {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // In a header, not the URL, so the key can't end up in request logs.
+            "x-goog-api-key": apiKey,
           },
-        }),
-        signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
-      }
-    );
-  } catch (error) {
-    // A timeout or network failure. Log the kind of failure, never the messages.
-    console.error("Gemini request failed:", error.name);
+          body: geminiRequest,
+          signal: AbortSignal.timeout(GEMINI_ATTEMPT_TIMEOUT_MS),
+        }
+      );
+    } catch (error) {
+      // A timeout or a network failure.
+      console.error(`Gemini attempt ${attempt} of ${GEMINI_ATTEMPTS} failed:`, error.name);
+      response = null;
+      continue;
+    }
+    // Success, or an error that asking again won't fix (a bad request, the
+    // quota): stop here. Only Google's own server errors are worth a retry.
+    if (response.status < 500) break;
+    console.error(`Gemini attempt ${attempt} of ${GEMINI_ATTEMPTS} returned`, response.status);
+  }
+
+  if (!response) {
     return res.status(502).json({ error: BUSY_MESSAGE });
   }
 

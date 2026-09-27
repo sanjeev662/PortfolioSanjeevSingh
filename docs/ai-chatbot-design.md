@@ -70,7 +70,7 @@ The function does the following, in order:
 2. Validate the body against the contract below. Failure gets `400`.
 3. Apply the per-IP rate limit. Over the limit gets `429`.
 4. Build the system instruction from the fixed rules (§5.4) and the portfolio text (§5.3).
-5. Call Gemini with plain `fetch` and a 9-second timeout, under Vercel's shortest function time limit. There is no SDK and no new npm dependency.
+5. Call Gemini with plain `fetch`. There is no SDK and no new npm dependency. Each attempt times out after 6 seconds. An attempt that stalls, or that Google answers with a 5xx, is retried, up to 3 attempts. `vercel.json` gives the function a `maxDuration` of 25 seconds to fit them. (This started as a single 9-second timeout. On 2026-09-27 about 1 request in 4 stalled past it, on both stage and production, while healthy replies took 1–2 seconds and an immediate retry usually answered fast.)
 6. Return the reply text, turning upstream failures into a friendly error.
 7. Log errors by status only, never message content.
 
