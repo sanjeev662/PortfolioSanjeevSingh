@@ -325,16 +325,20 @@ function HomeAbout() {
                           </a>
                         )}
 
-                        {/* Namekart is split into named workstreams. The teaser only
-                            names each one with its stack; all 13 bullets would swamp
-                            the homepage, and the full list is one click away on /about. */}
+                        {/* Namekart is split into named workstreams, each with its
+                            own bullets and stack — shown the same way as on /about. */}
                         {exp.projects ? (
-                          <div className="space-y-3">
+                          <div className="space-y-5">
                             {exp.projects.map((project) => (
-                              <div key={project.id} className="space-y-1.5">
+                              <div key={project.id} className="space-y-2">
                                 <h5 className="text-sm font-semibold text-foreground">
                                   {project.name}
                                 </h5>
+                                <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
+                                  {project.achievements.map((achievement) => (
+                                    <li key={achievement}>{achievement}</li>
+                                  ))}
+                                </ul>
                                 <ul className="flex flex-wrap gap-2">
                                   {project.tech.map((tech) => (
                                     <li

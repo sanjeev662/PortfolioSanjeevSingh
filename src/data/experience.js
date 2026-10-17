@@ -133,7 +133,7 @@ export const EDUCATION = [
 ];
 
 /**
- * The two most recent roles — what the homepage About teaser showed before this
- * module existed. Derived so it can never drift from EXPERIENCE.
+ * What the homepage About teaser shows: the current role (Namekart) only. The
+ * full history is on /about. Derived so it can never drift from EXPERIENCE.
  */
-export const RECENT_EXPERIENCE = EXPERIENCE.slice(0, 2);
+export const RECENT_EXPERIENCE = EXPERIENCE.slice(0, 1);
