@@ -39,8 +39,13 @@ export const DOMAINS = [
       },
       {
         id: "cloud-devops",
-        title: "Cloud, DevOps & Monitoring",
-        tech: "Docker, Hetzner Cloud, GitHub Actions (CI/CD)",
+        title: "DevOps & Monitoring",
+        tech: "Docker, Coolify, GitHub Actions (CI/CD), Prometheus, Grafana",
+      },
+      {
+        id: "ai-orchestration",
+        title: "AI & Orchestration",
+        tech: "LLM Integration, RAG, MCP, Temporal",
       },
     ],
     projectLink: {

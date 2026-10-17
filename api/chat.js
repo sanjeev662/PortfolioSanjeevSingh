@@ -83,10 +83,19 @@ function buildPortfolioText() {
   lines.push("", "## Work experience");
   for (const job of EXPERIENCE) {
     lines.push(`### ${job.title} at ${job.company} (${job.period}, ${job.location})`);
-    for (const achievement of job.achievements) {
+    // A role is either one bullet list, or (Namekart) named workstreams that
+    // each carry their own bullets and stack.
+    for (const project of job.projects || []) {
+      lines.push(`#### ${project.name}`);
+      for (const achievement of project.achievements) {
+        lines.push(`- ${achievement}`);
+      }
+      lines.push(`Technologies: ${project.tech.join(", ")}`);
+    }
+    for (const achievement of job.achievements || []) {
       lines.push(`- ${achievement}`);
     }
-    lines.push(`Technologies: ${job.tech.join(", ")}`);
+    if (job.tech) lines.push(`Technologies: ${job.tech.join(", ")}`);
   }
 
   lines.push("", "## Education");

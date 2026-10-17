@@ -226,7 +226,12 @@ function Domain() {
                 const GroupIcon = getIcon(group.icon);
 
                 return (
-                  <GlassCard key={group.id} className="flex h-full flex-col p-5">
+                  // With seven groups in three columns the last card sits alone; centre it
+                  // instead of leaving it stranded on the left.
+                  <GlassCard
+                    key={group.id}
+                    className="flex h-full flex-col p-5 lg:[&:last-child:nth-child(3n+1)]:col-start-2"
+                  >
                     <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary">
                       <GroupIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
                       {group.title}
