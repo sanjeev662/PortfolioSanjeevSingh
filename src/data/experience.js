@@ -4,10 +4,9 @@
  * Consumed by BOTH the full About page and the homepage About teaser.
  * Do NOT re-declare these arrays inside a component body.
  *
- * Every date range, company, location, achievement bullet and certificate link
- * is copied verbatim from About.jsx. The `tech` comma-string that the components
- * used to `.split(", ")` on every render is already a real array here — render
- * `role.tech.map(...)` directly.
+ * Bullets follow the CV. A role has either flat `achievements` + `tech`, or
+ * (Namekart) `projects`, each with its own `name`, `tech` and `achievements`.
+ * Every reader — About, the homepage teaser and api/chat.js — handles both.
  */
 
 export const EXPERIENCE = [
@@ -17,25 +16,43 @@ export const EXPERIENCE = [
     title: "Software Development Engineer (SDE)",
     company: "Namekart Private Limited",
     location: "Noida, India",
-    achievements: [
-      "Drove end-to-end technical ownership of the company's domain-name platform across 30+ modules, covering discovery, acquisition, pricing, and sales while authoring and reviewing production changes",
-      "Built a domain-intelligence microservice using Spring Boot ingesting 280K rows/day into a partitioned 4M-row PostgreSQL store, using composite indexing and cursor-based pagination for 15–30 ms filtered search and streaming CSV export",
-      "Developed an AI-powered SEO automation platform that automates the end-to-end consulting workflow — site audits, keyword research, content briefs, rank tracking, and client reporting — using independent multi-agent microservices orchestrated with Temporal for durable workflows and automatic retries; scheduled workflows generate and deliver reports to clients via Telegram bot",
-      "Engineered an LLM-powered AI assistant with retrieval-augmented context and role-based access control that enabled natural language queries over platform data, generating real-time reports and operational insights, reducing manual analysis effort by 50%",
-      "Delivered a scalable HR portal covering attendance, leave management, work logs, and automated stipend calculation with location-based office punch-ins across multiple cities, reducing manual HR processing by 70%",
-    ],
-    tech: [
-      "Java",
-      "Spring Boot",
-      "Spring Security",
-      "JPA",
-      "MySQL",
-      "PostgreSQL",
-      "React.js",
-      "Next.js",
-      "Node.js",
-      "Docker",
-      "Hetzner Cloud",
+    // The CV splits this role into three workstreams, each with its own stack,
+    // so they're kept as separate groups rather than one long bullet list.
+    projects: [
+      {
+        id: "namekart-dashboard",
+        name: "Namekart Dashboard",
+        tech: ["Java", "Spring Boot", "Spring Security", "JPA", "MySQL", "React.js", "Kafka"],
+        achievements: [
+          "Owned end-to-end technical delivery of the company's domain-name platform spanning 30+ modules across discovery, acquisition, pricing, and sales; translated business requirements into production-ready features and reviewed production code changes",
+          "Optimized end-to-end performance using composite MySQL indexes and JPA Criteria for database-level filtering, sorting, and pagination; added frontend virtualization and lazy loading to enable responsive browsing of tables containing 1.06M rows",
+          "Implemented event-driven and real-time communication using Kafka consumers for auction-change events with scheduled reconciliation for consistency, Server-Sent Events (SSE) for long-running job progress updates, and WebSockets for bidirectional AI chat",
+          "Built an LLM-powered AI assistant using RAG and role-based access control (RBAC) to answer natural-language queries over platform data and surface operational insights, reducing manual analysis effort by 50%",
+          "Integrated 10+ external services (domain registrars, valuation, email verification, etc.) using declarative Feign clients with configurable timeouts, retries, and centralized error handling",
+        ],
+      },
+      {
+        id: "seo-automation-platform",
+        name: "AI-Powered SEO Automation Platform",
+        tech: ["Node.js", "React.js", "Temporal", "OpenRouter", "PostgreSQL"],
+        achievements: [
+          "Built an AI-driven SEO automation platform in React.js and Node.js that automates site audits, keyword research, content-brief generation, and scheduled client reporting through a Telegram bot",
+          "Orchestrated crawl and LLM pipelines with Temporal across 15 isolated worker queues (durable execution, retries, crash recovery)",
+          "Designed a hybrid crawler (HTTP by default, headless Playwright for JS-rendered sites) that keeps crawls fast and resource-efficient",
+          "Integrated OpenRouter to orchestrate multiple LLMs for structured content generation; implemented a hallucination guard to validate AI-generated content briefs against live search results, improving content accuracy and reliability",
+        ],
+      },
+      {
+        id: "domain-intelligence-microservice",
+        name: "Domain Intelligence Microservice",
+        tech: ["Spring Boot", "PostgreSQL"],
+        achievements: [
+          "Built a Spring Boot microservice ingesting 250K rows/day into a partitioned PostgreSQL database containing 22M+ rows",
+          "Achieved 2–40 ms filtered search using composite and trigram indexes, cursor-based pagination, and caching",
+          "Ensured reliable data ingestion from rate-limited APIs using request throttling and exponential backoff to recover from transient failures",
+          "Deployed with Docker/Coolify on Hetzner Cloud via GitHub Actions CI/CD; monitored with Prometheus, Grafana, Loki, and OpenTelemetry",
+        ],
+      },
     ],
   },
   {
@@ -45,10 +62,10 @@ export const EXPERIENCE = [
     company: "Rydeu Logistics India Pvt. Ltd.",
     location: "Bengaluru, India (Remote)",
     achievements: [
-      "Optimized critical APIs, reducing average response time from 2s to 1.2s, improving performance by 40%",
-      "Engineered Keycloak-based authentication and authorization, securing platform access for users and reducing unauthorized access",
-      "Developed an automated vendor offer feature, reducing manual effort by 70% and increasing participation by 35%",
-      "Integrated third-party Freshwork CRM to improve customer interaction and email marketing, resulting in a 30% increase in lead conversions and more effective booking management",
+      "Optimized critical APIs, reducing average response time from 2 seconds to 1.2 seconds and improving performance by 40%",
+      "Implemented Keycloak-based authentication and authorization to secure platform access",
+      "Developed an automated vendor-offer feature, reducing manual effort by 70% and increasing participation by 35%",
+      "Integrated Freshworks CRM for customer engagement and email marketing, increasing lead conversions by 30%",
     ],
     tech: [
       "Node.js",

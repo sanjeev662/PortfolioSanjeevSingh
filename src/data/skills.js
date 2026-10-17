@@ -42,12 +42,13 @@ export const SKILLS = [
   },
 ];
 
-/** The CV's "Technical Skills" table, category for category. */
+/** The CV's "Technical Skills" table, category for category, in the CV's order. */
 export const SKILL_GROUPS = [
   {
     id: "languages",
     title: "Languages",
     icon: "Code",
+    // HTML and CSS aren't on the CV; kept because they were asked for here.
     items: ["Java", "JavaScript (ES6+)", "TypeScript", "HTML", "CSS", "SQL"],
   },
   {
@@ -55,13 +56,13 @@ export const SKILL_GROUPS = [
     title: "Backend",
     icon: "Server",
     items: [
-      "Node.js",
-      "Express.js",
       "Spring Boot",
       "Spring Security",
       "JPA",
       "Microservices",
-      "RESTful APIs",
+      "REST APIs",
+      "Node.js",
+      "Express.js",
       "Kafka",
       "WebSockets",
       "SSE",
@@ -80,18 +81,26 @@ export const SKILL_GROUPS = [
     items: ["MySQL", "PostgreSQL", "MongoDB"],
   },
   {
-    id: "cloud-devops-monitoring",
-    title: "Cloud, DevOps & Monitoring",
+    id: "devops-monitoring",
+    title: "DevOps & Monitoring",
     icon: "Wrench",
     items: [
       "Docker",
       "Hetzner Cloud",
       "Azure",
+      "Coolify",
       "GitHub Actions (CI/CD)",
       "Prometheus",
       "Grafana",
       "Loki",
+      "OpenTelemetry",
     ],
+  },
+  {
+    id: "ai-orchestration",
+    title: "AI & Orchestration",
+    icon: "Sparkles",
+    items: ["LLM Integration", "RAG", "Claude", "MCP", "OpenRouter", "Temporal"],
   },
   {
     id: "core-concepts",
@@ -102,7 +111,6 @@ export const SKILL_GROUPS = [
       "OOP",
       "SOLID Principles",
       "Design Patterns",
-      "LLM Integration & RAG",
     ],
   },
 ];

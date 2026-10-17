@@ -325,24 +325,48 @@ function HomeAbout() {
                           </a>
                         )}
 
-                        {/* Real bullets instead of a "•" span faking them. */}
-                        <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
-                          {exp.achievements.map((achievement) => (
-                            <li key={achievement}>{achievement}</li>
-                          ))}
-                        </ul>
-
-                        {/* exp.tech is already an array in src/data — no .split() needed. */}
-                        <ul className="flex flex-wrap gap-2">
-                          {exp.tech.map((tech) => (
-                            <li
-                              key={tech}
-                              className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
-                            >
-                              {tech}
-                            </li>
-                          ))}
-                        </ul>
+                        {/* Namekart is split into named workstreams. The teaser only
+                            names each one with its stack; all 13 bullets would swamp
+                            the homepage, and the full list is one click away on /about. */}
+                        {exp.projects ? (
+                          <div className="space-y-3">
+                            {exp.projects.map((project) => (
+                              <div key={project.id} className="space-y-1.5">
+                                <h5 className="text-sm font-semibold text-foreground">
+                                  {project.name}
+                                </h5>
+                                <ul className="flex flex-wrap gap-2">
+                                  {project.tech.map((tech) => (
+                                    <li
+                                      key={tech}
+                                      className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
+                                    >
+                                      {tech}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <>
+                            <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
+                              {exp.achievements.map((achievement) => (
+                                <li key={achievement}>{achievement}</li>
+                              ))}
+                            </ul>
+                            <ul className="flex flex-wrap gap-2">
+                              {exp.tech.map((tech) => (
+                                <li
+                                  key={tech}
+                                  className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
+                                >
+                                  {tech}
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
                       </div>
                     </motion.li>
                   ))}

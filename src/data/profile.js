@@ -34,7 +34,7 @@ export const PROFILE = {
   role: "Software Development Engineer (SDE)",
   tagline:
     "Full Stack Developer building production backends with Spring Boot and Node.js, and the React interfaces on top of them",
-  bio: "I'm a Full Stack Developer at Namekart, where I own a domain-name platform across 30+ modules — the Spring Boot services behind it, the multi-agent AI workflows that automate client reporting, and the React interfaces the team works in every day. I care about systems that hold up in production: filtered search that stays in the millisecond range over millions of rows, workflows that retry themselves when something fails, and screens that stay simple as the data grows. Away from feature work I've solved 800+ algorithmic problems in Java and qualified for the ICPC regionals.",
+  bio: "Full Stack Developer with 2+ years of experience owning backend and frontend features from requirement to release. Designed microservices and event-driven systems on Java, Spring Boot, React, and Node.js; built high-performance services that handle millions of records; and delivered AI-powered features into a live platform, including an assistant that reduced manual analysis work by 50%. Experienced in Docker-based deployments, CI/CD, and production monitoring, with a focus on building fast, scalable, reliable, and maintainable systems.",
   /** The split heading above the bio — the second half renders as gradient text. */
   intro: {
     lead: "I'm Sanjeev Singh, a",

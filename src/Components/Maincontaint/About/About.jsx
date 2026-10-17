@@ -413,24 +413,53 @@ function About() {
                               </a>
                             )}
 
-                            {/* Real bullets instead of a "•" span faking them. */}
-                            <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
-                              {exp.achievements.map((achievement) => (
-                                <li key={achievement}>{achievement}</li>
-                              ))}
-                            </ul>
-
-                            {/* exp.tech is already an array in src/data — no .split() needed. */}
-                            <ul className="flex flex-wrap gap-2">
-                              {exp.tech.map((tech) => (
-                                <li
-                                  key={tech}
-                                  className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
-                                >
-                                  {tech}
-                                </li>
-                              ))}
-                            </ul>
+                            {/* Most roles are one bullet list. Namekart is split into
+                                named workstreams, each with its own bullets and stack,
+                                the way the CV presents it. */}
+                            {exp.projects ? (
+                              <div className="space-y-5">
+                                {exp.projects.map((project) => (
+                                  <div key={project.id} className="space-y-2">
+                                    <h5 className="text-sm font-semibold text-foreground">
+                                      {project.name}
+                                    </h5>
+                                    <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
+                                      {project.achievements.map((achievement) => (
+                                        <li key={achievement}>{achievement}</li>
+                                      ))}
+                                    </ul>
+                                    <ul className="flex flex-wrap gap-2">
+                                      {project.tech.map((tech) => (
+                                        <li
+                                          key={tech}
+                                          className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
+                                        >
+                                          {tech}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <>
+                                <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground marker:text-primary">
+                                  {exp.achievements.map((achievement) => (
+                                    <li key={achievement}>{achievement}</li>
+                                  ))}
+                                </ul>
+                                <ul className="flex flex-wrap gap-2">
+                                  {exp.tech.map((tech) => (
+                                    <li
+                                      key={tech}
+                                      className="rounded-md bg-accent/50 px-2 py-1 text-xs font-medium text-accent-foreground"
+                                    >
+                                      {tech}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </>
+                            )}
                           </div>
                         </motion.li>
                       ))}
